@@ -1,0 +1,33 @@
+# Flutter / Dart
+.dart_tool/
+.packages
+.pub/
+.pub-cache/
+build/
+
+# Android / iOS generated
+android/.gradle/
+ios/Pods/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Local / temp
+.env
+*.log
+
+# Large files
+*.zip
+*.rar
+*.7z
+*.apk
+*.aab
+*.mp4
+*.mov
+*.avi
+*.sql
+*.sqlite
+
+Vendorapp1.zip
