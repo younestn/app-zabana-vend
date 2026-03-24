@@ -6,6 +6,7 @@ import 'package:sixvalley_vendor_app/features/shipping/domain/services/shipping_
 class ShippingService implements ShippingServiceInterface{
   final ShippingRepositoryInterface shippingRepoInterface;
   ShippingService({required this.shippingRepoInterface});
+  
 
   @override
   Future addShipping(ShippingModel? shipping) {
@@ -56,4 +57,19 @@ class ShippingService implements ShippingServiceInterface{
   Future updateShipping(String? title, String? duration, double? cost, int? id) {
     return shippingRepoInterface.updateShipping(title, duration, cost, id);
   }
+
+  @override
+Future getNoestSettings(String token) {
+  return shippingRepoInterface.getNoestSettings(token);
+}
+
+@override
+Future saveNoestSettings(String token, String? noestGuid, String? apiToken, int status) {
+  return shippingRepoInterface.saveNoestSettings(token, noestGuid, apiToken, status);
+}
+
+@override
+Future testNoestConnection(String token, String? noestGuid, String? apiToken) {
+  return shippingRepoInterface.testNoestConnection(token, noestGuid, apiToken);
+}
 }

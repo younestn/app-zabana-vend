@@ -1,5 +1,5 @@
 import 'package:sixvalley_vendor_app/features/shipping/domain/models/shipping_model.dart';
-
+import 'package:sixvalley_vendor_app/features/shipping/domain/models/noest_settings_model.dart';
 abstract class ShippingServiceInterface {
   Future<dynamic> getShipping();
   Future<dynamic> getShippingMethod(String token);
@@ -11,4 +11,8 @@ abstract class ShippingServiceInterface {
   Future<dynamic> setShippingMethodType( String? type);
   Future<dynamic> setCategoryWiseShippingCost(List<int? >  ids, List<double> cost, List<int> multiPly);
   Future<dynamic> shippingOnOff(int? id,int status);
+
+Future<dynamic> getNoestSettings(String token);
+Future<dynamic> saveNoestSettings(String token, String? noestGuid, String? apiToken, int status);
+Future<dynamic> testNoestConnection(String token, String? noestGuid, String? apiToken);
 }

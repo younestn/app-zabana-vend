@@ -107,7 +107,75 @@ class ShippingRepository implements ShippingRepositoryInterface{
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
+@override
+Future<ApiResponse> getNoestSettings(String token) async {
+  dioClient!.dio!.options.headers = {
+    'Content-Type': 'application/json; charset=UTF-8',
+    'Authorization': 'Bearer $token',
+  };
 
+  try {
+    final response = await dioClient!.get(AppConstants.getNoestSettingsUri);
+    return ApiResponse.withSuccess(response);
+  } catch (e) {
+    try {
+      return ApiResponse.withError(ApiErrorHandler.getMessage(e));
+    } catch (_) {
+      return ApiResponse.withError('Failed to load NOEST settings');
+    }
+  }
+}
+
+@override
+Future<ApiResponse> saveNoestSettings(String token, String? noestGuid, String? apiToken, int status) async {
+  dioClient!.dio!.options.headers = {
+    'Content-Type': 'application/json; charset=UTF-8',
+    'Authorization': 'Bearer $token',
+  };
+
+  try {
+    final response = await dioClient!.post(
+      AppConstants.saveNoestSettingsUri,
+      data: {
+        'noest_guid': noestGuid,
+        'api_token': apiToken,
+        'status': status,
+      },
+    );
+    return ApiResponse.withSuccess(response);
+  } catch (e) {
+    try {
+      return ApiResponse.withError(ApiErrorHandler.getMessage(e));
+    } catch (_) {
+      return ApiResponse.withError('Failed to save NOEST settings');
+    }
+  }
+}
+
+@override
+Future<ApiResponse> testNoestConnection(String token, String? noestGuid, String? apiToken) async {
+  dioClient!.dio!.options.headers = {
+    'Content-Type': 'application/json; charset=UTF-8',
+    'Authorization': 'Bearer $token',
+  };
+
+  try {
+    final response = await dioClient!.post(
+      AppConstants.testNoestConnectionUri,
+      data: {
+        'noest_guid': noestGuid,
+        'api_token': apiToken,
+      },
+    );
+    return ApiResponse.withSuccess(response);
+  } catch (e) {
+    try {
+      return ApiResponse.withError(ApiErrorHandler.getMessage(e));
+    } catch (_) {
+      return ApiResponse.withError('Failed to test NOEST connection');
+    }
+  }
+}
   @override
   Future add(value) async{
     try {

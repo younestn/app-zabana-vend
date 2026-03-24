@@ -10,4 +10,8 @@ abstract class ShippingRepositoryInterface implements RepositoryInterface{
   Future<ApiResponse> setShippingMethodType( String? type);
   Future<ApiResponse> setCategoryWiseShippingCost(List<int? >  ids, List<double> cost, List<int> multiPly);
   Future<ApiResponse> shippingOnOff(int? id,int status);
+
+Future<ApiResponse> getNoestSettings(String token);
+Future<ApiResponse> saveNoestSettings(String token, String? noestGuid, String? apiToken, int status);
+Future<ApiResponse> testNoestConnection(String token, String? noestGuid, String? apiToken);
 }

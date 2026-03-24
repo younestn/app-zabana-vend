@@ -7,6 +7,7 @@ import 'package:sixvalley_vendor_app/features/auth/controllers/auth_controller.d
 import 'package:sixvalley_vendor_app/features/shipping/domain/models/category_wise_shipping_model.dart';
 import 'package:sixvalley_vendor_app/features/shipping/domain/models/shipping_model.dart';
 import 'package:sixvalley_vendor_app/features/shipping/domain/services/shipping_service_interface.dart';
+import 'package:sixvalley_vendor_app/features/shipping/domain/models/noest_settings_model.dart';
 import 'package:sixvalley_vendor_app/helper/api_checker.dart';
 import 'package:sixvalley_vendor_app/helper/price_converter.dart';
 import 'package:sixvalley_vendor_app/localization/language_constrants.dart';
@@ -28,9 +29,77 @@ class ShippingController extends ChangeNotifier {
   int get shippingIndex => _shippingIndex;
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+  NoestSettingsModel? _noestSettingsModel;
+NoestSettingsModel? get noestSettingsModel => _noestSettingsModel;
+
+List<NoestDeliveryMethodModel> get noestDeliveryMethods => _noestSettingsModel?.deliveryMethods ?? [];
+
+bool _isNoestLoading = false;
+bool get isNoestLoading => _isNoestLoading;
+
+bool _isNoestConnectionLoading = false;
+bool get isNoestConnectionLoading => _isNoestConnectionLoading;
 
   List<AllCategoryShippingCost>? _categoryWiseShipping;
   List<AllCategoryShippingCost>? get categoryWiseShipping => _categoryWiseShipping;
+String _getErrorMessage(dynamic error) {
+  if (error is String) {
+    return error.toString();
+  } else {
+    ErrorResponse errorResponse = error;
+    if (errorResponse.errors != null && errorResponse.errors!.isNotEmpty) {
+      return errorResponse.errors![0].message ?? 'error';
+    }
+    return 'error';
+  }
+}
+Future<void> getNoestSettings() async {
+  String token = Provider.of<AuthController>(Get.context!, listen: false).getUserToken();
+  ApiResponse apiResponse = await shippingServiceInterface.getNoestSettings(token);
+
+  if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    _noestSettingsModel = NoestSettingsModel.fromJson(apiResponse.response!.data);
+  } else {
+    ApiChecker.checkApi(apiResponse);
+  }
+  notifyListeners();
+}
+
+Future<void> saveNoestSettings(String? noestGuid, String? apiToken, int status, Function callback) async {
+  _isNoestLoading = true;
+  notifyListeners();
+
+  String token = Provider.of<AuthController>(Get.context!, listen: false).getUserToken();
+  ApiResponse apiResponse = await shippingServiceInterface.saveNoestSettings(token, noestGuid, apiToken, status);
+
+  if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    await getNoestSettings();
+    callback(true, apiResponse.response!.data['message'] ?? '');
+  } else {
+    callback(false, _getErrorMessage(apiResponse.error));
+  }
+
+  _isNoestLoading = false;
+  notifyListeners();
+}
+
+Future<void> testNoestConnection(String? noestGuid, String? apiToken, Function callback) async {
+  _isNoestConnectionLoading = true;
+  notifyListeners();
+
+  String token = Provider.of<AuthController>(Get.context!, listen: false).getUserToken();
+  ApiResponse apiResponse = await shippingServiceInterface.testNoestConnection(token, noestGuid, apiToken);
+
+  if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    await getNoestSettings();
+    callback(true, apiResponse.response!.data['message'] ?? '');
+  } else {
+    callback(false, _getErrorMessage(apiResponse.error));
+  }
+
+  _isNoestConnectionLoading = false;
+  notifyListeners();
+}
 
 
   Future<void> getShippingList(String token) async {

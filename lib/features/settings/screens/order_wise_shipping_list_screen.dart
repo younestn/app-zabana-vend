@@ -16,6 +16,7 @@ import 'package:sixvalley_vendor_app/features/settings/screens/order_wise_shippi
 import 'package:sixvalley_vendor_app/features/settings/widgets/order_wise_shipping_card_widget.dart';
 import 'package:sixvalley_vendor_app/features/shipping/widgets/drop_down_for_shipping_type_widget.dart';
 import 'package:sixvalley_vendor_app/features/shop/widgets/animated_floating_button_widget.dart';
+import 'package:sixvalley_vendor_app/features/settings/widgets/noest_settings_card_widget.dart';
 
 class OrderWiseShippingScreen extends StatefulWidget {
   const OrderWiseShippingScreen({super.key});
@@ -27,14 +28,23 @@ class OrderWiseShippingScreen extends StatefulWidget {
 class OrderWiseShippingScreenState extends State<OrderWiseShippingScreen> {
 
   @override
-  void initState() {
-    Provider.of<ShippingController>(context, listen: false).iniType('order_wise');
-    super.initState();
-  }
+void initState() {
+  super.initState();
+
+  final shippingController = Provider.of<ShippingController>(context, listen: false);
+
+  shippingController.iniType('order_wise');
+
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    Provider.of<BusinessController>(context, listen: false).getBusinessList(context);
+    shippingController.getShippingList(
+      Provider.of<AuthController>(context, listen: false).getUserToken(),
+    );
+    shippingController.getNoestSettings();
+  });
+}
   @override
   Widget build(BuildContext context) {
-    Provider.of<BusinessController>(context, listen: false).getBusinessList(context);
-    Provider.of<ShippingController>(context, listen: false).getShippingList(Provider.of<AuthController>(context,listen: false).getUserToken());
     ScrollController scrollController = ScrollController();
 
     return Scaffold(
@@ -43,6 +53,7 @@ class OrderWiseShippingScreenState extends State<OrderWiseShippingScreen> {
       appBar: CustomAppBarWidget(title: getTranslated('business_settings', context), isBackButtonExist: true),
       body: Stack(children: [ Column( children: [
               const DropDownForShippingTypeWidget(),
+              const NoestSettingsCardWidget(),
               Padding(
                 padding: const EdgeInsets.fromLTRB(Dimensions.paddingSizeDefault, Dimensions.paddingSizeSmall, Dimensions.paddingSizeDefault,Dimensions.paddingSizeExtraSmall),
                 child: Container(

@@ -84,6 +84,10 @@ class AppConstants {
   static const String posProductList = '/api/v3/seller/pos/product-list';
   static const String searchPosProductList = '/api/v3/seller/pos/product-list';
   static const String shippingMethodOnOff = '/api/v3/seller/shipping-method/status';
+  static const String getNoestSettingsUri = '/api/v3/seller/shipping-method/noest-settings';
+static const String saveNoestSettingsUri = '/api/v3/seller/shipping-method/noest-settings';
+static const String testNoestConnectionUri = '/api/v3/seller/shipping-method/test-noest-connection';
+
   static const String updateProductQuantity = '/api/v3/seller/products/quantity-update';
   static const String productWiseReviewList = '/api/v3/seller/products/review-list/';
   static const String addDeliveryMan = '/api/v3/seller/delivery-man/store';
