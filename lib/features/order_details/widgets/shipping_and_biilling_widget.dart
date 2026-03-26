@@ -19,9 +19,55 @@ class ShippingAndBillingWidget extends StatelessWidget {
   final String orderType;
   const ShippingAndBillingWidget({super.key, this.orderModel, this.onlyDigital, required this.orderType});
 
+
+  String _getDeliveryTypeText(BuildContext context, String? deliveryType) {
+  if (deliveryType == null || deliveryType.trim().isEmpty) {
+    return '';
+  }
+
+  final String normalized = deliveryType.trim().toLowerCase();
+
+  switch (normalized) {
+    case 'home_delivery':
+    case 'to_home':
+    case 'home':
+      return getTranslated('home_delivery', context) ?? 'توصيل إلى المنزل';
+
+    case 'desk_delivery':
+    case 'office_delivery':
+    case 'to_office':
+    case 'desk':
+    case 'office':
+      return getTranslated('desk_delivery', context) ?? 'توصيل إلى مكتب التوصيل';
+
+    default:
+      return deliveryType.replaceAll('_', ' ');
+  }
+}
+
+String _getWilayaText(BillingAddressData? addressData) {
+  return addressData?.state?.trim().isNotEmpty == true
+      ? addressData!.state!.trim()
+      : '';
+}
+
+String _getCommuneText(BillingAddressData? addressData) {
+  return addressData?.commune?.trim().isNotEmpty == true
+      ? addressData!.commune!.trim()
+      : '';
+}
+
+
+
   @override
+
   Widget build(BuildContext context) {
     bool showEditButton = (orderModel?.orderStatus == 'out_for_delivery' || orderModel?.orderStatus == 'delivered' || orderModel?.orderStatus == 'returned');
+
+final BillingAddressData? shippingAddress = orderModel?.shippingAddressData;
+final String deliveryTypeText = _getDeliveryTypeText(context, orderModel?.deliveryType);
+final String wilayaText = _getWilayaText(shippingAddress);
+final String communeText = _getCommuneText(shippingAddress);
 
     return Container(decoration: const BoxDecoration(image: DecorationImage(image: AssetImage(Images.mapBg), fit: BoxFit.cover)),
       child: Padding(padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
@@ -93,20 +139,50 @@ class ShippingAndBillingWidget extends StatelessWidget {
               ]),
               const SizedBox(height: Dimensions.paddingSizeSmall),
 
+
               if(orderModel!.shippingAddressData != null)
-                Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Expanded(child: IconWithTextRowWidget(text: orderModel!.shippingAddressData?.contactPersonName ?? '', icon: Icons.person)),
+  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    Expanded(child: IconWithTextRowWidget(text: orderModel!.shippingAddressData?.contactPersonName ?? '', icon: Icons.person)),
+    Expanded(child: IconWithTextRowWidget(text: orderModel!.shippingAddressData?.phone ?? '', icon: Icons.call)),
+  ]),
+const SizedBox(height: Dimensions.paddingSizeSmall),
 
-                  Expanded(child: IconWithTextRowWidget(text: orderModel!.shippingAddressData?.phone ?? '', icon: Icons.call)),
-                ]),
-              const SizedBox(height: Dimensions.paddingSizeSmall),
+            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+  Expanded(
+    child: IconWithTextRowWidget(
+      text: shippingAddress?.country ?? '',
+      icon: Icons.flag,
+    ),
+  ),
 
-              Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Expanded(child: IconWithTextRowWidget(text: orderModel!.shippingAddressData?.addressType ?? '', icon: Icons.home)),
+  Expanded(
+    child: IconWithTextRowWidget(
+      text: deliveryTypeText.isNotEmpty ? deliveryTypeText : (shippingAddress?.addressType ?? ''),
+      icon: Icons.local_shipping,
+    ),
+  ),
+]),
+const SizedBox(height: Dimensions.paddingSizeSmall),
 
-                Expanded(child: IconWithTextRowWidget(text: orderModel!.shippingAddressData?.country ?? '', icon: Icons.flag)),
-              ]),
-              const SizedBox(height: Dimensions.paddingSizeSmall),
+if (wilayaText.isNotEmpty || communeText.isNotEmpty)
+  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    Expanded(
+      child: IconWithTextRowWidget(
+        text: wilayaText.isNotEmpty ? 'الولاية: $wilayaText' : '',
+        icon: Icons.map,
+      ),
+    ),
+
+    Expanded(
+      child: IconWithTextRowWidget(
+        text: communeText.isNotEmpty ? 'البلدية: $communeText' : '',
+        icon: Icons.location_city,
+      ),
+    ),
+  ]),
+
+if (wilayaText.isNotEmpty || communeText.isNotEmpty)
+  const SizedBox(height: Dimensions.paddingSizeSmall),
 
               Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Expanded(child: IconWithTextRowWidget(text: orderModel!.shippingAddressData?.city ?? '', icon: Icons.location_city)),
@@ -166,7 +242,7 @@ class ShippingAndBillingWidget extends StatelessWidget {
               const SizedBox(height: Dimensions.paddingSizeSmall),
 
 
-              if(!isBillingSameAsShipping())
+              if(isBillingSameAsShipping())
                 Container(
                   width: double.maxFinite,
                   decoration: BoxDecoration(
@@ -224,13 +300,13 @@ class ShippingAndBillingWidget extends StatelessWidget {
   }
 
   bool isBillingSameAsShipping() {
-    return orderModel?.shippingAddressData?.contactPersonName != orderModel?.billingAddressData?.contactPersonName ||
-        orderModel?.shippingAddressData?.phone != orderModel?.billingAddressData?.phone ||
-        orderModel?.shippingAddressData?.addressType != orderModel?.billingAddressData?.addressType ||
-        orderModel?.shippingAddressData?.country != orderModel?.billingAddressData?.country ||
-        orderModel?.shippingAddressData?.city != orderModel?.billingAddressData?.city ||
-        orderModel?.shippingAddressData?.zip != orderModel?.billingAddressData?.zip ||
-        orderModel?.shippingAddressData?.email != orderModel?.billingAddressData?.email ||
-        orderModel?.shippingAddressData?.address != orderModel?.billingAddressData?.address;
-  }
+  return orderModel?.shippingAddressData?.contactPersonName == orderModel?.billingAddressData?.contactPersonName &&
+      orderModel?.shippingAddressData?.phone == orderModel?.billingAddressData?.phone &&
+      orderModel?.shippingAddressData?.addressType == orderModel?.billingAddressData?.addressType &&
+      orderModel?.shippingAddressData?.country == orderModel?.billingAddressData?.country &&
+      orderModel?.shippingAddressData?.city == orderModel?.billingAddressData?.city &&
+      orderModel?.shippingAddressData?.zip == orderModel?.billingAddressData?.zip &&
+      orderModel?.shippingAddressData?.email == orderModel?.billingAddressData?.email &&
+      orderModel?.shippingAddressData?.address == orderModel?.billingAddressData?.address;
+}
 }

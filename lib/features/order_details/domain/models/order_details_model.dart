@@ -17,9 +17,9 @@ class OrderDetailsModel {
   String? paymentStatus;
   String? createdAt;
   String? updatedAt;
-  String? shippingMethodId;
+int? shippingMethodId;
+List<dynamic>? variation;
   String? variant;
-  String? variation;
   String? discountType;
   int? refundRequest;
   List<VerificationImages>? verificationImages;
@@ -70,9 +70,18 @@ class OrderDetailsModel {
     paymentStatus = json['payment_status'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    shippingMethodId = json['shipping_method_id'];
-    variant = json['variant'];
-    variation = json['variation'];
+  
+  shippingMethodId = json['shipping_method_id'] is int
+    ? json['shipping_method_id']
+    : int.tryParse(json['shipping_method_id'].toString());
+
+variant = json['variant']?.toString();
+
+if (json['variation'] is List) {
+  variation = List<dynamic>.from(json['variation']);
+} else {
+  variation = [];
+}
     discountType = json['discount_type'];
     refundRequest = json['refund_request'];
     if (json['verification_images'] != null) {

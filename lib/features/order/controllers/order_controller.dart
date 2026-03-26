@@ -82,7 +82,9 @@ class OrderController extends ChangeNotifier {
     } else {
       ApiChecker.checkApi(apiResponse);
     }
-    notifyListeners();
+
+_isLoading = false;
+notifyListeners();
   }
 
 
