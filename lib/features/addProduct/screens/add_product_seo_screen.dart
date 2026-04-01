@@ -72,6 +72,7 @@ class AddProductSeoScreenState extends State<AddProductSeoScreen> {
   GlobalKey<AutoCompleteTextFieldState<String>> key = GlobalKey();
   SimpleAutoCompleteTextField? textField;
   bool showWhichErrorText = false;
+  bool _isSubmittingProduct = false;
   late bool _update;
   Product? _product;
   AddProductModel? _addProduct;
@@ -132,7 +133,12 @@ class AddProductSeoScreenState extends State<AddProductSeoScreen> {
     _controller = TextfieldTagsController();
   }
 
-
+void _setSubmittingProduct(bool value) {
+  if (!mounted) return;
+  setState(() {
+    _isSubmittingProduct = value;
+  });
+}
 
   Future<void> route(bool isRoute, String name, String type, String? colorCode) async {
 
@@ -209,8 +215,13 @@ class AddProductSeoScreenState extends State<AddProductSeoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final addProductImageController = Provider.of<AddProductImageController>(context, listen: false);
+final addProductImageController = Provider.of<AddProductImageController>(context);
+final resProvider = Provider.of<AddProductController>(context);
 
+final bool isProcessing =
+    _isSubmittingProduct ||
+    resProvider.isLoading ||
+    addProductImageController.isLoading;
 
     return PopScope(
       canPop: Navigator.canPop(context),
@@ -227,7 +238,12 @@ class AddProductSeoScreenState extends State<AddProductSeoScreen> {
           Provider.of<AddProductController>(context,listen: false).setSelectedPageIndex(1, isUpdate: true);
         },
         ),
-        body: SafeArea(child: Consumer<VariationController>(
+        body: Stack(
+  children: [
+    AbsorbPointer(
+      absorbing: isProcessing,
+      child: SafeArea(
+        child: Consumer<VariationController>(
             builder: (context, variationController, child){
             return Consumer<AddProductController>(
               builder: (context, resProvider, child){
@@ -837,6 +853,9 @@ class AddProductSeoScreenState extends State<AddProductSeoScreen> {
                                       child: CustomButtonWidget(
                                         btnTxt: _update ? getTranslated('update',context) : getTranslated('submit', context), buttonHeight: 55,
                                         onTap: () async {
+                                          if (_isSubmittingProduct) {
+  return;
+}
                                           final digitalProductController = Provider.of<DigitalProductController>(Get.context!,listen: false);
                                           final categoryController = Provider.of<CategoryController>(Get.context!,listen: false);
 
@@ -948,82 +967,118 @@ class AddProductSeoScreenState extends State<AddProductSeoScreen> {
                                             }
 
 
-                                            if(_update){
+                                            try {
+  _setSubmittingProduct(true);
 
-                                              for (ImageModel value in addProductImageController.imagesWithColor) {
-                                                ///if on online -> value.colorImage?.imageName?.path
-                                                ///if on offline -> value.image?.path
-                                                if(value.image?.path == null && value.colorImage?.imageName?.path == null) {
-                                                  showCustomSnackBarWidget('${getTranslated('please_add_color_image', context)}', context);
-                                                  return;
-                                                }
-                                              }
+  if(_update){
 
+    for (ImageModel value in addProductImageController.imagesWithColor) {
+      if(value.image?.path == null && value.colorImage?.imageName?.path == null) {
+        showCustomSnackBarWidget(
+          '${getTranslated('please_add_color_image', context)}',
+          context,
+        );
+        return;
+      }
+    }
 
-                                              if(addProductImageController.selectedLogoFile != null){
-                                                await addProductImageController.addProductImage(context,addProductImageController.thumbnailImageModel, route, update: _update);
+    if(addProductImageController.selectedLogoFile != null){
+      await addProductImageController.addProductImage(
+        context,
+        addProductImageController.thumbnailImageModel,
+        route,
+        update: _update,
+      );
+    }
 
-                                              }
+    if(addProductImageController.selectedMetaImageFile != null){
+      await addProductImageController.addProductImage(
+        Get.context!,
+        addProductImageController.metaImageModel,
+        route,
+        update: _update,
+      );
+    }
 
-                                              if(addProductImageController.selectedMetaImageFile != null){
-                                                await addProductImageController.addProductImage(Get.context!, addProductImageController.metaImageModel, route, update: _update);
+    if(context.mounted) {
+      await addProductImageController.onUploadColorImages(
+        context: context,
+        isUpdate: _update,
+        productId: _product?.id,
+        callBack: route,
+      );
+    }
 
-                                              }
+    if(addProductImageController.withoutColor.isNotEmpty) {
+      for(int i = 0; i < addProductImageController.withoutColor.length; i++) {
+        if(addProductImageController.withoutColor[i].image != null){
+          await addProductImageController.addProductImage(
+            Get.context!,
+            addProductImageController.withoutColor[i],
+            route,
+            index: i,
+            update: _update,
+          );
+        }
+      }
+    }
 
-                                              if(context.mounted) {
-                                               await addProductImageController.onUploadColorImages(
-                                                 context: context,
-                                                 isUpdate: _update,
-                                                 productId: _product?.id,
-                                                 callBack: route,
-                                               );
+    await Provider.of<AddProductController>(
+      Get.context!,
+      listen: false,
+    ).addProduct(
+      Get.context!,
+      _product!,
+      _addProduct!,
+      thumbnailImage,
+      metaImage,
+      !_update,
+      tagList,
+    );
 
-                                              }
+  } else {
 
-                                              if(addProductImageController.withoutColor.isNotEmpty) {
-                                                for(int i =0; i<addProductImageController.withoutColor.length; i++) {
-                                                  if(addProductImageController.withoutColor[i].image != null){
-                                                    await addProductImageController.addProductImage(Get.context!, addProductImageController.withoutColor[i], route, index: i, update: _update);
-                                                  }
-                                                }
-                                              }
-                                            }
+    if(addProductImageController.selectedLogoFile != null){
+      await addProductImageController.addProductImage(
+        context,
+        addProductImageController.thumbnailImageModel,
+        route,
+      );
+    }
 
-                                            else{
-                                              if(addProductImageController.selectedLogoFile != null){
-                                                await addProductImageController.addProductImage(context, addProductImageController.thumbnailImageModel, route);
-                                              }
+    if(addProductImageController.selectedMetaImageFile != null) {
+      await addProductImageController.addProductImage(
+        Get.context!,
+        addProductImageController.metaImageModel,
+        route,
+      );
+    }
 
-                                              if(addProductImageController.selectedMetaImageFile != null) {
-                                               await addProductImageController.addProductImage(Get.context!, addProductImageController.metaImageModel,route);
-                                              }
+    if(addProductImageController.imagesWithColor.isNotEmpty) {
+      for(int i = 0; i < addProductImageController.imagesWithColor.length; i++) {
+        await addProductImageController.addProductImage(
+          Get.context!,
+          addProductImageController.imagesWithColor[i],
+          route,
+        );
+      }
+    }
 
-
-                                              if(addProductImageController.imagesWithColor.isNotEmpty) {
-                                                for(int i =0; i<addProductImageController.imagesWithColor.length; i++) {
-                                                 await addProductImageController.addProductImage(Get.context!, addProductImageController.imagesWithColor[i], route);
-                                                }
-                                              }
-
-
-                                              if(addProductImageController.withoutColor.isNotEmpty){
-                                                for(int i =0; i<addProductImageController.withoutColor.length; i++) {
-                                                 await addProductImageController.addProductImage(Get.context!, addProductImageController.withoutColor[i], route);
-                                                }
-                                              }
-
-                                            }
+    if(addProductImageController.withoutColor.isNotEmpty){
+      for(int i = 0; i < addProductImageController.withoutColor.length; i++) {
+        await addProductImageController.addProductImage(
+          Get.context!,
+          addProductImageController.withoutColor[i],
+          route,
+        );
+      }
+    }
+  }
+} finally {
+  _setSubmittingProduct(false);
+}
                                           }
-
-                                          if(_update) {
-                                            Provider.of<AddProductController>(Get.context!,listen: false).addProduct(Get.context!, _product!, _addProduct!, thumbnailImage, metaImage, !_update, tagList);
-                                          }
-
-
-
-
-
-                                        }
+                                        },
                                       ),
                                     )
                                   ],
@@ -1036,8 +1091,59 @@ class AddProductSeoScreenState extends State<AddProductSeoScreen> {
                 );
               },
             );
-          }
-        ),),
+                    }
+        ),
+      ),
+    ),
+
+    if (isProcessing) ...[
+      const ModalBarrier(
+        dismissible: false,
+        color: Colors.black54,
+      ),
+      Center(
+        child: Container(
+          margin: const EdgeInsets.symmetric(
+            horizontal: Dimensions.paddingSizeLarge,
+          ),
+          padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
+          decoration: BoxDecoration(
+            color: Theme.of(context).cardColor,
+            borderRadius: BorderRadius.circular(
+              Dimensions.paddingSizeSmall,
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: Dimensions.paddingSizeDefault),
+              Text(
+                getTranslated('please_wait', context) ?? 'Please wait',
+                textAlign: TextAlign.center,
+                style: robotoBold.copyWith(
+                  fontSize: Dimensions.fontSizeLarge,
+                ),
+              ),
+              const SizedBox(height: Dimensions.paddingSizeSmall),
+              Text(
+                'Uploading product...',
+                textAlign: TextAlign.center,
+                style: robotoRegular.copyWith(
+                  color: ColorHelper.blendColors(
+                    Colors.white,
+                    Theme.of(context).textTheme.bodyLarge!.color!,
+                    0.7,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ],
+  ],
+),
 
 
       ),

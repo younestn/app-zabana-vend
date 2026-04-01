@@ -1093,6 +1093,8 @@
   "noest_connection_test_completed": "تم اختبار اتصال NOEST",
   "noest_settings_saved_successfully": "تم حفظ إعدادات NOEST بنجاح",
   "home_delivery": "التوصيل إلى المنزل",
+  "please_wait": "يرجى الانتظار...",
+"product_is_being_processed": "جاري رفع صور المنتج ومعالجة الطلب",
   "desk_delivery": "التوصيل إلى المكتب"
 
 }
