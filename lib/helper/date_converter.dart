@@ -165,4 +165,27 @@ class DateConverter {
 
   static String durationDateTime(DateTime dateTime) => DateFormat('MM/dd/yyyy hh:mm:ss a').format(dateTime);
   static DateTime? convertDurationDateTimeFromString(String? dateTime) => DateFormat('MM/dd/yyyy hh:mm:ss a').tryParse(dateTime ?? '');
+static DateTime? safeIsoStringToLocalDate(String? dateTime) {
+  final String raw = dateTime?.trim() ?? '';
+
+  if (raw.isEmpty || raw == 'null') {
+    return null;
+  }
+
+  if (raw.startsWith('-0000') || raw.startsWith('-0001')) {
+    return null;
+  }
+
+  final DateTime? parsed = DateTime.tryParse(raw);
+  return parsed?.toLocal();
+}
+
+static String safeIsoStringToLocalDateOnly(String? dateTime) {
+  final DateTime? parsed = safeIsoStringToLocalDate(dateTime);
+  if (parsed == null) {
+    return '';
+  }
+  return DateFormat('dd MMM yyyy').format(parsed);
+}
+
 }

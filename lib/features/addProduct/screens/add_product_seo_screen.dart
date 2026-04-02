@@ -141,6 +141,16 @@ void _setSubmittingProduct(bool value) {
   });
 }
 
+double _safeDouble(String? value, {double fallback = 0}) {
+  final String normalized = (value ?? '').trim().replaceAll(',', '.');
+  return double.tryParse(normalized) ?? fallback;
+}
+
+int _safeInt(String? value, {int fallback = 0}) {
+  final String normalized = (value ?? '').trim();
+  return int.tryParse(normalized) ?? fallback;
+}
+
   Future<void> route(bool isRoute, String name, String type, String? colorCode) async {
 
     if (isRoute) {
@@ -873,7 +883,26 @@ final bool isProcessing =
                                           String productCode = resProvider.productCode.text;
                                           bool isColorImageEmpty = false;
                                           bool isProductImageNull = false;
+                                          final String unitPriceText = (widget.unitPrice ?? '').trim();
+final String taxText = (widget.tax ?? '').trim();
+final String discountText = (widget.discount ?? '').trim();
+final String shippingCostText = (widget.shippingCost ?? '').trim();
+final String currentStockText = (widget.currentStock ?? '').trim();
+final String minimumOrderQuantityText = (widget.minimumOrderQuantity ?? '').trim();
 
+if (unitPriceText.isEmpty ||
+    taxText.isEmpty ||
+    discountText.isEmpty ||
+    shippingCostText.isEmpty ||
+    currentStockText.isEmpty ||
+    minimumOrderQuantityText.isEmpty) {
+  showCustomSnackBarWidget(
+    'يرجى ملء السعر والضريبة والخصم والشحن والمخزون والحد الأدنى للطلب',
+    context,
+    sanckBarType: SnackBarType.warning,
+  );
+  return;
+}
 
                                           List<String> titleList = [];
                                           List<String> descriptionList = [];
@@ -924,21 +953,35 @@ final bool isProcessing =
                                             _addProduct!.titleList = titleList;
                                             _addProduct!.descriptionList = descriptionList;
                                             _addProduct!.videoUrl = videoUrl;
-                                            _product!.tax = double.parse(widget.tax!);
+                                            _product!.tax = _safeDouble(widget.tax);
                                             _product!.taxModel = resProvider.taxTypeIndex == 0 ? 'include' : 'exclude';
-                                            _product!.unitPrice = PriceConverter.systemCurrencyToDefaultCurrency(double.parse(widget.unitPrice!), context);
-                                            _product!.discount = resProvider.discountTypeIndex == 0 ?
-                                            double.parse(widget.discount!) : PriceConverter.systemCurrencyToDefaultCurrency(double.parse(widget.discount!), context);
+                                            _product!.unitPrice = PriceConverter.systemCurrencyToDefaultCurrency(
+  _safeDouble(widget.unitPrice),
+  context,
+);
+                                            _product!.discount = resProvider.discountTypeIndex == 0
+    ? _safeDouble(widget.discount)
+    : PriceConverter.systemCurrencyToDefaultCurrency(
+        _safeDouble(widget.discount),
+        context,
+      );
                                             _product!.productType = resProvider.productTypeIndex == 0 ? 'physical' : 'digital';
                                             _product!.unit = unit;
                                             _product!.code = productCode;
-                                            _product!.shippingCost = PriceConverter.systemCurrencyToDefaultCurrency(double.parse(widget.shippingCost!), context);
+                                            _product!.shippingCost = PriceConverter.systemCurrencyToDefaultCurrency(
+  _safeDouble(widget.shippingCost),
+  context,
+);
                                             _product!.multiplyWithQuantity = multi;
-                                            _product!.brandId = Provider.of<SplashController>(Get.context!, listen: false).configModel!.brandSetting == "1" && resProvider.productTypeIndex != 1 ? int.parse(brandId!) : null;
+                                            _product!.brandId =
+    Provider.of<SplashController>(Get.context!, listen: false).configModel!.brandSetting == "1" &&
+            resProvider.productTypeIndex != 1
+        ? int.tryParse((brandId ?? '').trim())
+        : null;
                                             _product!.metaTitle = metaTitle;
                                             _product!.metaDescription = metaDescription;
-                                            _product!.currentStock = int.parse(widget.currentStock!);
-                                            _product!.minimumOrderQty = int.parse(widget.minimumOrderQuantity!);
+                                            _product!.currentStock = _safeInt(widget.currentStock);
+                                            _product!.minimumOrderQty = _safeInt(widget.minimumOrderQuantity, fallback: 1);
                                             _product!.metaTitle = seoTitle;
                                             _product!.metaDescription = seoDescription;
                                             _product!.discountType = resProvider.discountType;

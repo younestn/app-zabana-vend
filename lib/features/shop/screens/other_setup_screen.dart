@@ -15,7 +15,7 @@ import 'package:sixvalley_vendor_app/localization/language_constrants.dart';
 import 'package:sixvalley_vendor_app/utill/dimensions.dart';
 import 'package:sixvalley_vendor_app/utill/images.dart';
 import 'package:sixvalley_vendor_app/utill/styles.dart';
-
+import 'package:sixvalley_vendor_app/features/shop/domain/models/shop_model.dart';
 import '../../../main.dart';
 import '../../product_details/widgets/product_details_widget.dart';
 
@@ -65,9 +65,14 @@ class _OtherSetupScreenState extends State<OtherSetupScreen> {
       _tinNumberController.text = shopController.shopModel?.taxIdentificationNumber ?? '';
     }
 
-    if(shopController.shopModel?.tinExpireDate != null) {
-      shopController.setExpireDate(DateTime.tryParse(shopController.shopModel?.tinExpireDate ?? ''));
-    }
+    if (shopController.shopModel?.tinExpireDate != null &&
+    ShopModel.sanitizeApiDate(shopController.shopModel?.tinExpireDate) != null) {
+  shopController.setExpireDate(
+    DateConverter.safeIsoStringToLocalDate(shopController.shopModel?.tinExpireDate),
+  );
+} else {
+  shopController.setExpireDate(null);
+}
 
     if(shopController.shopModel?.reorderLevel != null) {
       _reOrderLevelController.text = shopController.shopModel?.reorderLevel.toString() ?? '';
@@ -222,11 +227,17 @@ class _OtherSetupScreenState extends State<OtherSetupScreen> {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          shopController.tinExpireDate != null  ?
-                                          DateConverter.stringToLocalDateOnly(shopController.tinExpireDate.toString()) :
-                                          getTranslated('select_date', context) ?? '',
-                                          style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color),
-                                        ),
+  DateConverter.safeIsoStringToLocalDateOnly(
+            shopController.tinExpireDate?.toIso8601String(),
+          ).isNotEmpty
+      ? DateConverter.safeIsoStringToLocalDateOnly(
+          shopController.tinExpireDate?.toIso8601String(),
+        )
+      : (getTranslated('select_date', context) ?? ''),
+  style: robotoRegular.copyWith(
+    color: Theme.of(context).textTheme.bodyLarge?.color,
+  ),
+),
                                       ),
 
                                       InkWell(

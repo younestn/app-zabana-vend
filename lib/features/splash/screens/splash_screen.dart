@@ -24,22 +24,37 @@ import 'package:sixvalley_vendor_app/utill/styles.dart';
 import 'package:sixvalley_vendor_app/features/auth/screens/auth_screen.dart';
 import 'package:sixvalley_vendor_app/features/dashboard/screens/dashboard_screen.dart';
 import 'package:sixvalley_vendor_app/features/splash/widgets/splash_painter_widget.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class SplashScreen extends StatefulWidget {
   final NotificationBody? body;
   const SplashScreen({super.key, this.body});
   @override
   SplashScreenState createState() => SplashScreenState();
+  
 }
 
 class SplashScreenState extends State<SplashScreen> {
+
+  StreamSubscription<String>? _tokenRefreshSubscription;
 
   @override
   void initState() {
     super.initState();
     Provider.of<AuthController>(Get.context!,listen: false).setUnAuthorize(false, update: false);
+    _tokenRefreshSubscription = FirebaseMessaging.instance.onTokenRefresh.listen((String token) async {
+  if (Provider.of<AuthController>(context, listen: false).isLoggedIn()) {
+    await Provider.of<AuthController>(context, listen: false).updateToken(context);
+  }
+});
     initCall();
   }
+
+  @override
+void dispose() {
+  _tokenRefreshSubscription?.cancel();
+  super.dispose();
+}
 
   Future<void> initCall() async {
     NetworkInfo.checkConnectivity(context);

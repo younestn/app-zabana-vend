@@ -71,26 +71,9 @@ Future<void> main() async {
   HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
 
-  if(Firebase.apps.isEmpty){
-    if(Platform.isAndroid){
-      try{
-        ///todo you need to configure that firebase Option with your own firebase to run your app
-        await Firebase.initializeApp(
-            name: 'ZABANA',
-            options: const FirebaseOptions(
-                apiKey: "AIzaSyCAwmdM1hasjAkm0UwGC0EIzXSAhJsiutQ",
-                projectId: "1:696423528043:android:4c4457b9be9930fa2b632e",
-                messagingSenderId: "696423528043",
-                appId: "zabana-c5e3f"
-            )
-        );
-      } finally{
-        await Firebase.initializeApp();
-      }
-    }else {
-      await Firebase.initializeApp();
-    }
-  }
+if (Firebase.apps.isEmpty) {
+  await Firebase.initializeApp();
+}
   await FlutterDownloader.initialize(debug: true , ignoreSsl: true);
   await di.init();
 

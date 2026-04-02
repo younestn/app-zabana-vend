@@ -89,8 +89,8 @@ class ShopModel {
 
 
 
-    vacationEndDate = json['vacation_end_date'];
-    vacationStartDate = json['vacation_start_date'];
+    vacationEndDate = sanitizeApiDate(json['vacation_end_date']);
+    vacationStartDate = sanitizeApiDate(json['vacation_start_date']);
     vacationStatus = json['vacation_status']??false;
     offerBannerFullUrl = json['offer_banner_full_url'] != null
       ? ImageFullUrl.fromJson(json['offer_banner_full_url'])
@@ -107,7 +107,7 @@ class ShopModel {
     vacationDurationType = json['vacation_duration_type'] ?? 'custom';
     vacationNote = json['vacation_note'] ?? '';
     taxIdentificationNumber = json['tax_identification_number'];
-    tinExpireDate = json['tin_expire_date'];
+    tinExpireDate = sanitizeApiDate(json['tin_expire_date']);
     totalProducts = json['total_products'];
     totalOrder = json['total_orders'];
     totalReview = json['total_reviews'];
@@ -119,4 +119,18 @@ class ShopModel {
       ? int.tryParse(json['stock_limit'].toString())
       : null;
   }
+
+  static String? sanitizeApiDate(dynamic value) {
+  final String raw = value?.toString().trim() ?? '';
+
+  if (raw.isEmpty || raw == 'null') {
+    return null;
+  }
+
+  if (raw.startsWith('-0000') || raw.startsWith('-0001')) {
+    return null;
+  }
+
+  return raw;
+}
 }

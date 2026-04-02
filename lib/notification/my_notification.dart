@@ -332,7 +332,8 @@ static Future<void> showNotification(
 
 }
 
-Future<dynamic> myBackgroundMessageHandler(RemoteMessage message) async {
+@pragma('vm:entry-point')
+Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   await MyNotification._initializeLocalNotifications(
     flutterLocalNotificationsPlugin,
