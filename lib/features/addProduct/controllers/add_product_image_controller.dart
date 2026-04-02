@@ -52,6 +52,18 @@ class AddProductImageController extends ChangeNotifier {
   bool get isLoading => _isLoading;
   List<Map<String, dynamic>>? productReturnImageList  = [];
   List<String> imagesWithColorForUpdate = [];
+  static const int _uploadImageQuality = 75;
+static const double _uploadMaxWidth = 1600;
+static const double _uploadMaxHeight = 1600;
+
+Future<XFile?> _pickOptimizedImage() async {
+  return await ImagePicker().pickImage(
+    source: ImageSource.gallery,
+    imageQuality: _uploadImageQuality,
+    maxWidth: _uploadMaxWidth,
+    maxHeight: _uploadMaxHeight,
+  );
+}
 
 
   void pickImage(bool isLogo,bool isMeta, bool isRemove, int? index, {bool update = false, bool isAddProduct = false}) async {
@@ -67,7 +79,13 @@ class AddProductImageController extends ChangeNotifier {
     }else {
       totalSelectedImages ++;
       if (isLogo) {
-        _selectedLogoFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+        final XFile? pickedLogoFile = await _pickOptimizedImage();
+if (pickedLogoFile == null) {
+  totalSelectedImages--;
+  notifyListeners();
+  return;
+}
+_selectedLogoFile = pickedLogoFile;
         if(_selectedLogoFile != null){
           thumbnailImageModel = ImageModel(type: 'thumbnail', color: '', image: _selectedLogoFile);
           if(isAddProduct){
@@ -77,13 +95,26 @@ class AddProductImageController extends ChangeNotifier {
         }
 
       } else if(isMeta){
-        _selectedMetaImageFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+        final XFile? pickedMetaFile = await _pickOptimizedImage();
+if (pickedMetaFile == null) {
+  totalSelectedImages--;
+  notifyListeners();
+  return;
+}
+_selectedMetaImageFile = pickedMetaFile;
         if(_selectedMetaImageFile != null){
           metaImageModel = ImageModel(type: 'meta', color: '', image: _selectedMetaImageFile);
         }
 
       }else {
-        _selectedCoveredImageFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+        final XFile? pickedProductFile = await _pickOptimizedImage();
+if (pickedProductFile == null) {
+  totalSelectedImages--;
+  notifyListeners();
+  return;
+}
+_selectedCoveredImageFile = pickedProductFile;
+
         if (_selectedCoveredImageFile != null && index != null) {
           if(update) {
             totalSelectedImages --;

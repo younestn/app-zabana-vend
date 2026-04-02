@@ -73,6 +73,7 @@ class AddProductSeoScreenState extends State<AddProductSeoScreen> {
   SimpleAutoCompleteTextField? textField;
   bool showWhichErrorText = false;
   bool _isSubmittingProduct = false;
+  bool _reuseThumbnailAsMetaUpload = false;
   late bool _update;
   Product? _product;
   AddProductModel? _addProduct;
@@ -197,11 +198,11 @@ void _setSubmittingProduct(bool value) {
 
         counter++;
 
-        if(metaImage == ''){
-          total = Provider.of<AddProductImageController>(Get.context!,listen: false).imagesWithColor.length+ Provider.of<AddProductImageController>(Get.context!,listen: false).withoutColor.length + 1;
-        }else{
-          total = Provider.of<AddProductImageController>(Get.context!,listen: false).imagesWithColor.length+ Provider.of<AddProductImageController>(Get.context!,listen: false).withoutColor.length + 2;
-        }
+        if(metaImage == '' || _reuseThumbnailAsMetaUpload){
+  total = Provider.of<AddProductImageController>(Get.context!,listen: false).imagesWithColor.length+ Provider.of<AddProductImageController>(Get.context!,listen: false).withoutColor.length + 1;
+}else{
+  total = Provider.of<AddProductImageController>(Get.context!,listen: false).imagesWithColor.length+ Provider.of<AddProductImageController>(Get.context!,listen: false).withoutColor.length + 2;
+}
 
         if(counter == total) {
           counter++;
@@ -965,7 +966,13 @@ final bool isProcessing =
                                                 _addProduct!.languageList!.insert(i, Provider.of<SplashController>(context, listen:false).configModel!.languageList![i].code) ;
                                               }
                                             }
+final bool isSameMetaAsThumbnail =
+    addProductImageController.selectedLogoFile != null &&
+    addProductImageController.selectedMetaImageFile != null &&
+    addProductImageController.selectedLogoFile!.path ==
+        addProductImageController.selectedMetaImageFile!.path;
 
+_reuseThumbnailAsMetaUpload = !_update && isSameMetaAsThumbnail;
 
                                             try {
   _setSubmittingProduct(true);
@@ -991,14 +998,18 @@ final bool isProcessing =
       );
     }
 
-    if(addProductImageController.selectedMetaImageFile != null){
-      await addProductImageController.addProductImage(
-        Get.context!,
-        addProductImageController.metaImageModel,
-        route,
-        update: _update,
-      );
-    }
+  if (isSameMetaAsThumbnail && thumbnailImage != null && thumbnailImage!.isNotEmpty) {
+  metaImage = thumbnailImage;
+}
+
+if(addProductImageController.selectedMetaImageFile != null && !isSameMetaAsThumbnail){
+  await addProductImageController.addProductImage(
+    Get.context!,
+    addProductImageController.metaImageModel,
+    route,
+    update: _update,
+  );
+}
 
     if(context.mounted) {
       await addProductImageController.onUploadColorImages(
@@ -1046,13 +1057,17 @@ final bool isProcessing =
       );
     }
 
-    if(addProductImageController.selectedMetaImageFile != null) {
-      await addProductImageController.addProductImage(
-        Get.context!,
-        addProductImageController.metaImageModel,
-        route,
-      );
-    }
+  if (isSameMetaAsThumbnail && thumbnailImage != null && thumbnailImage!.isNotEmpty) {
+  metaImage = thumbnailImage;
+}
+
+if(addProductImageController.selectedMetaImageFile != null && !isSameMetaAsThumbnail) {
+  await addProductImageController.addProductImage(
+    Get.context!,
+    addProductImageController.metaImageModel,
+    route,
+  );
+}
 
     if(addProductImageController.imagesWithColor.isNotEmpty) {
       for(int i = 0; i < addProductImageController.imagesWithColor.length; i++) {
@@ -1075,6 +1090,7 @@ final bool isProcessing =
     }
   }
 } finally {
+  _reuseThumbnailAsMetaUpload = false;
   _setSubmittingProduct(false);
 }
                                           }

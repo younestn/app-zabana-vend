@@ -95,12 +95,25 @@ Future<void> main() async {
   await di.init();
 
 
-  await Permission.notification.isDenied.then((value) {
-    if (value) {
-      Permission.notification.request();
-    }
-  });
-  NotificationBody? body;
+await Permission.notification.isDenied.then((value) {
+  if (value) {
+    Permission.notification.request();
+  }
+});
+
+await FirebaseMessaging.instance.requestPermission(
+  alert: true,
+  badge: true,
+  sound: true,
+);
+
+await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+  alert: true,
+  badge: true,
+  sound: true,
+);
+
+NotificationBody? body;
 
   try {
     final RemoteMessage? remoteMessage = await FirebaseMessaging.instance.getInitialMessage();
