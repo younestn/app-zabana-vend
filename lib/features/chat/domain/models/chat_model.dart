@@ -36,14 +36,18 @@ class Chat {
   int? id;
   int? userId;
   int? deliveryManId;
+  int? adminId;
   String? message;
   bool? sentByCustomer;
   bool? sentByDeliveryMan;
+  bool? sentByAdmin;
+  bool? sentBySeller;
   bool? seenBySeller;
   String? createdAt;
   String? updatedAt;
   DeliveryMan? deliveryMan;
   Customer? customer;
+  Customer? admin;
   String? attachment;
   int? unseenMessageCount;
 
@@ -65,20 +69,28 @@ class Chat {
 
   Chat.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    userId = json['user_id'];
-    if(json['delivery_man_id'] != null){
-      deliveryManId = int.parse(json['delivery_man_id'].toString());
-    }
+userId = json['user_id'];
 
-    message = json['message'];
-    sentByCustomer = json['sent_by_customer'];
-    sentByDeliveryMan = json['sent_by_delivery_man'];
-    seenBySeller = json['seen_by_seller'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    deliveryMan = json['delivery_man'] != null ? DeliveryMan.fromJson(json['delivery_man']) : null;
-    customer = json['customer'] != null ? Customer.fromJson(json['customer']) : null;
-    attachment = json['attachment'];
+if (json['delivery_man_id'] != null) {
+  deliveryManId = int.tryParse(json['delivery_man_id'].toString());
+}
+
+if (json['admin_id'] != null) {
+  adminId = int.tryParse(json['admin_id'].toString());
+}
+
+message = json['message'];
+sentByCustomer = json['sent_by_customer'] ?? false;
+sentByDeliveryMan = json['sent_by_delivery_man'] ?? false;
+sentByAdmin = json['sent_by_admin'] ?? false;
+sentBySeller = json['sent_by_seller'] ?? false;
+seenBySeller = json['seen_by_seller'];
+createdAt = json['created_at'];
+updatedAt = json['updated_at'];
+deliveryMan = json['delivery_man'] != null ? DeliveryMan.fromJson(json['delivery_man']) : null;
+customer = json['customer'] != null ? Customer.fromJson(json['customer']) : null;
+admin = json['admin'] != null ? Customer.fromJson(json['admin']) : null;
+attachment = json['attachment'];
 
 
     unseenMessageCount = json['unseen_message_count'];
@@ -89,10 +101,13 @@ class Chat {
     data['id'] = id;
     data['user_id'] = userId;
     data['delivery_man_id'] = deliveryManId;
-    data['message'] = message;
-    data['sent_by_customer'] = sentByCustomer;
-    data['sent_by_delivery_man'] = sentByDeliveryMan;
-    data['seen_by_seller'] = seenBySeller;
+data['admin_id'] = adminId;
+data['message'] = message;
+data['sent_by_customer'] = sentByCustomer;
+data['sent_by_delivery_man'] = sentByDeliveryMan;
+data['sent_by_admin'] = sentByAdmin;
+data['sent_by_seller'] = sentBySeller;
+data['seen_by_seller'] = seenBySeller;
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
     if (deliveryMan != null) {

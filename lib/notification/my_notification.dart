@@ -21,6 +21,8 @@ import 'package:sixvalley_vendor_app/features/wallet/screens/wallet_screen.dart'
 import 'package:sixvalley_vendor_app/notification/models/notification_body.dart';
 import 'package:sixvalley_vendor_app/utill/app_constants.dart';
 import 'package:sixvalley_vendor_app/features/chat/screens/inbox_screen.dart';
+import 'package:sixvalley_vendor_app/features/chat/screens/chat_screen.dart';
+import 'package:sixvalley_vendor_app/features/chat/controllers/chat_controller.dart';
 import 'package:sixvalley_vendor_app/features/notification/screens/notification_screen.dart';
 import 'package:sixvalley_vendor_app/features/order_details/screens/order_details_screen.dart';
 
@@ -56,16 +58,32 @@ class MyNotification {
     NotificationBody? payload, {
     String? title,
   }) async {
-    if (payload?.type == 'chatting' || (title?.contains('chatting') ?? false)) {
-      Get.navigator!.push(
-        MaterialPageRoute(
-          builder: (context) => InboxScreen(
-            fromNotification: true,
-            initIndex: payload?.messageKey == 'message_from_delivery_man' ? 1 : 0,
-          ),
+  if (payload?.type == 'chatting' || (title?.contains('chatting') ?? false)) {
+  final int chatIndex = _resolveChatIndex(payload);
+
+  Provider.of<ChatController>(Get.context!, listen: false)
+      .setUserTypeIndex(Get.context!, chatIndex, isUpdate: false);
+
+  if ((payload?.chatType?.toLowerCase() ?? '') == 'admin') {
+    Get.navigator!.push(
+      MaterialPageRoute(
+        builder: (context) => ChatScreen(
+          userId: payload?.chatTargetId ?? 0,
+          name: 'Admin',
         ),
-      );
-    } else if (payload?.type == 'Theme' || (title?.contains('Theme') ?? false)) {
+      ),
+    );
+  } else {
+    Get.navigator!.push(
+      MaterialPageRoute(
+        builder: (context) => InboxScreen(
+          fromNotification: true,
+          initIndex: chatIndex,
+        ),
+      ),
+    );
+  }
+} else if (payload?.type == 'Theme' || (title?.contains('Theme') ?? false)) {
       Get.navigator!.push(
         MaterialPageRoute(builder: (context) => const NotificationScreen()),
       );
@@ -329,6 +347,14 @@ static Future<void> showNotification(
     await file.writeAsBytes(response.data);
     return filePath;
   }
+
+  static int _resolveChatIndex(NotificationBody? payload) {
+  final type = payload?.chatType?.toLowerCase();
+
+  if (type == 'admin') return 2;
+  if (type == 'delivery-man' || type == 'delivery_man') return 1;
+  return 0;
+}
 
 }
 

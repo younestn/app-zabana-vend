@@ -86,10 +86,15 @@ class MessageBubbleWidget extends StatelessWidget {
     );
   }
 
-  String? _getAvatarImage({required int userTypeIndex}) {
-    return userTypeIndex == 0 ?
-    message.customer != null? message.customer?.imageFullUrl?.path :'' : message.deliveryMan?.imageFullUrl?.path;
+String? _getAvatarImage({required int userTypeIndex}) {
+  if (userTypeIndex == 0) {
+    return message.customer?.imageFullUrl?.path ?? '';
+  } else if (userTypeIndex == 1) {
+    return message.deliveryMan?.imageFullUrl?.path ?? '';
+  } else {
+    return message.admin?.imageFullUrl?.path ?? '';
   }
+}
 
   bool _isUserAvatarActive(bool isMe, bool isSameUserWithPreviousMessage, ChatController chatProvider) =>
       !isMe && (!isSameUserWithPreviousMessage || chatProvider.getChatTimeWithPrevious(message, previous).isNotEmpty);

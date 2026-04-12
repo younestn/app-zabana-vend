@@ -19,16 +19,27 @@ class ChatCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    int? id = Provider.of<ChatController>(context, listen: false).userTypeIndex == 0 ?
-    chat!.customer?.id?? -1 : chat!.deliveryManId;
+  final int typeIndex = Provider.of<ChatController>(context, listen: false).userTypeIndex;
 
-    String? image = Provider.of<ChatController>(context, listen: false).userTypeIndex == 0 ?
-    chat!.customer != null? chat?.customer?.imageFullUrl?.path: '' : chat!.deliveryMan?.imageFullUrl?.path;
+int? id = typeIndex == 0
+    ? (chat!.customer?.id ?? -1)
+    : typeIndex == 1
+        ? chat!.deliveryManId
+        : (chat!.adminId ?? 0);
 
-    String name = Provider.of<ChatController>(context, listen: false).userTypeIndex == 0 ?
-    chat!.customer != null?
-    '${chat!.customer?.fName} ${chat!.customer?.lName}' :'Deleted' :
-    '${chat!.deliveryMan?.fName??'Deliveryman'} ${chat!.deliveryMan?.lName??'Deleted'}';
+  String? image = typeIndex == 0
+    ? (chat!.customer != null ? chat?.customer?.imageFullUrl?.path : '')
+    : typeIndex == 1
+        ? chat!.deliveryMan?.imageFullUrl?.path
+        : chat!.admin?.imageFullUrl?.path;
+
+    String name = typeIndex == 0
+    ? (chat!.customer != null
+        ? '${chat!.customer?.fName ?? ''} ${chat!.customer?.lName ?? ''}'.trim()
+        : 'Deleted')
+    : typeIndex == 1
+        ? '${chat!.deliveryMan?.fName ?? 'Deliveryman'} ${chat!.deliveryMan?.lName ?? ''}'.trim()
+        : '${chat!.admin?.fName ?? 'Admin'} ${chat!.admin?.lName ?? ''}'.trim();
 
 
     return Padding(
@@ -37,7 +48,7 @@ class ChatCardWidget extends StatelessWidget {
         splashColor: Colors.transparent,
         onTap: (){
 
-          Provider.of<ChatController>(context, listen: false).seenMessage( context, id, id);
+          Provider.of<ChatController>(context, listen: false).seenMessage(context, id);
           callBack();
 
           if(name.trim() == "Deleted"){

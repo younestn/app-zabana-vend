@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -34,13 +35,33 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final ImagePicker picker = ImagePicker();
   final ScrollController _scrollController = ScrollController();
+  Timer? _pollingTimer;
+  bool _isPolling = false;
 
-  @override
-  void initState() {
-    Provider.of<ChatController>(context, listen: false).getMessageList(widget.userId, 1);
-    Provider.of<ChatController>(context, listen: false).setEmojiPickerValue(false, notify: false);
-    super.initState();
-  }
+@override
+void initState() {
+  super.initState();
+  Provider.of<ChatController>(context, listen: false).getMessageList(widget.userId, 1);
+  Provider.of<ChatController>(context, listen: false).setEmojiPickerValue(false, notify: false);
+  _startPolling();
+}
+
+  void _startPolling() {
+  _pollingTimer?.cancel();
+  _pollingTimer = Timer.periodic(const Duration(seconds: 6), (_) async {
+    if (!mounted || _isPolling) return;
+
+    final chatController = Provider.of<ChatController>(context, listen: false);
+    if (chatController.isLoading) return;
+
+    _isPolling = true;
+    try {
+      await chatController.getMessageList(widget.userId, 1, reload: true);
+    } finally {
+      _isPolling = false;
+    }
+  });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -294,6 +315,12 @@ class _ChatScreenState extends State<ChatScreen> {
     }
     return null;
   }
+
+  @override
+void dispose() {
+  _pollingTimer?.cancel();
+  super.dispose();
+}
 }
 
 

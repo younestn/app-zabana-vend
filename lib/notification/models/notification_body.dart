@@ -4,8 +4,10 @@ class NotificationBody {
   int? orderId;
   int? orderDetailsId;
   int? refundId;
-  String? type;
-  String? messageKey;
+String? type;
+String? messageKey;
+String? chatType;
+int? chatTargetId;
 
 
   NotificationBody({
@@ -24,7 +26,12 @@ class NotificationBody {
       orderDetailsId = int.tryParse(json['order_details_id'].toString());
     }
     type = json['type'];
-    messageKey = json['message_key'];
+messageKey = json['message_key'];
+chatType = json['chat_type'];
+
+if (json['chat_target_id'] != null && json['chat_target_id'] != '') {
+  chatTargetId = int.tryParse(json['chat_target_id'].toString());
+}
     if(json['refund_id'] != null && json['refund_id'] != ''){
       refundId = int.tryParse(json['refund_id'].toString());
     }
@@ -36,7 +43,9 @@ class NotificationBody {
     data['order_details_id'] = orderDetailsId;
     data['refund_id'] = refundId;
     data['type'] = type;
-    data['message_key'] = messageKey;
+data['message_key'] = messageKey;
+data['chat_type'] = chatType;
+data['chat_target_id'] = chatTargetId;
     return data;
   }
 

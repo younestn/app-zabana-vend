@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sixvalley_vendor_app/features/chat/screens/inbox_screen.dart';
+import 'package:sixvalley_vendor_app/features/chat/screens/chat_screen.dart';
+import 'package:sixvalley_vendor_app/features/chat/controllers/chat_controller.dart';
+
 import 'package:sixvalley_vendor_app/features/maintenance/maintenance_screen.dart';
 import 'package:sixvalley_vendor_app/features/notification/screens/notification_screen.dart';
 import 'package:sixvalley_vendor_app/features/order_details/screens/order_details_screen.dart';
@@ -86,10 +89,38 @@ void dispose() {
               String notificationType = widget.body?.type??"";
 
               switch(notificationType.toLowerCase()) {
-                case 'chatting' : {
-                  Navigator.of(Get.context!).pushReplacement(MaterialPageRoute(builder: (context) => InboxScreen(fromNotification: true, initIndex: widget.body?.messageKey ==  'message_from_delivery_man' ? 1 : 0)));
-                }
-                break;
+                case 'chatting': {
+  final String chatType = widget.body?.chatType?.toLowerCase() ?? '';
+  final int chatIndex = chatType == 'admin'
+      ? 2
+      : (chatType == 'delivery-man' || chatType == 'delivery_man')
+          ? 1
+          : 0;
+
+  Provider.of<ChatController>(Get.context!, listen: false)
+      .setUserTypeIndex(Get.context!, chatIndex, isUpdate: false);
+
+  if (chatType == 'admin') {
+    Navigator.of(Get.context!).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => ChatScreen(
+          userId: widget.body?.chatTargetId ?? 0,
+          name: 'Admin',
+        ),
+      ),
+    );
+  } else {
+    Navigator.of(Get.context!).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => InboxScreen(
+          fromNotification: true,
+          initIndex: chatIndex,
+        ),
+      ),
+    );
+  }
+}
+break;
 
                 case 'theme' : {
                   Navigator.of(Get.context!).pushReplacement(MaterialPageRoute(builder: (context) => const NotificationScreen()));

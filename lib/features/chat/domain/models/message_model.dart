@@ -26,14 +26,18 @@ class Message {
   int? id;
   int? userId;
   int? deliveryManId;
+  int? adminId;
   String? message;
   bool? sentByCustomer;
   bool? sentByDeliveryMan;
   bool? sentBySeller;
+  bool? sentByAdmin;
   bool? seenBySeller;
+  bool? seenByAdmin;
   String? createdAt;
   String? updatedAt;
   Customer? customer;
+  Customer? admin;
   DeliveryMan? deliveryMan;
   List<Attachment>? attachment;
 
@@ -54,21 +58,29 @@ class Message {
       });
 
   Message.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    userId = json['user_id'];
-    if(json['delivery_man_id'] != null){
-      deliveryManId = int.parse(json['delivery_man_id'].toString());
-    }
+  id = json['id'];
+userId = json['user_id'];
 
-    message = json['message'];
-    sentByCustomer = json['sent_by_customer'];
-    sentByDeliveryMan = json['sent_by_delivery_man']??false;
-    sentBySeller = json['sent_by_seller'];
-    seenBySeller = json['seen_by_seller'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    customer = json['customer'] != null ? Customer.fromJson(json['customer']) : null;
-    deliveryMan = json['delivery_man'] != null ? DeliveryMan.fromJson(json['delivery_man']) : null;
+if (json['delivery_man_id'] != null) {
+  deliveryManId = int.tryParse(json['delivery_man_id'].toString());
+}
+
+if (json['admin_id'] != null) {
+  adminId = int.tryParse(json['admin_id'].toString());
+}
+
+message = json['message'];
+sentByCustomer = json['sent_by_customer'] ?? false;
+sentByDeliveryMan = json['sent_by_delivery_man'] ?? false;
+sentBySeller = json['sent_by_seller'] ?? false;
+sentByAdmin = json['sent_by_admin'] ?? false;
+seenBySeller = json['seen_by_seller'];
+seenByAdmin = json['seen_by_admin'];
+createdAt = json['created_at'];
+updatedAt = json['updated_at'];
+customer = json['customer'] != null ? Customer.fromJson(json['customer']) : null;
+admin = json['admin'] != null ? Customer.fromJson(json['admin']) : null;
+deliveryMan = json['delivery_man'] != null ? DeliveryMan.fromJson(json['delivery_man']) : null;
     if (json['attachment'] != null) {
       attachment = <Attachment>[];
       json['attachment'].forEach((v) {

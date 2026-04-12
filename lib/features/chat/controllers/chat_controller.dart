@@ -42,6 +42,18 @@ class ChatController extends ChangeNotifier {
   bool get isSendButtonActive => _isSendButtonActive;
   int _userTypeIndex = 0;
   int get userTypeIndex =>  _userTypeIndex;
+  String get currentChatType {
+  switch (_userTypeIndex) {
+    case 0:
+      return 'customer';
+    case 1:
+      return 'delivery-man';
+    case 2:
+      return 'admin';
+    default:
+      return 'customer';
+  }
+}
   bool _isLoading = false;
   bool get isLoading => _isLoading;
   ChatModel? _chatModel;
@@ -83,7 +95,7 @@ class ChatController extends ChangeNotifier {
       messageModel = null;
     }
 
-    ApiResponse apiResponse = await chatServiceInterface.getMessageList(_userTypeIndex == 0 ? 'customer' : 'delivery-man', offset, id);
+ApiResponse apiResponse = await chatServiceInterface.getMessageList(currentChatType, offset, id);
 
     if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       if(offset == 1) {
@@ -107,7 +119,7 @@ class ChatController extends ChangeNotifier {
       _chatModel = null;
     }
     _isLoading = true;
-    ApiResponse apiResponse = await chatServiceInterface.getChatList(_userTypeIndex == 0 ? 'customer' : 'delivery-man', offset);
+    ApiResponse apiResponse = await chatServiceInterface.getChatList(currentChatType, offset);
 
     if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       if(offset == 1) {
@@ -127,7 +139,7 @@ class ChatController extends ChangeNotifier {
   }
 
   Future<void> searchedChatList(BuildContext context, String search) async {
-    ApiResponse apiResponse = await chatServiceInterface.searchChat(_userTypeIndex == 0 ? 'customer' : 'delivery-man', search);
+    ApiResponse apiResponse = await chatServiceInterface.searchChat(currentChatType, search);
     if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       _chatModel = ChatModel(totalSize: 10, limit: '10', offset: '1', chat: []);
       apiResponse.response!.data.forEach((chat) {_chatModel!.chat!.add(Chat.fromJson(chat));});
@@ -145,7 +157,12 @@ class ChatController extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    http.StreamedResponse response = await chatServiceInterface.sendMessage(messageBody, _userTypeIndex == 0 ? 'customer' : 'delivery-man' , getXFileFromMediaFileModel(pickedMediaFileModelList ?? []) ?? [], pickedFiles ?? []);
+    http.StreamedResponse response = await chatServiceInterface.sendMessage(
+  messageBody,
+  currentChatType,
+  getXFileFromMediaFileModel(pickedMediaFileModelList ?? []) ?? [],
+  pickedFiles,
+);
     if (response.statusCode == 200) {
       getMessageList(messageBody.userId, 1, reload: false);
       _emptyAllPickedData();
@@ -374,16 +391,18 @@ class ChatController extends ChangeNotifier {
   }
 
   SenderType getSenderType(Message? senderData) {
-    if (senderData?.sentByCustomer == true) {
-      return SenderType.customer;
-    } else if (senderData?.sentBySeller == true) {
-      return SenderType.seller;
-    } else if (senderData?.sentByDeliveryMan == true) {
-      return SenderType.deliveryMan;
-    } else {
-      return SenderType.unknown;
-    }
+  if (senderData?.sentByCustomer == true) {
+    return SenderType.customer;
+  } else if (senderData?.sentBySeller == true) {
+    return SenderType.seller;
+  } else if (senderData?.sentByAdmin == true) {
+    return SenderType.admin;
+  } else if (senderData?.sentByDeliveryMan == true) {
+    return SenderType.deliveryMan;
+  } else {
+    return SenderType.unknown;
   }
+}
 
 
   String getChatTimeWithPrevious (Message currentChat, Message? previousChat) {
@@ -527,14 +546,21 @@ class ChatController extends ChangeNotifier {
   }
 
 
-  Future<ApiResponse> seenMessage(BuildContext context, int? customerId, int? deliveryId) async {
-    ApiResponse apiResponse = await chatServiceInterface.seenMessage(_userTypeIndex == 0 ? customerId!: deliveryId!, _userTypeIndex == 0 ? 'customer' : 'delivery-man');
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {} else {
-      ApiChecker.checkApi(apiResponse);
-    }
+Future<ApiResponse> seenMessage(BuildContext context, int? targetId) async {
+  final int resolvedId = currentChatType == 'admin' ? 0 : (targetId ?? 0);
 
-    notifyListeners();
-    return apiResponse;
+  ApiResponse apiResponse = await chatServiceInterface.seenMessage(
+    resolvedId,
+    currentChatType,
+  );
+
+  if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+  } else {
+    ApiChecker.checkApi(apiResponse);
   }
+
+  notifyListeners();
+  return apiResponse;
+}
 
 }
