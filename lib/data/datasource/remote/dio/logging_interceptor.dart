@@ -56,7 +56,9 @@ class LoggingInterceptor extends InterceptorsWrapper {
   @override
   Future onError(DioException err, ErrorInterceptorHandler handler) async {
     if (kDebugMode) {
-      print("ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}");
+      print(
+  "ERROR[${err.response?.statusCode}] => TYPE: ${err.type} => MESSAGE: ${err.message} => PATH: ${err.requestOptions.path}",
+);
     }
     return super.onError(err, handler);
   }

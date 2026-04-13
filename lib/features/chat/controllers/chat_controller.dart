@@ -90,29 +90,40 @@ class ChatController extends ChangeNotifier {
 
 
 
-  Future<void> getMessageList(int? id, int offset, {bool reload = true}) async {
-    if(reload){
+  Future<bool> getMessageList(int? id, int offset, {bool reload = true}) async {
+  if (reload) {
+    messageModel = null;
+  }
+
+  ApiResponse apiResponse =
+      await chatServiceInterface.getMessageList(currentChatType, offset, id);
+
+  if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    if (offset == 1) {
       messageModel = null;
-    }
-
-ApiResponse apiResponse = await chatServiceInterface.getMessageList(currentChatType, offset, id);
-
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-      if(offset == 1) {
-        messageModel = null;
-        messageModel = MessageModel.fromJson(apiResponse.response!.data);
-      } else {
-        messageModel!.totalSize =  MessageModel.fromJson(apiResponse.response!.data).totalSize;
-        messageModel!.offset =  MessageModel.fromJson(apiResponse.response!.data).offset;
-        messageModel!.message!.addAll(MessageModel.fromJson(apiResponse.response!.data).message!) ;
-      }
+      messageModel = MessageModel.fromJson(apiResponse.response!.data);
     } else {
-      ApiChecker.checkApi(apiResponse);
+      messageModel!.totalSize =
+          MessageModel.fromJson(apiResponse.response!.data).totalSize;
+      messageModel!.offset =
+          MessageModel.fromJson(apiResponse.response!.data).offset;
+      messageModel!.message!
+          .addAll(MessageModel.fromJson(apiResponse.response!.data).message!);
     }
 
     notifyListeners();
+    return true;
+  } else {
+    if (kDebugMode) {
+      print(
+        'CHAT LOAD FAILED => type=$currentChatType, id=$id, error=${apiResponse.error}',
+      );
+    }
+    ApiChecker.checkApi(apiResponse);
+    notifyListeners();
+    return false;
   }
-
+}
 
   Future<void> getChatList(BuildContext context, int offset, {bool reload = false}) async {
     if(reload){

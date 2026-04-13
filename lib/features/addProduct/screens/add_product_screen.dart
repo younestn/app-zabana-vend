@@ -56,20 +56,30 @@ class AddProductScreenState extends State<AddProductScreen> with TickerProviderS
   final ScrollController _scrollController = ScrollController();
   double optionHeight = 0;
 
-  Future<void> _load() async{
-    Provider.of<CategoryController>(context, listen: false).resetCategory();
-    String languageCode = Provider.of<LocalizationController>(context, listen: false).locale.countryCode == 'US'?
-    'en':Provider.of<LocalizationController>(context, listen: false).locale.countryCode!.toLowerCase();
-    await Provider.of<SplashController>(Get.context!, listen: false).getColorList();
-     await Provider.of<VariationController>(Get.context!,listen: false).getAttributeList(Get.context!, widget.product, languageCode);
-    await Provider.of<CategoryController>(Get.context!,listen: false).getCategoryList(Get.context!,widget.product, languageCode);
-    await Provider.of<ProductController>(Get.context!,listen: false).getBrandList(Get.context!, languageCode);
-    if(_update && widget.product?.brandId == null){
-      Provider.of<ProductController>(Get.context!,listen: false).setBrandIndex(1, false);
-    } else if(!_update) {
-      Provider.of<ProductController>(Get.context!,listen: false).setBrandIndex(0, false);
-    }
+Future<void> _load() async {
+  final categoryController = Provider.of<CategoryController>(context, listen: false);
+  final localizationController = Provider.of<LocalizationController>(context, listen: false);
+  final splashController = Provider.of<SplashController>(Get.context!, listen: false);
+  final variationController = Provider.of<VariationController>(Get.context!, listen: false);
+  final productController = Provider.of<ProductController>(Get.context!, listen: false);
+
+  categoryController.resetCategory();
+
+  String languageCode = localizationController.locale.languageCode.toLowerCase();
+
+  await Future.wait([
+    categoryController.getCategoryList(Get.context!, widget.product, languageCode),
+    splashController.getColorList(),
+    variationController.getAttributeList(Get.context!, widget.product, languageCode),
+    productController.getBrandList(Get.context!, languageCode),
+  ]);
+
+  if (_update && widget.product?.brandId == null) {
+    productController.setBrandIndex(1, false);
+  } else if (!_update) {
+    productController.setBrandIndex(0, false);
   }
+}
 
   @override
   void initState() {
@@ -82,7 +92,7 @@ class AddProductScreenState extends State<AddProductScreen> with TickerProviderS
     _tabController?.addListener((){
     });
 
-    Provider.of<CategoryController>(context,listen: false).removeCategory();
+    
 
     Provider.of<AddProductController>(context,listen: false).setSelectedPageIndex(0, isUpdate: false);
     _load();

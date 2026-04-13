@@ -56,7 +56,12 @@ void initState() {
 
     _isPolling = true;
     try {
-      await chatController.getMessageList(widget.userId, 1, reload: true);
+      final bool success =
+    await chatController.getMessageList(widget.userId, 1, reload: true);
+
+if (!success) {
+  _pollingTimer?.cancel();
+}
     } finally {
       _isPolling = false;
     }

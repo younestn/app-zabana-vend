@@ -57,8 +57,8 @@ class LocalizationController extends ChangeNotifier {
   }
 
   String? getCurrentLanguage() {
-    return sharedPreferences!.getString(AppConstants.countryCode == 'US'? 'en' : AppConstants.countryCode) ?? "en";
-  }
+  return sharedPreferences!.getString(AppConstants.languageCode) ?? 'en';
+}
 
 
 }

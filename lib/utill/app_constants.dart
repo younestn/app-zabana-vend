@@ -5,7 +5,7 @@ import '../features/shop/domain/models/guideline_model.dart';
 
 class AppConstants {
   static const String appName = 'Vendor App';
-  static const String appVersion = '1.0.0'; /// Flutter SDK version - 3.32.8
+  static const String appVersion = '2.2.1'; /// Flutter SDK version - 3.32.8
   static const String companyName = 'ZABANA';
 
 
