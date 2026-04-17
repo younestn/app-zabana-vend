@@ -6,6 +6,7 @@ import 'package:sixvalley_vendor_app/data/model/response/base/api_response.dart'
 import 'package:sixvalley_vendor_app/features/bank_info/domain/repositories/bank_info_repository_interface.dart';
 import 'package:sixvalley_vendor_app/features/profile/domain/models/profile_info.dart';
 import 'package:sixvalley_vendor_app/utill/app_constants.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
 class BankInfoRepository implements BankInfoRepositoryInterface{
@@ -87,5 +88,40 @@ class BankInfoRepository implements BankInfoRepositoryInterface{
   Future update(Map<String, dynamic> body, int id) {
     // TODO: implement update
     throw UnimplementedError();
+  
   }
+
+
+  @override
+Future<ApiResponse> getCurrentMonthCommissionInvoice() async {
+  try {
+    final response = await dioClient!.get(AppConstants.currentMonthCommissionInvoiceUri);
+    return ApiResponse.withSuccess(response);
+  } catch (e) {
+    return ApiResponse.withError(ApiErrorHandler.getMessage(e));
+  }
+}
+
+@override
+Future<http.StreamedResponse> sendCommissionReceipt(int invoiceId, String? note, XFile receiptImage) async {
+  final String token = sharedPreferences!.getString(AppConstants.token) ?? '';
+
+  final request = http.MultipartRequest(
+    'POST',
+    Uri.parse('${AppConstants.baseUrl}${AppConstants.sendCommissionReceiptUri}$invoiceId/send-payment-receipt'),
+  );
+
+  request.headers.addAll(<String, String>{
+    'Authorization': 'Bearer $token',
+  });
+
+  if (note != null && note.trim().isNotEmpty) {
+    request.fields['note'] = note.trim();
+  }
+
+  request.files.add(await http.MultipartFile.fromPath('receipt_image', receiptImage.path));
+
+  return await request.send();
+}
+
 }

@@ -268,36 +268,58 @@ Future<void> _load() async {
                             ) : const SizedBox(),
 
 
-                            resProvider.productTypeIndex == 0 ?
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeMedium),
-                              child: Column(
-                                children: [
-                                  DropdownDecoratorWidget(
-                                    child: DropdownButton<String>(
-                                      icon: const Icon(Icons.keyboard_arrow_down_outlined),
-                                      borderRadius: const BorderRadius.all(Radius.circular(Dimensions.paddingEye)),
-                                      hint: (resProvider.unitValue == null || resProvider.unitValue == 'select_unit' || resProvider.unitValue == 'null')
-                                          ? Text(getTranslated('select_unit', context)!, style: robotoMedium.copyWith(color: Theme.of(context).hintColor))
-                                          : Text(resProvider.unitValue!, style: robotoMedium.copyWith(
-                                        color: Theme.of(context).textTheme.bodyLarge?.color,
-                                        fontSize: Dimensions.fontSizeExtraLarge,
-                                      )),
-                                      items: Provider.of<SplashController>(context,listen: false).configModel!.unit!.map((String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value, style: robotoMedium),
-                                        );}).toList(),
-                                      onChanged: (val) {
-                                        unitValue = val;
-                                        setState(() {resProvider.setValueForUnit(val);},);},
-                                      isExpanded: true,
-                                      underline: const SizedBox(),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ) : const SizedBox(),
+                            resProvider.productTypeIndex == 0
+    ? Padding(
+        padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeMedium),
+        child: Column(
+          children: [
+            DropdownDecoratorWidget(
+              title: 'unit',
+              child: InkWell(
+                onTap: () => _showUnitSelectorBottomSheet(resProvider),
+                borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+                child: SizedBox(
+                  height: 56,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          (resProvider.unitValue == null ||
+                                  resProvider.unitValue == 'select_unit' ||
+                                  resProvider.unitValue == 'null')
+                              ? getTranslated('select_unit', context)!
+                              : resProvider.unitValue!,
+                          style: robotoMedium.copyWith(
+                            color: (resProvider.unitValue == null ||
+                                    resProvider.unitValue == 'select_unit' ||
+                                    resProvider.unitValue == 'null')
+                                ? Theme.of(context).hintColor
+                                : Theme.of(context).textTheme.bodyLarge?.color,
+                            fontSize: Dimensions.fontSizeDefault,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 34,
+                        width: 34,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor.withValues(alpha: .08),
+                          borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+                        ),
+                        child: Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      )
+    : const SizedBox(),
 
 
                             Container(padding: const EdgeInsets.fromLTRB(Dimensions.paddingSizeMedium, 0, Dimensions.paddingSizeMedium, 0),
@@ -756,7 +778,167 @@ Future<void> _load() async {
       ),
      );
   }
+Future<void> _showUnitSelectorBottomSheet(AddProductController resProvider) async {
+  final List<String> units =
+      Provider.of<SplashController>(context, listen: false).configModel!.unit ?? [];
 
+  await showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (context) {
+      return SafeArea(
+        child: Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * .72,
+          ),
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(24),
+            ),
+          ),
+          child: Column(
+            children: [
+              const SizedBox(height: Dimensions.paddingSizeSmall),
+              Container(
+                width: 44,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).hintColor.withValues(alpha: .35),
+                  borderRadius: BorderRadius.circular(100),
+                ),
+              ),
+              const SizedBox(height: Dimensions.paddingSizeDefault),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Dimensions.paddingSizeLarge,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        getTranslated('select_unit', context) ?? 'اختيار الوحدة',
+                        style: robotoBold.copyWith(
+                          fontSize: Dimensions.fontSizeLarge,
+                          color: Theme.of(context).textTheme.bodyLarge?.color,
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () => Navigator.pop(context),
+                      borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+                      child: Container(
+                        padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor.withValues(alpha: .08),
+                          borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+                        ),
+                        child: Icon(
+                          Icons.close_rounded,
+                          size: 20,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: Dimensions.paddingSizeDefault),
+
+              Expanded(
+                child: ListView.separated(
+                  padding: const EdgeInsets.fromLTRB(
+                    Dimensions.paddingSizeLarge,
+                    0,
+                    Dimensions.paddingSizeLarge,
+                    Dimensions.paddingSizeLarge,
+                  ),
+                  itemCount: units.length,
+                  separatorBuilder: (_, __) =>
+                      const SizedBox(height: Dimensions.paddingSizeSmall),
+                  itemBuilder: (context, index) {
+                    final String value = units[index];
+                    final bool isSelected = resProvider.unitValue == value;
+
+                    return InkWell(
+                      onTap: () {
+                        unitValue = value;
+                        resProvider.setValueForUnit(value);
+                        setState(() {});
+                        Navigator.pop(context);
+                      },
+                      borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 180),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: Dimensions.paddingSizeDefault,
+                          vertical: Dimensions.paddingSizeDefault,
+                        ),
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? Theme.of(context).primaryColor.withValues(alpha: .10)
+                              : Theme.of(context).cardColor,
+                          borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+                          border: Border.all(
+                            color: isSelected
+                                ? Theme.of(context).primaryColor
+                                : Theme.of(context).primaryColor.withValues(alpha: .10),
+                            width: isSelected ? 1.2 : .8,
+                          ),
+                          boxShadow: isSelected
+                              ? [
+                                  BoxShadow(
+                                    color: Theme.of(context).primaryColor.withValues(alpha: .08),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ]
+                              : [],
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                value,
+                                style: robotoMedium.copyWith(
+                                  fontSize: Dimensions.fontSizeDefault,
+                                  color: isSelected
+                                      ? Theme.of(context).primaryColor
+                                      : Theme.of(context).textTheme.bodyLarge?.color,
+                                ),
+                              ),
+                            ),
+                            if (isSelected)
+                              Container(
+                                height: 26,
+                                width: 26,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.check_rounded,
+                                  color: Colors.white,
+                                  size: 16,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
   String _generateSKU() {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     final random = Random();

@@ -167,28 +167,81 @@ class TransactionChartState extends State<TransactionChart> {
                 ),
                 SizedBox(height: isEarningEmpty ? Dimensions.paddingSizeSmall : 38),
 
-                (!isEarningEmpty) ?
-                Expanded(
-                  child: SfCartesianChart(
-                    tooltipBehavior: TooltipBehavior(enable: true),
-                    primaryXAxis: const CategoryAxis(),
-                    primaryYAxis: const NumericAxis(),
-                    series:[
-                      LineSeries<ChartData, String>(
-                        color: comisssionColor,
-                        dataSource: _incomeChartList,
-                        xValueMapper: (ChartData data,_)=> data.x,
-                        yValueMapper: (ChartData data,_)=> data.y,
-                      ),
-                      LineSeries<ChartData, String>(
-                        color: earningColor,
-                        dataSource: _expanseChartList,
-                        xValueMapper: (ChartData data,_)=> data.x,
-                        yValueMapper: (ChartData data,_)=> data.y,
-                      ),
-                    ],
-                  ),
-                ) : const EmptyEarningStateWidget(),
+                (!isEarningEmpty)
+    ? Expanded(
+        child: SfCartesianChart(
+          margin: EdgeInsets.zero,
+          plotAreaBorderWidth: 0,
+          backgroundColor: Colors.transparent,
+          tooltipBehavior: TooltipBehavior(
+            enable: true,
+            canShowMarker: true,
+            header: '',
+            color: Theme.of(context).cardColor,
+            textStyle: robotoRegular.copyWith(
+              color: Theme.of(context).textTheme.bodyLarge?.color,
+              fontSize: Dimensions.fontSizeSmall,
+            ),
+            borderColor: Theme.of(context).primaryColor.withValues(alpha: .10),
+            borderWidth: 1,
+          ),
+          primaryXAxis: CategoryAxis(
+            axisLine: const AxisLine(width: 0),
+            majorTickLines: const MajorTickLines(size: 0),
+            majorGridLines: const MajorGridLines(width: 0),
+            labelStyle: robotoRegular.copyWith(
+              fontSize: Dimensions.fontSizeSmall,
+              color: Theme.of(context).hintColor,
+            ),
+          ),
+          primaryYAxis: NumericAxis(
+            axisLine: const AxisLine(width: 0),
+            majorTickLines: const MajorTickLines(size: 0),
+            majorGridLines: MajorGridLines(
+              width: .7,
+              color: Theme.of(context).hintColor.withValues(alpha: .15),
+              dashArray: const <double>[4, 4],
+            ),
+            labelStyle: robotoRegular.copyWith(
+              fontSize: Dimensions.fontSizeSmall,
+              color: Theme.of(context).hintColor,
+            ),
+          ),
+          series: [
+            SplineAreaSeries<ChartData, String>(
+              dataSource: _incomeChartList,
+              xValueMapper: (ChartData data, _) => data.x,
+              yValueMapper: (ChartData data, _) => data.y,
+              borderColor: comisssionColor,
+              borderWidth: 3,
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  comisssionColor.withValues(alpha: .30),
+                  comisssionColor.withValues(alpha: .03),
+                ],
+              ),
+            ),
+            SplineSeries<ChartData, String>(
+              dataSource: _expanseChartList,
+              xValueMapper: (ChartData data, _) => data.x,
+              yValueMapper: (ChartData data, _) => data.y,
+              color: earningColor,
+              width: 3,
+              markerSettings: MarkerSettings(
+                isVisible: true,
+                width: 7,
+                height: 7,
+                borderWidth: 2,
+                color: earningColor,
+                borderColor: Theme.of(context).cardColor,
+              ),
+            ),
+          ],
+        ),
+      )
+    : const EmptyEarningStateWidget(),
                 SizedBox(height: isEarningEmpty ? 0 : Dimensions.paddingSize),
               ],
             ),

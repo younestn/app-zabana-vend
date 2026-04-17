@@ -112,6 +112,8 @@ static const String testNoestConnectionUri = '/api/v3/seller/shipping-method/tes
   static const String productDetails = '/api/v3/seller/products/details/';
   static const String deliveryManOrderChangeLog = '/api/v3/seller/delivery-man/order-status-history/';
   static const String chartFilterData = '/api/v3/seller/get-earning-statitics?type=';
+  static const String currentMonthCommissionInvoiceUri = '/api/v3/seller/commission/current-month';
+static const String sendCommissionReceiptUri = '/api/v3/seller/commission/invoices/';
   static const String addNewCoupon = '/api/v3/seller/coupon/store';
   static const String getCouponList = '/api/v3/seller/coupon/list';
   static const String updateCoupon = '/api/v3/seller/coupon/update/';

@@ -6,6 +6,10 @@ import 'package:sixvalley_vendor_app/data/model/response/response_model.dart';
 import 'package:sixvalley_vendor_app/features/bank_info/domain/services/bank_info_service_interface.dart';
 import 'package:sixvalley_vendor_app/features/profile/domain/models/profile_info.dart';
 import 'package:sixvalley_vendor_app/helper/api_checker.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:sixvalley_vendor_app/common/basewidgets/custom_snackbar_widget.dart';
+import 'package:sixvalley_vendor_app/data/model/response/response_model.dart';
+import 'package:sixvalley_vendor_app/features/bank_info/domain/models/current_commission_invoice_model.dart';
 
 class BankInfoController extends ChangeNotifier {
   final BankInfoServiceInterface bankInfoServiceInterface;
@@ -34,6 +38,18 @@ class BankInfoController extends ChangeNotifier {
 
   bool _showWarning = true;
   bool get showWarning => _showWarning;
+
+  CurrentCommissionInvoiceModel? _currentMonthCommissionInvoice;
+CurrentCommissionInvoiceModel? get currentMonthCommissionInvoice => _currentMonthCommissionInvoice;
+
+bool _isCommissionLoading = false;
+bool get isCommissionLoading => _isCommissionLoading;
+
+bool _isSendingReceipt = false;
+bool get isSendingReceipt => _isSendingReceipt;
+
+XFile? _selectedCommissionReceiptImage;
+XFile? get selectedCommissionReceiptImage => _selectedCommissionReceiptImage;
 
   void setRevenueFilterName(BuildContext context, String? filterName, bool notify) {
     _revenueFilterType = filterName;
@@ -167,5 +183,71 @@ class BankInfoController extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> getCurrentMonthCommissionInvoice(BuildContext context, {bool reload = false}) async {
+  if (reload) {
+    _currentMonthCommissionInvoice = null;
+  }
+
+  _isCommissionLoading = true;
+  notifyListeners();
+
+  final data = await bankInfoServiceInterface.getCurrentMonthCommissionInvoice();
+  if (data is CurrentCommissionInvoiceModel) {
+    _currentMonthCommissionInvoice = data;
+  }
+
+  _isCommissionLoading = false;
+  notifyListeners();
+}
+
+Future<void> pickCommissionReceiptImage() async {
+  final XFile? pickedImage = await ImagePicker().pickImage(
+    source: ImageSource.gallery,
+    maxWidth: 1200,
+    imageQuality: 85,
+  );
+
+  if (pickedImage != null) {
+    _selectedCommissionReceiptImage = pickedImage;
+    notifyListeners();
+  }
+}
+
+void clearCommissionReceiptImage({bool notify = true}) {
+  _selectedCommissionReceiptImage = null;
+  if (notify) {
+    notifyListeners();
+  }
+}
+
+Future<ResponseModel> sendCommissionReceipt(
+  BuildContext context, {
+  required int invoiceId,
+  String? note,
+}) async {
+  if (_selectedCommissionReceiptImage == null) {
+    return ResponseModel(false, 'يرجى اختيار صورة وصل الدفع');
+  }
+
+  _isSendingReceipt = true;
+  notifyListeners();
+
+  final ResponseModel responseModel = await bankInfoServiceInterface.sendCommissionReceipt(
+    invoiceId,
+    note,
+    _selectedCommissionReceiptImage!,
+  );
+
+  if (responseModel.isSuccess) {
+    _selectedCommissionReceiptImage = null;
+    await getCurrentMonthCommissionInvoice(context, reload: true);
+  }
+
+  _isSendingReceipt = false;
+  notifyListeners();
+
+  return responseModel;
+}
 
 }

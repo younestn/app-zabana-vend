@@ -11,6 +11,9 @@ import 'package:sixvalley_vendor_app/features/bank_info/domain/services/bank_inf
 import 'package:sixvalley_vendor_app/features/profile/domain/models/profile_info.dart';
 import 'package:sixvalley_vendor_app/helper/api_checker.dart';
 import 'package:sixvalley_vendor_app/localization/language_constrants.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:sixvalley_vendor_app/data/model/response/response_model.dart';
+import 'package:sixvalley_vendor_app/features/bank_info/domain/models/current_commission_invoice_model.dart';
 import 'package:sixvalley_vendor_app/main.dart';
 
 class BankInfoService implements BankInfoServiceInterface{
@@ -58,4 +61,25 @@ class BankInfoService implements BankInfoServiceInterface{
     return bankInfoRepoInterface.getOrderFilterData(type);
   }
   
+  @override
+Future getCurrentMonthCommissionInvoice() async {
+  ApiResponse apiResponse = await bankInfoRepoInterface.getCurrentMonthCommissionInvoice();
+  if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    return CurrentCommissionInvoiceModel.fromJson(apiResponse.response!.data);
+  } else {
+    ApiChecker.checkApi(apiResponse);
+  }
+}
+
+@override
+Future<ResponseModel> sendCommissionReceipt(int invoiceId, String? note, XFile receiptImage) async {
+  http.StreamedResponse response = await bankInfoRepoInterface.sendCommissionReceipt(invoiceId, note, receiptImage);
+
+  if (response.statusCode == 200) {
+    return ResponseModel(true, 'تم إرسال وصل الدفع بنجاح');
+  } else {
+    return ResponseModel(false, '${response.statusCode} ${response.reasonPhrase}');
+  }
+}
+
 }

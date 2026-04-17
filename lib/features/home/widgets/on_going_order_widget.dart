@@ -9,6 +9,7 @@ import 'package:sixvalley_vendor_app/utill/dimensions.dart';
 import 'package:sixvalley_vendor_app/utill/images.dart';
 import 'package:sixvalley_vendor_app/utill/styles.dart';
 import 'package:sixvalley_vendor_app/features/home/widgets/order_type_button_head_widget.dart';
+import 'package:sixvalley_vendor_app/features/home/widgets/monthly_commission_banner_widget.dart';
 
 class OngoingOrderWidget extends StatelessWidget {
   final Function? callback;
@@ -79,48 +80,81 @@ class OngoingOrderWidget extends StatelessWidget {
                 style: robotoBold.copyWith(color: Theme.of(context).primaryColor),),
             ),
 
-            Consumer<BankInfoController>(
-              builder: (context, bankInfoController, child) => Padding(
-                padding: const EdgeInsets.fromLTRB(Dimensions.paddingSizeSmall,0, Dimensions.paddingSizeSmall,Dimensions.fontSizeSmall),
-                child: GridView.count(
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: 2,
-                  childAspectRatio: (1 / .65),
-                  shrinkWrap: true,
-                  padding: EdgeInsets.zero,
-                  children: [
-                    OrderTypeButtonHeadWidget(
-                      color: ColorHelper.blendColors(Colors.white, Theme.of(context).primaryColor, 0.9),
-                      text: getTranslated('pending', context), index: 1,
-                      subText: getTranslated('orders', context),
-                      numberOfOrder: bankInfoController.businessAnalyticsFilterData?.pending ?? 0, callback: callback,
-                    ),
-
-                    OrderTypeButtonHeadWidget(
-                      color: ColorHelper.blendColors(Colors.white, Theme.of(context).primaryColor, 0.8),
-                      text: getTranslated('processing', context), index: 2,
-                      numberOfOrder: bankInfoController.businessAnalyticsFilterData?.processing ?? 0, callback: callback,
-                      subText: getTranslated('orders', context),
-                    ),
-
-                    OrderTypeButtonHeadWidget(
-                      color: Theme.of(context).colorScheme.onTertiaryContainer,
-                      text: getTranslated('confirmed', context), index: 7,
-                      subText: getTranslated('orders', context),
-                      numberOfOrder: bankInfoController.businessAnalyticsFilterData?.confirmed ?? 0, callback: callback,
-                    ),
-
-                    OrderTypeButtonHeadWidget(
-                      color: Theme.of(context).colorScheme.error,
-                      text: getTranslated('out_for_delivery', context), index: 8,
-                      subText: '',
-                      numberOfOrder: bankInfoController.businessAnalyticsFilterData?.outForDelivery ?? 0, callback: callback,
-                    ),
-                  ],
-                ),
+Consumer<BankInfoController>(
+  builder: (context, bankInfoController, child) => Padding(
+    padding: const EdgeInsets.fromLTRB(
+      Dimensions.paddingSizeSmall,
+      0,
+      Dimensions.paddingSizeSmall,
+      Dimensions.fontSizeSmall,
+    ),
+    child: Column(
+      children: [
+        GridView.count(
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: 2,
+          childAspectRatio: (1 / .65),
+          shrinkWrap: true,
+          padding: EdgeInsets.zero,
+          children: [
+            OrderTypeButtonHeadWidget(
+              color: ColorHelper.blendColors(
+                Colors.white,
+                Theme.of(context).primaryColor,
+                0.9,
               ),
+              text: getTranslated('pending', context),
+              index: 1,
+              subText: getTranslated('orders', context),
+              numberOfOrder:
+                  bankInfoController.businessAnalyticsFilterData?.pending ?? 0,
+              callback: callback,
             ),
-            const SizedBox(height: Dimensions.paddingSizeSmall),
+
+            OrderTypeButtonHeadWidget(
+              color: ColorHelper.blendColors(
+                Colors.white,
+                Theme.of(context).primaryColor,
+                0.8,
+              ),
+              text: getTranslated('processing', context),
+              index: 2,
+              numberOfOrder:
+                  bankInfoController.businessAnalyticsFilterData?.processing ?? 0,
+              callback: callback,
+              subText: getTranslated('orders', context),
+            ),
+
+            OrderTypeButtonHeadWidget(
+              color: Theme.of(context).colorScheme.onTertiaryContainer,
+              text: getTranslated('confirmed', context),
+              index: 7,
+              subText: getTranslated('orders', context),
+              numberOfOrder:
+                  bankInfoController.businessAnalyticsFilterData?.confirmed ?? 0,
+              callback: callback,
+            ),
+
+            OrderTypeButtonHeadWidget(
+              color: Theme.of(context).colorScheme.error,
+              text: getTranslated('out_for_delivery', context),
+              index: 8,
+              subText: '',
+              numberOfOrder:
+                  bankInfoController.businessAnalyticsFilterData?.outForDelivery ?? 0,
+              callback: callback,
+            ),
+          ],
+        ),
+
+        const SizedBox(height: Dimensions.paddingSizeSmall),
+
+        const MonthlyCommissionBannerWidget(),
+      ],
+    ),
+  ),
+),
+const SizedBox(height: Dimensions.paddingSizeSmall),
           ],),);
       },
     );

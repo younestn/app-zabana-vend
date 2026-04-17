@@ -23,7 +23,6 @@ import 'package:sixvalley_vendor_app/features/product/screens/most_popular_produ
 import 'package:sixvalley_vendor_app/features/product/screens/top_selling_product_screen.dart';
 import 'package:sixvalley_vendor_app/features/delivery_man/widgets/top_delivery_man_view_widget.dart';
 
-
 class HomePageScreen extends StatefulWidget {
   final Function? callback;
   const HomePageScreen({super.key, this.callback});
@@ -49,7 +48,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
     Provider.of<ShippingController>(context,listen: false).getSelectedShippingMethodType(context);
     Provider.of<DeliveryManController>(context, listen: false).getTopDeliveryManList(context);
     Provider.of<BankInfoController>(context, listen: false).getDashboardRevenueData(context,'yearEarn');
-
+Provider.of<BankInfoController>(context, listen: false).getCurrentMonthCommissionInvoice(context, reload: reload);
     Provider.of<BankInfoController>(context, listen: false).setRevenueFilterType(0, false);
     Provider.of<NotificationController>(context, listen: false).getNotificationList(1);
     Provider.of<ProductController>(context, listen: false).getStockLimitStatus(context);
