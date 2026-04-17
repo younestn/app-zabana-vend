@@ -68,7 +68,7 @@ class Order {
   double? _bringCashAmount;
   double? _referAndEarnDiscount;
   String? _bringChangeAmountCurrency;
-
+CustomerTrustScore? _customerTrustScore;
   Order(
       {int? id,
         int? customerId,
@@ -201,7 +201,7 @@ class Order {
   double? get bringCashAmount => _bringCashAmount;
   String? get bringChangeAmountCurrency => _bringChangeAmountCurrency;
   double? get referAndEarnDiscount => _referAndEarnDiscount;
-
+CustomerTrustScore? get customerTrustScore => _customerTrustScore;
 
   Order.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -304,10 +304,66 @@ class Order {
       });
     }
     _bringCashAmount = double.tryParse('${json['bring_change_amount']}');
-    _bringChangeAmountCurrency = json['bring_change_amount_currency'];
-    _referAndEarnDiscount =  double.tryParse(json['refer_and_earn_discount'].toString());
+_bringChangeAmountCurrency = json['bring_change_amount_currency'];
+_referAndEarnDiscount =  double.tryParse(json['refer_and_earn_discount'].toString());
+
+if(json['customer_trust_score'] != null){
+  _customerTrustScore = CustomerTrustScore.fromJson(json['customer_trust_score']);
+}
   }
 
+}
+class CustomerTrustScore {
+  String? phone;
+  dynamic score;
+  int? delivered;
+  int? resolvedOrders;
+  bool? hasHistory;
+  String? label;
+
+  CustomerTrustScore({
+    this.phone,
+    this.score,
+    this.delivered,
+    this.resolvedOrders,
+    this.hasHistory,
+    this.label,
+  });
+
+  CustomerTrustScore.fromJson(Map<String, dynamic> json) {
+    phone = json['phone']?.toString();
+    score = json['score'];
+    delivered = int.tryParse(json['delivered'].toString());
+    resolvedOrders = int.tryParse(json['resolved_orders'].toString());
+    hasHistory = json['has_history'] == true || json['has_history'].toString() == '1';
+    label = json['label']?.toString();
+  }
+
+  double? get rate {
+    if (score == null) return null;
+    if (score is num) return (score as num).toDouble();
+    return double.tryParse(score.toString());
+  }
+
+  int? get totalResolved => resolvedOrders;
+
+  String? get message => label;
+
+  String get status {
+    if (!(hasHistory ?? false) || (resolvedOrders ?? 0) == 0) {
+      return 'new';
+    }
+
+    final currentRate = rate ?? 0;
+
+    if (currentRate >= 80) {
+      return 'trusted';
+    } else if (currentRate >= 50) {
+      return 'medium';
+    } else {
+      return 'danger';
+    }
+  }
 }
 
 class Customer {

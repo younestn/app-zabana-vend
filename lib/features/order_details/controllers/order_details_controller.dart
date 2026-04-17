@@ -250,22 +250,36 @@ class OrderDetailsController extends ChangeNotifier{
   }
 
 
-  Future<void> setUpOrder({required OrderSetupModel orderSetupModel}) async {
+    Future<void> setUpOrder({
+    required OrderSetupModel orderSetupModel,
+    required BuildContext context,
+  }) async {
+    _isUpdating = true;
+    notifyListeners();
 
-    ApiResponse apiResponse = await orderDetailsServiceInterface.setUpOrder(orderSetupModel);
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-      String? message = getTranslated('updated_successfully', Get.context!);
-      showCustomSnackBarWidget(message, Get.context!, isToaster: true, isError: false,  sanckBarType: SnackBarType.success);
+    try {
+      ApiResponse apiResponse = await orderDetailsServiceInterface.setUpOrder(orderSetupModel);
 
-      getOrderDetails(orderSetupModel.orderId.toString());
-      Provider.of<OrderController>(Get.context!, listen: false).getOrderList(Get.context!, 1, 'all');
+      if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+        String? message = getTranslated('updated_successfully', context);
+        showCustomSnackBarWidget(
+          message,
+          context,
+          isToaster: true,
+          isError: false,
+          sanckBarType: SnackBarType.success,
+        );
 
-    }
-    else{
-      ApiChecker.checkApi(apiResponse);
+        await getOrderDetails(orderSetupModel.orderId.toString());
+        await Provider.of<OrderController>(context, listen: false).getOrderList(context, 1, 'all');
+      } else {
+        ApiChecker.checkApi(apiResponse);
+      }
+    } finally {
+      _isUpdating = false;
+      notifyListeners();
     }
   }
-
 
 
   void initializeOrderSetupModel({required Order? order}){

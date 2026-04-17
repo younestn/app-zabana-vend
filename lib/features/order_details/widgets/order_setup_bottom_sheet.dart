@@ -27,8 +27,10 @@ class OrderSetupBottomSheet extends StatefulWidget {
 class _OrderSetupBottomSheetState extends State<OrderSetupBottomSheet> {
   bool isSellerWiseShipping = false;
   bool inHouseShipping = false;
+  bool isLoading = false;
+  String? selectedOrderStatus;
+  String? selectedPaymentStatus;
   final List<String> paymentTypeList = ['paid', 'unpaid'];
-
   void _clearAllTextField(DeliveryManController deliveryManController) {
     deliveryManController.deliveryManChargeTextEditingController.clear();
     deliveryManController.expectedDeliveryDateTextEditingController.clear();
@@ -46,9 +48,11 @@ class _OrderSetupBottomSheetState extends State<OrderSetupBottomSheet> {
     isSellerWiseShipping = Provider.of<SplashController>(context,listen: false).configModel!.shippingMethod == 'sellerwise_shipping';
     _getShippingMethod();
 
-    final OrderDetailsController orderDetailsController = Provider.of<OrderDetailsController>(Get.context!, listen: false);
+      final OrderDetailsController orderDetailsController = Provider.of<OrderDetailsController>(Get.context!, listen: false);
     orderDetailsController.initializeOrderSetupModel(order: widget.orderModel);
 
+    selectedOrderStatus = widget.orderModel?.orderStatus;
+    selectedPaymentStatus = widget.orderModel?.paymentStatus;
 
     super.initState();
   }
@@ -79,9 +83,11 @@ class _OrderSetupBottomSheetState extends State<OrderSetupBottomSheet> {
   Widget build(BuildContext context) {
   final double keyBoardHeight = MediaQuery.of(context).viewInsets.bottom;
 
-    return Container(
-      padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-      child: Column(mainAxisSize: MainAxisSize.min, children: [
+          return AbsorbPointer(
+      absorbing: isLoading,
+      child: Container(
+        padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
 
         InkWell(
           onTap: () => Navigator.pop(context),
@@ -132,42 +138,64 @@ class _OrderSetupBottomSheetState extends State<OrderSetupBottomSheet> {
                               ),
                           ),
                         ) :
-                        CustomDropDownItemWidget(
+                                                CustomDropDownItemWidget(
                           title: 'order_status',
                           widget: DropdownButtonFormField<String>(
-                            value: widget.orderModel!.orderStatus,
+                            value: selectedOrderStatus,
                             isExpanded: true,
                             decoration: const InputDecoration(border: InputBorder.none),
-                            iconSize: 24, elevation: 16, style: robotoRegular,
-                            onChanged: widget.orderModel?.orderStatus == 'delivered' ? null :  (value){
-                              orderDetailsController.orderSetupModel.orderStatus = value;
-                            },
+                            iconSize: 24,
+                            elevation: 16,
+                            style: robotoRegular,
+                            onChanged: widget.orderModel?.orderStatus == 'delivered'
+                                ? null
+                                : (value) {
+                                    setState(() {
+                                      selectedOrderStatus = value;
+                                    });
+                                    orderDetailsController.orderSetupModel.orderStatus = value;
+                                  },
                             items: orderDetailsController.orderStatusList.map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
-                                child: Text(getTranslated(value, context)!,
-                                    style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color)),
+                                child: Text(
+                                  getTranslated(value, context)!,
+                                  style: robotoRegular.copyWith(
+                                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                                  ),
+                                ),
                               );
                             }).toList(),
                           ),
                         ),
 
-                        CustomDropDownItemWidget(
+                                                CustomDropDownItemWidget(
                           title: 'payment_status',
                           widget: DropdownButtonFormField<String>(
-                            value: widget.orderModel!.paymentStatus,
+                            value: selectedPaymentStatus,
                             isExpanded: true,
                             decoration: const InputDecoration(border: InputBorder.none),
-                            iconSize: 24, elevation: 16, style: robotoRegular,
-                            onChanged: !paymentActive ? null : (value) {
-                              orderDetailsController.setPaymentMethodIndex(value == 'paid' ? 0 : 1);
-                              orderDetailsController.orderSetupModel.paymentStatus = value;
-                            },
+                            iconSize: 24,
+                            elevation: 16,
+                            style: robotoRegular,
+                            onChanged: !paymentActive
+                                ? null
+                                : (value) {
+                                    setState(() {
+                                      selectedPaymentStatus = value;
+                                    });
+                                    orderDetailsController.setPaymentMethodIndex(value == 'paid' ? 0 : 1);
+                                    orderDetailsController.orderSetupModel.paymentStatus = value;
+                                  },
                             items: paymentTypeList.map((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
-                                child: Text(getTranslated(value, context)!,
-                                    style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color)),
+                                child: Text(
+                                  getTranslated(value, context)!,
+                                  style: robotoRegular.copyWith(
+                                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                                  ),
+                                ),
                               );
                             }).toList(),
                           ),
@@ -185,50 +213,83 @@ class _OrderSetupBottomSheetState extends State<OrderSetupBottomSheet> {
 
                         const SizedBox(height: Dimensions.paddingSizeSmall),
 
-                        Padding(
+                                                                        Padding(
                           padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
-                          child: CustomButtonWidget(
-                            btnTxt: getTranslated('update', context),
-                            backgroundColor: Theme.of(context).primaryColor,
-                            borderRadius: 8,
-                            onTap: () async {
-                              DeliveryManController deliveryManController = Provider.of<DeliveryManController>(context, listen: false);
-                              _populateOrderSetUpModel(orderDetailsController.orderSetupModel, deliveryManController);
+                          child: isLoading
+                              ? const Center(
+                                  child: SizedBox(
+                                    height: 24,
+                                    width: 24,
+                                    child: CircularProgressIndicator(strokeWidth: 2.5),
+                                  ),
+                                )
+                              : CustomButtonWidget(
+                                  btnTxt: getTranslated('update', context),
+                                  backgroundColor: Theme.of(context).primaryColor,
+                                  borderRadius: 8,
+                                  onTap: () async {
+  final DeliveryManController deliveryManController =
+      Provider.of<DeliveryManController>(context, listen: false);
 
-                              if(_canUpdate(orderDetailsController.orderSetupModel, widget.orderModel)){
-                               await orderDetailsController.setUpOrder(orderSetupModel: orderDetailsController.orderSetupModel);
+  final NavigatorState navigator = Navigator.of(context);
 
-                                if (context.mounted) Navigator.pop(context);
-                              }
-                              else{
-                                final deliveryManController = Provider.of<DeliveryManController>(context, listen: false);
+  _populateOrderSetUpModel(
+    orderDetailsController.orderSetupModel,
+    deliveryManController,
+  );
 
-                                if(deliveryManController.selectedDeliveryTypeIndex == 1 && deliveryManController.deliveryManIndex == 0){
-                                  showToast(message: getTranslated('please_select_delivery_man', context)!);
-                                  return false;
-                                }
-                                else if(deliveryManController.selectedDeliveryTypeIndex == 1
-                                    && deliveryManController.deliveryManIndex != 0
-                                    && deliveryManController.deliveryManChargeTextEditingController.text.isEmpty ){
-                                  showToast(message: getTranslated('please_enter_delivery_incentive', context)!);
-                                  return false;
-                                }
-                                else if(deliveryManController.selectedDeliveryTypeIndex == 2
-                                    && deliveryManController.thirdPartyShippingNameTextEditingController.text.isEmpty){
-                                  showToast(message: getTranslated('please_enter_delivery_service_name', context)!);
-                                  return false;
-                                }
-                                else if(deliveryManController.selectedDeliveryTypeIndex == 2
-                                    && deliveryManController.thirdPartyShippingTrackingIdTextEditingController.text.isEmpty) {
-                                  showToast(message: getTranslated('please_enter_tracking_id', context)!);
-                                  return false;
-                                }
-                                else{
-                                  showToast(message: getTranslated('there_is_no_change_to_update', context)!);
-                                }
-                              }
-                            },
-                          ),
+  if (_canUpdate(orderDetailsController.orderSetupModel, widget.orderModel)) {
+    try {
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
+
+      await orderDetailsController.setUpOrder(
+  orderSetupModel: orderDetailsController.orderSetupModel,
+  context: widget.bottomContext,
+);
+
+      if (!mounted) return;
+
+      navigator.pop();
+      return;
+    } catch (e) {
+      if (mounted) {
+        showToast(message: e.toString());
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  } else {
+    if (deliveryManController.selectedDeliveryTypeIndex == 1 &&
+        deliveryManController.deliveryManIndex == 0) {
+      showToast(message: getTranslated('please_select_delivery_man', context)!);
+      return;
+    } else if (deliveryManController.selectedDeliveryTypeIndex == 1 &&
+        deliveryManController.deliveryManIndex != 0 &&
+        deliveryManController.deliveryManChargeTextEditingController.text.isEmpty) {
+      showToast(message: getTranslated('please_enter_delivery_incentive', context)!);
+      return;
+    } else if (deliveryManController.selectedDeliveryTypeIndex == 2 &&
+        deliveryManController.thirdPartyShippingNameTextEditingController.text.isEmpty) {
+      showToast(message: getTranslated('please_enter_delivery_service_name', context)!);
+      return;
+    } else if (deliveryManController.selectedDeliveryTypeIndex == 2 &&
+        deliveryManController.thirdPartyShippingTrackingIdTextEditingController.text.isEmpty) {
+      showToast(message: getTranslated('please_enter_tracking_id', context)!);
+      return;
+    } else {
+      showToast(message: getTranslated('there_is_no_change_to_update', context)!);
+    }
+  }
+},
+                                ),
                         ),
                       ],
                     ),
@@ -237,7 +298,8 @@ class _OrderSetupBottomSheetState extends State<OrderSetupBottomSheet> {
               );
             }
         ),
-      ]),
+            ]),
+      ),
     );
   }
 

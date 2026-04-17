@@ -175,7 +175,7 @@ class MyApp extends StatelessWidget {
     }
 
     return MaterialApp(
-      navigatorObservers: [_BottomSheetObserver(context: context)],
+      navigatorObservers: [_BottomSheetObserver()],
       title: AppConstants.appName,
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
@@ -361,18 +361,24 @@ class _GlobalScrollListener extends StatelessWidget {
 }
 
 
-class _BottomSheetObserver extends NavigatorObserver {
-  final BuildContext context;
-  final Set<Route> _activeOverlayRoutes = {};
 
-  _BottomSheetObserver({required this.context});
+class _BottomSheetObserver extends NavigatorObserver {
+  final Set<Route> _activeOverlayRoutes = {};
 
   bool _isOverlay(Route route) =>
       route is ModalBottomSheetRoute || route is DialogRoute;
 
   void _updateState() {
     final hasActiveOverlay = _activeOverlayRoutes.isNotEmpty;
-    final controller = Provider.of<ShowBottomSheetController>(context, listen: false);
+    final currentContext = navigatorKey.currentContext;
+
+    if (currentContext == null) return;
+
+    final controller = Provider.of<ShowBottomSheetController>(
+      currentContext,
+      listen: false,
+    );
+
     hasActiveOverlay ? controller.openBottomSheet() : controller.closeBottomSheet();
   }
 
@@ -402,8 +408,12 @@ class _BottomSheetObserver extends NavigatorObserver {
 
   @override
   void didReplace({Route? newRoute, Route? oldRoute}) {
-    if (_isOverlay(oldRoute!)) _activeOverlayRoutes.remove(oldRoute);
-    if (_isOverlay(newRoute!)) _activeOverlayRoutes.add(newRoute);
+    if (oldRoute != null && _isOverlay(oldRoute)) {
+      _activeOverlayRoutes.remove(oldRoute);
+    }
+    if (newRoute != null && _isOverlay(newRoute)) {
+      _activeOverlayRoutes.add(newRoute);
+    }
     _updateState();
   }
 }
