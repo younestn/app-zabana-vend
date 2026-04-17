@@ -412,27 +412,28 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               borderRadius: Dimensions.paddingSizeExtraSmall,
               btnTxt: getTranslated('order_setup', context),
               onTap: (orderDetailsController.orderDetails == null ) ? null : () {
+  final parentContext = context;
 
-                showModalBottomSheet(
-                  backgroundColor: Theme.of(context).cardColor,
-                  useSafeArea: true,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(20),
-                    ),
-                  ),
-                  isScrollControlled: true,
-                  context: context,
-                  builder: (BuildContext context){
+  showModalBottomSheet(
+    backgroundColor: Theme.of(parentContext).cardColor,
+    useSafeArea: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(
+        top: Radius.circular(20),
+      ),
+    ),
+    isScrollControlled: true,
+    context: parentContext,
+    builder: (BuildContext sheetContext){
 
-                    return OrderSetupBottomSheet(
-                      orderModel: orderDetailsController.orderDetails?[0].order,
-                      onlyDigital: _onlyDigital,
-                      bottomContext: context,
-                    );
-                  },
-                );
-              },
+      return OrderSetupBottomSheet(
+        orderModel: orderDetailsController.orderDetails?[0].order,
+        onlyDigital: _onlyDigital,
+        bottomContext: parentContext,
+      );
+    },
+  );
+},
             ),
           );
         }),

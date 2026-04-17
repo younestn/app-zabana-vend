@@ -228,68 +228,52 @@ class _OrderSetupBottomSheetState extends State<OrderSetupBottomSheet> {
                                   backgroundColor: Theme.of(context).primaryColor,
                                   borderRadius: 8,
                                   onTap: () async {
-  final DeliveryManController deliveryManController =
-      Provider.of<DeliveryManController>(context, listen: false);
+  final parentContext = widget.bottomContext;
+  final sheetContext = context;
 
-  final NavigatorState navigator = Navigator.of(context);
+  DeliveryManController deliveryManController = Provider.of<DeliveryManController>(parentContext, listen: false);
+  _populateOrderSetUpModel(orderDetailsController.orderSetupModel, deliveryManController);
 
-  _populateOrderSetUpModel(
-    orderDetailsController.orderSetupModel,
-    deliveryManController,
+  if(_canUpdate(orderDetailsController.orderSetupModel, widget.orderModel)){
+  await orderDetailsController.setUpOrder(
+    orderSetupModel: orderDetailsController.orderSetupModel,
+    context: parentContext,
   );
 
-  if (_canUpdate(orderDetailsController.orderSetupModel, widget.orderModel)) {
-    try {
-      if (mounted) {
-        setState(() {
-          isLoading = true;
-        });
-      }
+  if (!mounted) return;
 
-      await orderDetailsController.setUpOrder(
-  orderSetupModel: orderDetailsController.orderSetupModel,
-  context: widget.bottomContext,
-);
+  if (Navigator.of(sheetContext).canPop()) {
+    Navigator.of(sheetContext).pop();
+  }
+}
+  else{
+    final deliveryManController = Provider.of<DeliveryManController>(parentContext, listen: false);
 
-      if (!mounted) return;
-
-      navigator.pop();
+    if(deliveryManController.selectedDeliveryTypeIndex == 1 && deliveryManController.deliveryManIndex == 0){
+      showToast(message: getTranslated('please_select_delivery_man', parentContext)!);
       return;
-    } catch (e) {
-      if (mounted) {
-        showToast(message: e.toString());
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-      }
     }
-  } else {
-    if (deliveryManController.selectedDeliveryTypeIndex == 1 &&
-        deliveryManController.deliveryManIndex == 0) {
-      showToast(message: getTranslated('please_select_delivery_man', context)!);
+    else if(deliveryManController.selectedDeliveryTypeIndex == 1
+        && deliveryManController.deliveryManIndex != 0
+        && deliveryManController.deliveryManChargeTextEditingController.text.isEmpty ){
+      showToast(message: getTranslated('please_enter_delivery_incentive', parentContext)!);
       return;
-    } else if (deliveryManController.selectedDeliveryTypeIndex == 1 &&
-        deliveryManController.deliveryManIndex != 0 &&
-        deliveryManController.deliveryManChargeTextEditingController.text.isEmpty) {
-      showToast(message: getTranslated('please_enter_delivery_incentive', context)!);
+    }
+    else if(deliveryManController.selectedDeliveryTypeIndex == 2
+        && deliveryManController.thirdPartyShippingNameTextEditingController.text.isEmpty){
+      showToast(message: getTranslated('please_enter_delivery_service_name', parentContext)!);
       return;
-    } else if (deliveryManController.selectedDeliveryTypeIndex == 2 &&
-        deliveryManController.thirdPartyShippingNameTextEditingController.text.isEmpty) {
-      showToast(message: getTranslated('please_enter_delivery_service_name', context)!);
+    }
+    else if(deliveryManController.selectedDeliveryTypeIndex == 2
+        && deliveryManController.thirdPartyShippingTrackingIdTextEditingController.text.isEmpty) {
+      showToast(message: getTranslated('please_enter_tracking_id', parentContext)!);
       return;
-    } else if (deliveryManController.selectedDeliveryTypeIndex == 2 &&
-        deliveryManController.thirdPartyShippingTrackingIdTextEditingController.text.isEmpty) {
-      showToast(message: getTranslated('please_enter_tracking_id', context)!);
-      return;
-    } else {
-      showToast(message: getTranslated('there_is_no_change_to_update', context)!);
+    }
+    else{
+      showToast(message: getTranslated('there_is_no_change_to_update', parentContext)!);
     }
   }
-},
-                                ),
+},                            ),
                         ),
                       ],
                     ),

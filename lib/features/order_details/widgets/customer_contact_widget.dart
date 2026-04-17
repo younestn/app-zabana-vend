@@ -35,6 +35,11 @@ Widget build(BuildContext context) {
       : (orderModel?.customer?.email ?? '');
 
   final trust = orderModel?.customerTrustScore;
+  final bool hasTrustHistory = trust?.hasHistory == true;
+final String trustLabel = trust?.label?.trim() ?? '';
+final String trustBadgeText = hasTrustHistory
+    ? 'سجل هذا الزبون عبر المنصة'
+    : 'لا يوجد سجل محسوم';
 
   return Container(
     padding: const EdgeInsets.symmetric(
@@ -110,53 +115,39 @@ Widget build(BuildContext context) {
                       ),
 
                       if (trust != null)
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: trust.status == 'trusted'
-                                ? Colors.green.withValues(alpha: .12)
-                                : trust.status == 'medium'
-                                    ? Colors.orange.withValues(alpha: .12)
-                                    : trust.status == 'danger'
-                                        ? Colors.red.withValues(alpha: .12)
-                                        : Theme.of(context).hintColor.withValues(alpha: .15),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            trust.status == 'trusted'
-                                ? '🟢 زبون موثوق'
-                                : trust.status == 'medium'
-                                    ? '🟠 زبون متوسط'
-                                    : trust.status == 'danger'
-                                        ? '🔴نسبة الارجاع عالية'
-                                        : trust.status == 'new'
-                                            ? '⚪ لا يوجد سجل سابق'
-                                            : '⚪ غير معروف',
-                            style: titilliumRegular.copyWith(
-                              fontSize: 12,
-                              color: Theme.of(context).textTheme.bodyLarge?.color,
-                            ),
-                          ),
-                        ),
+  Container(
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    decoration: BoxDecoration(
+      color: hasTrustHistory
+          ? Theme.of(context).primaryColor.withValues(alpha: .12)
+          : Theme.of(context).hintColor.withValues(alpha: .15),
+      borderRadius: BorderRadius.circular(20),
+    ),
+    child: Text(
+      trustBadgeText,
+      style: titilliumRegular.copyWith(
+        fontSize: 12,
+        color: Theme.of(context).textTheme.bodyLarge?.color,
+      ),
+    ),
+  ),
                     ],
                   ),
 
-                  if (trust != null) ...[
-                    const SizedBox(height: Dimensions.paddingSizeExtraSmall),
-                    Text(
-                      trust.rate != null
-                          ? 'نسبة الاستلام  : ${trust.rate}% (استلم ${trust.delivered} من أصل ${trust.totalResolved})'
-                          : 'حالة الرقم: ${trust.message ?? ''}',
-                      style: titilliumRegular.copyWith(
-                        color: ColorHelper.blendColors(
-                          Colors.white,
-                          Theme.of(context).textTheme.bodyLarge!.color!,
-                          0.7,
-                        ),
-                        fontSize: Dimensions.fontSizeDefault,
-                      ),
-                    ),
-                  ],
+                if (trustLabel.isNotEmpty) ...[
+  const SizedBox(height: Dimensions.paddingSizeExtraSmall),
+  Text(
+    trustLabel,
+    style: titilliumRegular.copyWith(
+      color: ColorHelper.blendColors(
+        Colors.white,
+        Theme.of(context).textTheme.bodyLarge!.color!,
+        0.7,
+      ),
+      fontSize: Dimensions.fontSizeDefault,
+    ),
+  ),
+],
 
                   if (displayPhone.isNotEmpty) ...[
                     const SizedBox(height: Dimensions.paddingSizeExtraSmall),
@@ -214,24 +205,7 @@ Widget build(BuildContext context) {
                     ),
                   ],
 
-                  if (trust?.status == 'danger') ...[
-                    const SizedBox(height: Dimensions.paddingSizeSmall),
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.red.withValues(alpha: .08),
-                        borderRadius: BorderRadius.circular(Dimensions.paddingSizeExtraSmall),
-                        border: Border.all(color: Colors.red.withValues(alpha: .25)),
-                      ),
-                      child: Text(
-                        '⚠️ هذا الرقم لديه نسبة استلام ${trust?.rate ?? 0}% فقط',
-                        style: titilliumRegular.copyWith(
-                          color: Colors.red,
-                          fontSize: Dimensions.fontSizeDefault,
-                        ),
-                      ),
-                    ),
-                  ],
+                  
                 ],
               ),
             ),
