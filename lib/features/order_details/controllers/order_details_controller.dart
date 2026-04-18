@@ -250,36 +250,39 @@ class OrderDetailsController extends ChangeNotifier{
   }
 
 
-    Future<void> setUpOrder({
-    required OrderSetupModel orderSetupModel,
-    required BuildContext context,
-  }) async {
-    _isUpdating = true;
-    notifyListeners();
+    Future<bool> setUpOrder({required OrderSetupModel orderSetupModel}) async {
+  bool isSuccess = false;
+  _isUpdating = true;
+  notifyListeners();
 
-    try {
-      ApiResponse apiResponse = await orderDetailsServiceInterface.setUpOrder(orderSetupModel);
+  try {
+    ApiResponse apiResponse = await orderDetailsServiceInterface.setUpOrder(orderSetupModel);
 
-      if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-        String? message = getTranslated('updated_successfully', context);
-        showCustomSnackBarWidget(
-          message,
-          context,
-          isToaster: true,
-          isError: false,
-          sanckBarType: SnackBarType.success,
-        );
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      String? message = getTranslated('updated_successfully', Get.context!);
+      showCustomSnackBarWidget(
+        message,
+        Get.context!,
+        isToaster: true,
+        isError: false,
+        sanckBarType: SnackBarType.success,
+      );
 
-        await getOrderDetails(orderSetupModel.orderId.toString());
-        await Provider.of<OrderController>(context, listen: false).getOrderList(context, 1, 'all');
-      } else {
-        ApiChecker.checkApi(apiResponse);
-      }
-    } finally {
-      _isUpdating = false;
-      notifyListeners();
+      await getOrderDetails(orderSetupModel.orderId.toString());
+      await Provider.of<OrderController>(Get.context!, listen: false)
+          .getOrderList(Get.context!, 1, 'all');
+
+      isSuccess = true;
+    } else {
+      ApiChecker.checkApi(apiResponse);
     }
+  } finally {
+    _isUpdating = false;
+    notifyListeners();
   }
+
+  return isSuccess;
+}
 
 
   void initializeOrderSetupModel({required Order? order}){

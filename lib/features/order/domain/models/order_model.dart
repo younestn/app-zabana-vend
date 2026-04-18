@@ -232,13 +232,17 @@ CustomerTrustScore? get customerTrustScore => _customerTrustScore;
   _shippingCost = double.tryParse(json['shipping_cost'].toString()) ?? 0;
 }
 
-    if(json['shipping_address_data'] != null){
-      _shippingAddressData =  BillingAddressData.fromJson(json['shipping_address_data']);
+    if (json['shipping_address_data'] != null && json['shipping_address_data'] is Map<String, dynamic>) {
+  _shippingAddressData = BillingAddressData.fromJson(json['shipping_address_data']);
+} else {
+  _shippingAddressData = null;
+}
 
-    }
-    if(json['billing_address_data'] != null){
-      _billingAddressData =  BillingAddressData.fromJson(json['billing_address_data']);
-    }
+if (json['billing_address_data'] != null && json['billing_address_data'] is Map<String, dynamic>) {
+  _billingAddressData = BillingAddressData.fromJson(json['billing_address_data']);
+} else {
+  _billingAddressData = null;
+}
 
     _createdAt = json['created_at'];
     _updatedAt = json['updated_at'];
@@ -522,6 +526,10 @@ class BillingAddressData {
         });
 
 BillingAddressData.fromJson(Map<String, dynamic> json) {
+if (json.isEmpty) {
+  return;
+}
+
   id = json['id'];
   contactPersonName = json['contact_person_name']?.toString();
   addressType = json['address_type']?.toString();

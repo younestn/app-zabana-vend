@@ -27,7 +27,6 @@ class OrderSetupBottomSheet extends StatefulWidget {
 class _OrderSetupBottomSheetState extends State<OrderSetupBottomSheet> {
   bool isSellerWiseShipping = false;
   bool inHouseShipping = false;
-  bool isLoading = false;
   String? selectedOrderStatus;
   String? selectedPaymentStatus;
   final List<String> paymentTypeList = ['paid', 'unpaid'];
@@ -79,18 +78,19 @@ class _OrderSetupBottomSheetState extends State<OrderSetupBottomSheet> {
   }
 
 
-  @override
-  Widget build(BuildContext context) {
+@override
+Widget build(BuildContext context) {
   final double keyBoardHeight = MediaQuery.of(context).viewInsets.bottom;
+  final bool isUpdating = Provider.of<OrderDetailsController>(context).isUpdating;
 
-          return AbsorbPointer(
-      absorbing: isLoading,
+  return AbsorbPointer(
+    absorbing: isUpdating,
       child: Container(
         padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
 
         InkWell(
-          onTap: () => Navigator.pop(context),
+  onTap: isUpdating ? null : () => Navigator.pop(context),
           child: Align(
               alignment: Alignment.centerRight,
               child: Icon(Icons.cancel_outlined,
@@ -215,35 +215,34 @@ class _OrderSetupBottomSheetState extends State<OrderSetupBottomSheet> {
 
                                                                         Padding(
                           padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
-                          child: isLoading
-                              ? const Center(
-                                  child: SizedBox(
-                                    height: 24,
-                                    width: 24,
-                                    child: CircularProgressIndicator(strokeWidth: 2.5),
-                                  ),
-                                )
-                              : CustomButtonWidget(
+                        child: isUpdating
+    ? const Center(
+        child: SizedBox(
+          height: 24,
+          width: 24,
+          child: CircularProgressIndicator(strokeWidth: 2.5),
+        ),
+      )
+    : CustomButtonWidget(
                                   btnTxt: getTranslated('update', context),
                                   backgroundColor: Theme.of(context).primaryColor,
                                   borderRadius: 8,
                                   onTap: () async {
   final parentContext = widget.bottomContext;
-  final sheetContext = context;
+
 
   DeliveryManController deliveryManController = Provider.of<DeliveryManController>(parentContext, listen: false);
   _populateOrderSetUpModel(orderDetailsController.orderSetupModel, deliveryManController);
 
-  if(_canUpdate(orderDetailsController.orderSetupModel, widget.orderModel)){
-  await orderDetailsController.setUpOrder(
+if(_canUpdate(orderDetailsController.orderSetupModel, widget.orderModel)){
+  final bool isSuccess = await orderDetailsController.setUpOrder(
     orderSetupModel: orderDetailsController.orderSetupModel,
-    context: parentContext,
   );
 
   if (!mounted) return;
 
-  if (Navigator.of(sheetContext).canPop()) {
-    Navigator.of(sheetContext).pop();
+  if (isSuccess && Navigator.of(context).canPop()) {
+    Navigator.of(context).pop();
   }
 }
   else{
