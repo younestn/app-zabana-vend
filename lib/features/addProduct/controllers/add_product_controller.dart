@@ -99,6 +99,35 @@ class AddProductController extends ChangeNotifier {
   void setDescription(int index, String description) {
     _descriptionControllerList[index].text = description;
   }
+
+  void syncArabicContentToAllLanguages(int sourceIndex) {
+    if (_titleControllerList.isEmpty || _descriptionControllerList.isEmpty) {
+      return;
+    }
+
+    if (sourceIndex < 0 ||
+        sourceIndex >= _titleControllerList.length ||
+        sourceIndex >= _descriptionControllerList.length) {
+      return;
+    }
+
+    final String sourceTitle = _titleControllerList[sourceIndex].text.trim();
+    final String sourceDescription = _descriptionControllerList[sourceIndex].text.trim();
+
+    for (int i = 0; i < _titleControllerList.length; i++) {
+      if (i != sourceIndex) {
+        _titleControllerList[i].text = sourceTitle;
+      }
+    }
+
+    for (int i = 0; i < _descriptionControllerList.length; i++) {
+      if (i != sourceIndex) {
+        _descriptionControllerList[i].text = sourceDescription;
+      }
+    }
+
+    notifyListeners();
+  }
   
   void getTitleAndDescriptionList(List<Language> languageList, EditProductModel? edtProduct){
     _titleControllerList = [];

@@ -87,16 +87,12 @@ Future<void> _load() async {
 
     _update = widget.product != null;
 
-    _tabController = TabController(length: Provider.of<SplashController>(context,listen: false).configModel!.languageList!.length,
-        initialIndex: 0,vsync: this);
-    _tabController?.addListener((){
-    });
+    _tabController = TabController(length: 1, initialIndex: 0, vsync: this);
+_tabController?.addListener(() {});
 
-    
-
-    Provider.of<AddProductController>(context,listen: false).setSelectedPageIndex(0, isUpdate: false);
-    _load();
-    length = Provider.of<SplashController>(context,listen: false).configModel!.languageList!.length;
+Provider.of<AddProductController>(context,listen: false).setSelectedPageIndex(0, isUpdate: false);
+_load();
+length = 1;
     Provider.of<VariationController>(context, listen: false).initColorCode();
     if(widget.product != null){
       unitValue = widget.product!.unit;
@@ -697,18 +693,23 @@ Future<void> _load() async {
                                     final productController = Provider.of<ProductController>(context,listen: false);
                                     final categoryController = Provider.of<CategoryController>(context,listen: false);
 
-                                    bool haveBlankTitle = false;
-                                    bool haveBlankDes = false;
-                                    for(TextEditingController title in resProvider.titleControllerList){
-                                      if(title.text.isEmpty){
-                                        haveBlankTitle = true;
-                                        break;
-                                      }
-                                    }
-                                    for(TextEditingController des in resProvider.descriptionControllerList){
-                                      if(des.text.isEmpty){
-                                        haveBlankDes = true;
-                                        break;}}
+                                  final int arabicIndex = _getArabicLanguageIndex();
+resProvider.syncArabicContentToAllLanguages(arabicIndex);
+
+bool haveBlankTitle = false;
+bool haveBlankDes = false;
+for(TextEditingController title in resProvider.titleControllerList){
+  if(title.text.isEmpty){
+    haveBlankTitle = true;
+    break;
+  }
+}
+for(TextEditingController des in resProvider.descriptionControllerList){
+  if(des.text.isEmpty){
+    haveBlankDes = true;
+    break;
+  }
+}
 
                                     if(haveBlankTitle){
                                       showCustomSnackBarWidget(getTranslated('please_input_all_title',context),context, sanckBarType: SnackBarType.warning);
@@ -950,21 +951,33 @@ Future<void> _showUnitSelectorBottomSheet(AddProductController resProvider) asyn
     return sku;
   }
 
-  List<Widget> _generateTabChildren() {
-    List<Widget> tabs = [];
-    for(int index=0; index < Provider.of<SplashController>(context, listen: false).configModel!.languageList!.length; index++) {
-      tabs.add(Text(Provider.of<SplashController>(context, listen: false).configModel!.languageList![index].name!.capitalize(),
-          style: robotoBold.copyWith()));
-    }
-    return tabs;
+    int _getArabicLanguageIndex() {
+    final languageList = Provider.of<SplashController>(context, listen: false).configModel!.languageList!;
+    final int arabicIndex = languageList.indexWhere(
+      (language) => (language.code ?? '').toLowerCase() == 'ar',
+    );
+    return arabicIndex == -1 ? 0 : arabicIndex;
   }
 
+  List<Widget> _generateTabChildren() {
+    return [
+      Text(
+        'Arabic',
+        style: robotoBold.copyWith(),
+      ),
+    ];
+  }
+  
+
   List<Widget> _generateTabPage(AddProductController resProvider) {
-    List<Widget> tabView = [];
-    for(int index=0; index < Provider.of<SplashController>(context, listen: false).configModel!.languageList!.length; index++) {
-      tabView.add(TitleAndDescriptionWidget(resProvider: resProvider, index: index));
-    }
-    return tabView;
+    final int arabicIndex = _getArabicLanguageIndex();
+
+    return [
+      TitleAndDescriptionWidget(
+        resProvider: resProvider,
+        index: arabicIndex,
+      ),
+    ];
   }
 
   void _onChangeOptionHeight(String value, List<String> list) {
