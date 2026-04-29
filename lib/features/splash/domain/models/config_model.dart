@@ -177,7 +177,7 @@ class ConfigModel {
   String? get shippingMethod => _shippingMethod;
   String? get version => _version;
   String? get forgotPasswordVerification => _forgotPasswordVerification;
-  String? get countryCode =>_countryCode;
+  String? get countryCode => _countryCode;
   int? get decimalPointSettings => _decimalPointSettings;
   String? get brandSetting => _brandSetting;
   String? get digitalProductSetting => _digitalProductSetting;
@@ -191,17 +191,21 @@ class ConfigModel {
   ImageFullUrl? get companyLogoImage => _companyLogoImage;
   int? get posActive => _posActive;
   int? get mapApiStatus => _mapApiStatus;
-  SellerAppVersionControl? get sellerAppVersionControl => _sellerAppVersionControl;
-
-
+  SellerAppVersionControl? get sellerAppVersionControl =>
+      _sellerAppVersionControl;
 
   ConfigModel.fromJson(Map<String, dynamic> json) {
     _systemDefaultCurrency = json['system_default_currency'];
-    _baseUrls = json['base_urls'] != null ? BaseUrls.fromJson(json['base_urls']) : null;
-    _staticUrls = json['static_urls'] != null ? StaticUrls.fromJson(json['static_urls']) : null;
+    _baseUrls =
+        json['base_urls'] != null ? BaseUrls.fromJson(json['base_urls']) : null;
+    _staticUrls = json['static_urls'] != null
+        ? StaticUrls.fromJson(json['static_urls'])
+        : null;
     if (json['currency_list'] != null) {
       _currencyList = [];
-      json['currency_list'].forEach((v) { _currencyList!.add(CurrencyList.fromJson(v)); });
+      json['currency_list'].forEach((v) {
+        _currencyList!.add(CurrencyList.fromJson(v));
+      });
     }
     if (json['language'] != null) {
       _languageList = [];
@@ -210,27 +214,36 @@ class ConfigModel {
       });
     }
 
-    _colors = List<ColorList>.from(json["colors"].map((x) => ColorList.fromJson(x)));
+    _colors =
+        List<ColorList>.from(json["colors"].map((x) => ColorList.fromJson(x)));
     _unit = List<String>.from(json["unit"].map((x) => x));
     _aboutUs = json['about_us'];
     _privacyPolicy = json['privacy_policy'];
     if (json['faq'] != null) {
       _faq = [];
-      json['faq'].forEach((v) {_faq!.add(Faq.fromJson(v));
+      json['faq'].forEach((v) {
+        _faq!.add(Faq.fromJson(v));
       });
     }
     _termsConditions = json['terms_&_conditions'];
-    _refundPolicy = json['refund_policy'] != null ? RefundPolicy.fromJson(json['refund_policy']) : null;
-    _returnPolicy = json['return_policy'] != null ? RefundPolicy.fromJson(json['return_policy']) : null;
-    _cancellationPolicy = json['cancellation_policy'] != null ? RefundPolicy.fromJson(json['cancellation_policy']) : null;
+    _refundPolicy = json['refund_policy'] != null
+        ? RefundPolicy.fromJson(json['refund_policy'])
+        : null;
+    _returnPolicy = json['return_policy'] != null
+        ? RefundPolicy.fromJson(json['return_policy'])
+        : null;
+    _cancellationPolicy = json['cancellation_policy'] != null
+        ? RefundPolicy.fromJson(json['cancellation_policy'])
+        : null;
     _currencyModel = json['currency_model'];
     _shippingMethod = json['shipping_method'];
-    if(json['software_version'] != null){
+    if (json['software_version'] != null) {
       _version = json['software_version'];
     }
     _forgotPasswordVerification = json['vendor_forgot_password_method'];
     _countryCode = json['country_code'];
-    _decimalPointSettings = int.tryParse(json['decimal_point_settings'].toString());
+    _decimalPointSettings =
+        int.tryParse(json['decimal_point_settings'].toString());
     _brandSetting = json['brand_setting'];
     _digitalProductSetting = json['digital_product_setting'];
     _digitalPayment = json['digital_payment'];
@@ -238,85 +251,94 @@ class ConfigModel {
     _sellerRegistration = json['seller_registration'].toString();
     _companyPhone = json['company_phone'].toString();
     _companyEmail = json['company_email'].toString();
-    if(json['decimal_point_settings'] != null && json['decimal_point_settings'] != "" ){
-      _decimalPointSetting = int.parse(json['decimal_point_settings'].toString());
+    if (json['decimal_point_settings'] != null &&
+        json['decimal_point_settings'] != "") {
+      _decimalPointSetting =
+          int.parse(json['decimal_point_settings'].toString());
     }
     // _companyLogo =json['company_logo']??'';
     _companyLogoImage = json['company_logo'] != null
-      ? ImageFullUrl.fromJson(json['company_logo'])
-      : null;
-    if(json['pos_active'] != null){
-      try{
+        ? ImageFullUrl.fromJson(json['company_logo'])
+        : null;
+    if (json['pos_active'] != null) {
+      try {
         _posActive = json['pos_active'];
-      }catch(e){
+      } catch (e) {
         _posActive = int.parse(json['pos_active'].toString());
       }
-    }else{
+    } else {
       _posActive = 0;
     }
 
     activeTheme = json['active_theme'];
-    if(json['minimum_order_amount_status'] != null){
-      try{
+    if (json['minimum_order_amount_status'] != null) {
+      try {
         minimumOrderAmountStatus = json['minimum_order_amount_status'];
-      }catch(e){
-        minimumOrderAmountStatus = int.parse(json['minimum_order_amount_status'].toString());
+      } catch (e) {
+        minimumOrderAmountStatus =
+            int.parse(json['minimum_order_amount_status'].toString());
       }
     }
-    if(json['free_delivery_status'] != null){
-      try{
+    if (json['free_delivery_status'] != null) {
+      try {
         freeDeliveryStatus = json['free_delivery_status'];
-      }catch(e){
+      } catch (e) {
         freeDeliveryStatus = int.parse(json['free_delivery_status'].toString());
       }
     }
 
-    if(json['order_verification'] != null){
-      try{
+    if (json['order_verification'] != null) {
+      try {
         orderVerification = json['order_verification'];
-      }catch(e){
+      } catch (e) {
         orderVerification = int.parse(json['order_verification'].toString());
       }
     }
 
     freeDeliveryResponsibility = json['free_delivery_responsibility'];
 
-     _mapApiStatus = json['map_api_status'] != null ? int.parse(json['map_api_status'].toString()) : null;
+    _mapApiStatus = json['map_api_status'] != null
+        ? int.parse(json['map_api_status'].toString())
+        : null;
 
-    if(json['minimum_order_amount_by_seller'] != null){
-      try{
-        minimumOrderAmountStatusBySeller = json['minimum_order_amount_by_seller'];
-      }catch(e){
-        minimumOrderAmountStatusBySeller = int.parse(json['minimum_order_amount_by_seller'].toString());
+    if (json['minimum_order_amount_by_seller'] != null) {
+      try {
+        minimumOrderAmountStatusBySeller =
+            json['minimum_order_amount_by_seller'];
+      } catch (e) {
+        minimumOrderAmountStatusBySeller =
+            int.parse(json['minimum_order_amount_by_seller'].toString());
       }
     }
 
-    if(json['vendor_review_reply_status'] != null) {
-      try{
-        reviewReplyStatus = json['vendor_review_reply_status'] == 1 ? true : false;
-      }catch(e){
+    if (json['vendor_review_reply_status'] != null) {
+      try {
+        reviewReplyStatus =
+            json['vendor_review_reply_status'] == 1 ? true : false;
+      } catch (e) {
         reviewReplyStatus = false;
       }
     }
 
-
-    maintenanceModeData = json['maintenance_mode'] != null ? MaintenanceMode.fromJson(json['maintenance_mode']) : null;
+    maintenanceModeData = json['maintenance_mode'] != null
+        ? MaintenanceMode.fromJson(json['maintenance_mode'])
+        : null;
     currencySymbolPosition = json['currency_symbol_position'];
-    if(json['wallet_status'] != null) {
+    if (json['wallet_status'] != null) {
       walletStatus = json['wallet_status'] == 0 ? false : true;
-    }else{
+    } else {
       walletStatus = false;
     }
 
-    productMaxPriceRange = double.tryParse('${json['product_max_unit_price_range']}');
+    productMaxPriceRange =
+        double.tryParse('${json['product_max_unit_price_range']}');
 
     serverUploadMaxFileSize = json['server_upload_max_filesize'];
 
-    if(json['seller_app_version_control'] != null){
-      _sellerAppVersionControl = SellerAppVersionControl.fromJson(json['seller_app_version_control']);
+    if (json['seller_app_version_control'] != null) {
+      _sellerAppVersionControl =
+          SellerAppVersionControl.fromJson(json['seller_app_version_control']);
     }
-
-
   }
 }
 
@@ -334,7 +356,8 @@ class BaseUrls {
   String? _digitalProductUrl;
   String? _deliveryManImageUrl;
 
-  BaseUrls({String? productImageUrl,
+  BaseUrls({
+    String? productImageUrl,
     String? productThumbnailUrl,
     String? brandImageUrl,
     String? customerImageUrl,
@@ -418,7 +441,14 @@ class StaticUrls {
   String? _categories;
   String? _customerAccount;
 
-  StaticUrls({String? aboutUs, String? faq, String? termsConditions, String? contactUs, String? brands, String? categories, String? customerAccount}) {
+  StaticUrls(
+      {String? aboutUs,
+      String? faq,
+      String? termsConditions,
+      String? contactUs,
+      String? brands,
+      String? categories,
+      String? customerAccount}) {
     _aboutUs = aboutUs;
     _faq = faq;
     _termsConditions = termsConditions;
@@ -458,6 +488,7 @@ class StaticUrls {
     return data;
   }
 }
+
 class Faq {
   int? _id;
   String? _question;
@@ -469,12 +500,12 @@ class Faq {
 
   Faq(
       {int? id,
-        String? question,
-        String? answer,
-        int? ranking,
-        int? status,
-        String? createdAt,
-        String? updatedAt}) {
+      String? question,
+      String? answer,
+      int? ranking,
+      int? status,
+      String? createdAt,
+      String? updatedAt}) {
     _id = id;
     _question = question;
     _answer = answer;
@@ -491,7 +522,6 @@ class Faq {
   int? get status => _status;
   String? get createdAt => _createdAt;
   String? get updatedAt => _updatedAt;
-
 
   Faq.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
@@ -516,31 +546,25 @@ class Faq {
   }
 }
 
-
-
 class ColorList {
   int? _id;
   String? _name;
   String? _code;
 
-  ColorList({int? id, String? name, String? code}){
-
+  ColorList({int? id, String? name, String? code}) {
     _id = id;
     _name = name;
     _code = code;
-
   }
 
   int? get id => _id;
   String? get name => _name;
   String? get code => _code;
 
-
   ColorList.fromJson(Map<String, dynamic> json) {
-    _id = json ['id'];
-    _name = json ['name'];
-    _code = json ['code'];
-
+    _id = json['id'];
+    _name = json['name'];
+    _code = json['code'];
   }
 
   Map<String, dynamic> toJson() {
@@ -557,7 +581,6 @@ class ColorList {
   }
 }
 
-
 class CurrencyList {
   int? _id;
   String? _name;
@@ -568,7 +591,16 @@ class CurrencyList {
   String? _updatedAt;
   bool? status;
 
-  CurrencyList({int? id, String? name, String? symbol, String? code, double? exchangeRate, int? status, String? createdAt, String? updatedAt, }) {
+  CurrencyList({
+    int? id,
+    String? name,
+    String? symbol,
+    String? code,
+    double? exchangeRate,
+    int? status,
+    String? createdAt,
+    String? updatedAt,
+  }) {
     _id = id;
     _name = name;
     _symbol = symbol;
@@ -587,16 +619,15 @@ class CurrencyList {
   String? get createdAt => _createdAt;
   String? get updatedAt => _updatedAt;
 
-
   CurrencyList.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
     _name = json['name'];
     _symbol = json['symbol'];
     _code = json['code'];
-    if(json['exchange_rate'] != null){
-      try{
+    if (json['exchange_rate'] != null) {
+      try {
         _exchangeRate = json['exchange_rate'].toDouble();
-      }catch(e){
+      } catch (e) {
         _exchangeRate = double.parse(json['exchange_rate'].toString());
       }
     }
@@ -605,7 +636,6 @@ class CurrencyList {
     _updatedAt = json['updated_at'];
     status = json['status'];
   }
-
 }
 
 class Language {
@@ -626,7 +656,6 @@ class Language {
     return data;
   }
 }
-
 
 class LanguageList {
   String? _bn;
@@ -751,7 +780,54 @@ class En {
   String? _stripe;
   String? _paytm;
 
-  En({String? home, String? signIn, String? myCart, String? shippingMethod, String? banner, String? addMainBanner, String? addFooterBanner, String? mainBannerForm, String? bannerUrl, String? bannerType, String? published, String? mainBannerImage, String? footerBannerForm, String? footerBannerImage, String? bannerTable, String? bannerPhoto, String? categories, String? allCategories, String? latestProducts, String? moreProducts, String? brands, String? brandUpdate, String? viewAll, String? brand, String? brandForm, String? name, String? brandLogo, String? brandTable, String? sl, String? image, String? action, String? save, String? update, String? category, String? icon, String? categoryForm, String? categoryTable, String? slug, String? subCategory, String? subCategoryForm, String? subCategoryTable, String? selectCategoryName, String? cashOnDelivery, String? sslCommerzPayment, String? paypal, String? stripe, String? paytm}) {
+  En(
+      {String? home,
+      String? signIn,
+      String? myCart,
+      String? shippingMethod,
+      String? banner,
+      String? addMainBanner,
+      String? addFooterBanner,
+      String? mainBannerForm,
+      String? bannerUrl,
+      String? bannerType,
+      String? published,
+      String? mainBannerImage,
+      String? footerBannerForm,
+      String? footerBannerImage,
+      String? bannerTable,
+      String? bannerPhoto,
+      String? categories,
+      String? allCategories,
+      String? latestProducts,
+      String? moreProducts,
+      String? brands,
+      String? brandUpdate,
+      String? viewAll,
+      String? brand,
+      String? brandForm,
+      String? name,
+      String? brandLogo,
+      String? brandTable,
+      String? sl,
+      String? image,
+      String? action,
+      String? save,
+      String? update,
+      String? category,
+      String? icon,
+      String? categoryForm,
+      String? categoryTable,
+      String? slug,
+      String? subCategory,
+      String? subCategoryForm,
+      String? subCategoryTable,
+      String? selectCategoryName,
+      String? cashOnDelivery,
+      String? sslCommerzPayment,
+      String? paypal,
+      String? stripe,
+      String? paytm}) {
     _home = home;
     _signIn = signIn;
     _myCart = myCart;
@@ -968,7 +1044,6 @@ class RefundPolicy {
   int? get status => _status;
   String? get content => _content;
 
-
   RefundPolicy.fromJson(Map<String, dynamic> json) {
     _status = int.parse(json['status'].toString());
     _content = json['content'];
@@ -982,7 +1057,6 @@ class RefundPolicy {
   }
 }
 
-
 class MaintenanceMode {
   int? maintenanceStatus;
   SelectedMaintenanceSystem? selectedMaintenanceSystem;
@@ -991,14 +1065,16 @@ class MaintenanceMode {
 
   MaintenanceMode(
       {this.maintenanceStatus,
-        this.selectedMaintenanceSystem,
-        this.maintenanceMessages, this.maintenanceTypeAndDuration});
+      this.selectedMaintenanceSystem,
+      this.maintenanceMessages,
+      this.maintenanceTypeAndDuration});
 
   MaintenanceMode.fromJson(Map<String, dynamic> json) {
     maintenanceStatus = int.tryParse(json['maintenance_status'].toString());
-    selectedMaintenanceSystem = (json['selected_maintenance_system'] != null && json['selected_maintenance_system'] is !List)
+    selectedMaintenanceSystem = (json['selected_maintenance_system'] != null &&
+            json['selected_maintenance_system'] is! List)
         ? SelectedMaintenanceSystem.fromJson(
-        json['selected_maintenance_system'])
+            json['selected_maintenance_system'])
         : null;
     maintenanceMessages = json['maintenance_messages'] != null
         ? MaintenanceMessages.fromJson(json['maintenance_messages'])
@@ -1006,7 +1082,7 @@ class MaintenanceMode {
 
     maintenanceTypeAndDuration = json['maintenance_type_and_duration'] != null
         ? MaintenanceTypeAndDuration.fromJson(
-        json['maintenance_type_and_duration'])
+            json['maintenance_type_and_duration'])
         : null;
   }
 
@@ -1014,8 +1090,7 @@ class MaintenanceMode {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['maintenance_status'] = maintenanceStatus;
     if (selectedMaintenanceSystem != null) {
-      data['selected_maintenance_system'] =
-          selectedMaintenanceSystem!.toJson();
+      data['selected_maintenance_system'] = selectedMaintenanceSystem!.toJson();
     }
     if (maintenanceMessages != null) {
       data['maintenance_messages'] = maintenanceMessages!.toJson();
@@ -1034,7 +1109,8 @@ class SelectedMaintenanceSystem {
   int? webApp;
   int? deliverymanApp;
 
-  SelectedMaintenanceSystem({this.vendorApp, this.customerApp, this.webApp, this.deliverymanApp});
+  SelectedMaintenanceSystem(
+      {this.vendorApp, this.customerApp, this.webApp, this.deliverymanApp});
 
   SelectedMaintenanceSystem.fromJson(Map<String, dynamic> json) {
     vendorApp = int.tryParse(json['vendor_app'].toString());
@@ -1060,9 +1136,9 @@ class MaintenanceMessages {
 
   MaintenanceMessages(
       {this.businessNumber,
-        this.businessEmail,
-        this.maintenanceMessage,
-        this.messageBody});
+      this.businessEmail,
+      this.maintenanceMessage,
+      this.messageBody});
 
   MaintenanceMessages.fromJson(Map<String, dynamic> json) {
     businessNumber = json['business_number'];
@@ -1117,7 +1193,6 @@ class MaintenanceTypeAndDuration {
     return data;
   }
 }
-
 
 class SellerAppVersionControl {
   final PlatformVersion? forAndroid;

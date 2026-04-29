@@ -21,30 +21,46 @@ class CustomFieldWithTitleWidget extends StatelessWidget {
     this.isPadding = true,
     this.isSKU = false,
     this.limitSet = false,
-    this.onTap, this.isCoupon = false,
+    this.onTap,
+    this.isCoupon = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: isCoupon? const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault, vertical: Dimensions.paddingSizeExtraSmall): isPadding ? const EdgeInsets.all(Dimensions.paddingSizeDefault) : const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
-      child: Column( crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            RichText(
-              text: TextSpan(
-                text: title, style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color),
-                children: <TextSpan>[
-                 requiredField ? TextSpan(text: '  *', style: robotoRegular.copyWith(color: Colors.red)) : const TextSpan(),
-                ],
+      padding: isCoupon
+          ? const EdgeInsets.symmetric(
+              horizontal: Dimensions.paddingSizeDefault,
+              vertical: Dimensions.paddingSizeExtraSmall)
+          : isPadding
+              ? const EdgeInsets.all(Dimensions.paddingSizeDefault)
+              : const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              RichText(
+                text: TextSpan(
+                  text: title,
+                  style: robotoRegular.copyWith(
+                      color: Theme.of(context).textTheme.bodyLarge?.color),
+                  children: <TextSpan>[
+                    requiredField
+                        ? TextSpan(
+                            text: '  *',
+                            style: robotoRegular.copyWith(color: Colors.red))
+                        : const TextSpan(),
+                  ],
+                ),
               ),
-            ),
-         ],
-        ),
-        const SizedBox(height: Dimensions.paddingSizeExtraSmall),
-        
-        customTextField,
-      ],),
+            ],
+          ),
+          const SizedBox(height: Dimensions.paddingSizeExtraSmall),
+          customTextField,
+        ],
+      ),
     );
   }
 }

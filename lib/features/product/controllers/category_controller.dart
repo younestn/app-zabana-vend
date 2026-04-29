@@ -11,7 +11,6 @@ class CategoryController extends ChangeNotifier {
   final CategoryServiceInterface categoryServiceInterface;
   CategoryController({required this.categoryServiceInterface});
 
-
   List<int?> _categoryIds = [];
   List<int?> _subCategoryIds = [];
   List<int?> _subSubCategoryIds = [];
@@ -48,16 +47,13 @@ class CategoryController extends ChangeNotifier {
   int? get subCategorySelectedIndex => _subCategorySelectedIndex;
   int? get subSubCategorySelectedIndex => _subSubCategorySelectedIndex;
 
-
-
-
-
   ///Move to Product List
-  Future<void> getCategoryList(BuildContext context, Product? product, String language) async {
+  Future<void> getCategoryList(
+      BuildContext context, Product? product, String language) async {
     log("====category call==> ");
-    _categoryIds =[];
-    _subCategoryIds =[];
-    _subSubCategoryIds =[];
+    _categoryIds = [];
+    _subCategoryIds = [];
+    _subSubCategoryIds = [];
     _categoryIds.add(0);
     _subCategoryIds.add(0);
     _subSubCategoryIds.add(0);
@@ -67,28 +63,42 @@ class CategoryController extends ChangeNotifier {
     // if(_categoryList != null && _categoryList!.isNotEmpty){
     //   notifyListeners();
     // }
-    ApiResponse response = await categoryServiceInterface.getCategoryList(language);
+    ApiResponse response =
+        await categoryServiceInterface.getCategoryList(language);
     if (response.response != null && response.response!.statusCode == 200) {
       _categoryList = [];
-      response.response!.data.forEach((category) => _categoryList!.add(CategoryModel.fromJson(category)));
+      response.response!.data.forEach(
+          (category) => _categoryList!.add(CategoryModel.fromJson(category)));
       _categoryIndex = 0;
 
-      for(int index = 0; index < _categoryList!.length; index++) {
+      for (int index = 0; index < _categoryList!.length; index++) {
         _categoryIds.add(_categoryList![index].id);
         _selectedCategory.add(false);
       }
 
-      if(product != null && product.categoryIds != null &&product.categoryIds!.isNotEmpty){
-        setCategoryIndex(_categoryIds.indexOf(int.parse(product.categoryIds![0].id!)), false);
-        getSubCategoryList(Get.context!,_categoryIds.indexOf(int.parse(product.categoryIds![0].id!)), false, product);
+      if (product != null &&
+          product.categoryIds != null &&
+          product.categoryIds!.isNotEmpty) {
+        setCategoryIndex(
+            _categoryIds.indexOf(int.parse(product.categoryIds![0].id!)),
+            false);
+        getSubCategoryList(
+            Get.context!,
+            _categoryIds.indexOf(int.parse(product.categoryIds![0].id!)),
+            false,
+            product);
         if (_subCategoryList != null && _subCategoryList!.isNotEmpty) {
           for (int index = 0; index < _subCategoryList!.length; index++) {
             _subCategoryIds.add(_subCategoryList![index].id);
           }
 
-          if(product.categoryIds!.length>1){
-            setSubCategoryIndex(_subCategoryIds.indexOf(int.parse(product.categoryIds![1].id!)), false);
-            getSubSubCategoryList(_subCategoryIds.indexOf(int.parse(product.categoryIds![1].id!)), false);
+          if (product.categoryIds!.length > 1) {
+            setSubCategoryIndex(
+                _subCategoryIds.indexOf(int.parse(product.categoryIds![1].id!)),
+                false);
+            getSubSubCategoryList(
+                _subCategoryIds.indexOf(int.parse(product.categoryIds![1].id!)),
+                false);
           }
         }
 
@@ -96,9 +106,15 @@ class CategoryController extends ChangeNotifier {
           for (int index = 0; index < _subSubCategoryList!.length; index++) {
             _subSubCategoryIds.add(_subSubCategoryList![index].id);
           }
-          if(product.categoryIds!.length>2){
-            setSubSubCategoryIndex(_subSubCategoryIds.indexOf(int.parse(product.categoryIds![2].id!)), false);
-            setSubSubCategoryIndex(_subSubCategoryIds.indexOf(int.parse(product.categoryIds![2].id!)), false);
+          if (product.categoryIds!.length > 2) {
+            setSubSubCategoryIndex(
+                _subSubCategoryIds
+                    .indexOf(int.parse(product.categoryIds![2].id!)),
+                false);
+            setSubSubCategoryIndex(
+                _subSubCategoryIds
+                    .indexOf(int.parse(product.categoryIds![2].id!)),
+                false);
           }
         }
       }
@@ -108,13 +124,15 @@ class CategoryController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getSubCategoryList(BuildContext context, int? selectedIndex, bool notify, Product? product) async {
+  Future<void> getSubCategoryList(BuildContext context, int? selectedIndex,
+      bool notify, Product? product) async {
     _subCategoryIndex = 0;
-    if(categoryIndex != 0) {
+    if (categoryIndex != 0) {
       _subCategoryList = [];
-      _subCategoryList!.addAll(_categoryList![categoryIndex!-1].subCategories!);
+      _subCategoryList!
+          .addAll(_categoryList![categoryIndex! - 1].subCategories!);
     }
-    if(notify){
+    if (notify) {
       _subCategoryIds = [];
       _subCategoryIds.add(0);
       _subCategoryIndex = 0;
@@ -130,15 +148,16 @@ class CategoryController extends ChangeNotifier {
 
   Future<void> getSubSubCategoryList(int? selectedIndex, bool notify) async {
     _subSubCategoryIndex = 0;
-    if(_subCategoryIndex != 0) {
+    if (_subCategoryIndex != 0) {
       _subSubCategoryList = [];
-      _subSubCategoryList!.addAll(subCategoryList![_subCategoryIndex!-1].subSubCategories!);
+      _subSubCategoryList!
+          .addAll(subCategoryList![_subCategoryIndex! - 1].subSubCategories!);
     }
-    if(notify){
+    if (notify) {
       _subSubCategoryIds = [];
       _subSubCategoryIds.add(0);
       _subSubCategoryIndex = 0;
-      if(_subSubCategoryList!.isNotEmpty){
+      if (_subSubCategoryList!.isNotEmpty) {
         for (var element in _subSubCategoryList!) {
           _subSubCategoryIds.add(element.id);
         }
@@ -147,29 +166,28 @@ class CategoryController extends ChangeNotifier {
     }
   }
 
-
   void setCategoryIndex(int? index, bool notify) {
     _categoryIndex = index;
-    if(notify) {
+    if (notify) {
       notifyListeners();
     }
   }
 
   void setSubCategoryIndex(int? index, bool notify) {
     _subCategoryIndex = index;
-    if(notify) {
+    if (notify) {
       notifyListeners();
     }
   }
 
   void setSubSubCategoryIndex(int? index, bool notify) {
     _subSubCategoryIndex = index;
-    if(notify) {
+    if (notify) {
       notifyListeners();
     }
   }
 
-  void setSelectedCategoryForFilter(int index, bool? selected){
+  void setSelectedCategoryForFilter(int index, bool? selected) {
     _selectedCategory[index] = selected;
     notifyListeners();
   }
@@ -179,26 +197,23 @@ class CategoryController extends ChangeNotifier {
     _categoryList = [];
   }
 
-  void resetCategory () {
+  void resetCategory() {
     _categoryIndex = 0;
     _subCategoryIndex = 0;
     _subSubCategoryIndex = 0;
   }
 
-  void removeCategory(){
+  void removeCategory() {
     _categoryList = null;
     _subCategoryList = null;
     _subSubCategoryList = null;
   }
 
-  void toggleCategoryChecked(int index, {bool isUpdate = true}){
+  void toggleCategoryChecked(int index, {bool isUpdate = true}) {
     categoryList![index].toggleChecked();
 
-    if(isUpdate) {
+    if (isUpdate) {
       notifyListeners();
-
     }
   }
-
-
 }

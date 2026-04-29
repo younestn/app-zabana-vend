@@ -1,5 +1,4 @@
-
- import 'dart:io';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:sixvalley_vendor_app/features/addProduct/domain/models/add_product_model.dart';
 import 'package:sixvalley_vendor_app/features/product/domain/models/product_model.dart';
@@ -7,25 +6,53 @@ import 'package:sixvalley_vendor_app/features/addProduct/domain/models/image_mod
 import 'package:sixvalley_vendor_app/features/addProduct/domain/repository/add_product_repository_interface.dart';
 import 'package:sixvalley_vendor_app/features/addProduct/domain/services/add_product_service_interface.dart';
 
-class AddProductService implements AddProductServiceInterface{
- final AddProductRepositoryInterface shopRepoInterface;
- AddProductService({required this.shopRepoInterface});
+class AddProductService implements AddProductServiceInterface {
+  final AddProductRepositoryInterface shopRepoInterface;
+  AddProductService({required this.shopRepoInterface});
 
   @override
-  Future addImage(BuildContext context, ImageModel imageForUpload, bool colorActivate) {
+  Future addImage(
+      BuildContext context, ImageModel imageForUpload, bool colorActivate) {
     return shopRepoInterface.addImage(context, imageForUpload, colorActivate);
   }
 
   @override
-  Future addProduct(Product product, AddProductModel addProduct, Map<String, dynamic> attributes, List<Map<String, dynamic>>? productImages, String? thumbnail, String? metaImage, bool isAdd, bool isActiveColor, List<ColorImage> colorImageObject, List<String?> tags, String? digitalFileReady, DigitalVariationModel? digitalVariationModel, bool? isDigitalVariationActive, String? token) async{
-    return await shopRepoInterface.addProduct(product, addProduct, attributes, productImages, thumbnail, metaImage, isAdd, isActiveColor, colorImageObject, tags, digitalFileReady, digitalVariationModel, isDigitalVariationActive, token);
+  Future addProduct(
+      Product product,
+      AddProductModel addProduct,
+      Map<String, dynamic> attributes,
+      List<Map<String, dynamic>>? productImages,
+      String? thumbnail,
+      String? metaImage,
+      bool isAdd,
+      bool isActiveColor,
+      List<ColorImage> colorImageObject,
+      List<String?> tags,
+      String? digitalFileReady,
+      DigitalVariationModel? digitalVariationModel,
+      bool? isDigitalVariationActive,
+      String? token) async {
+    return await shopRepoInterface.addProduct(
+        product,
+        addProduct,
+        attributes,
+        productImages,
+        thumbnail,
+        metaImage,
+        isAdd,
+        isActiveColor,
+        colorImageObject,
+        tags,
+        digitalFileReady,
+        digitalVariationModel,
+        isDigitalVariationActive,
+        token);
   }
 
   @override
   Future getAttributeList(String languageCode) {
     return shopRepoInterface.getAttributeList(languageCode);
   }
-
 
   @override
   Future getCategoryList(String languageCode) {
@@ -34,12 +61,12 @@ class AddProductService implements AddProductServiceInterface{
 
   @override
   Future getEditProduct(int? id) {
-   return shopRepoInterface.getEditProduct(id);
+    return shopRepoInterface.getEditProduct(id);
   }
 
   @override
   Future getSubCategoryList() {
-   return shopRepoInterface.getSubCategoryList();
+    return shopRepoInterface.getSubCategoryList();
   }
 
   @override
@@ -48,20 +75,23 @@ class AddProductService implements AddProductServiceInterface{
   }
 
   @override
-  Future updateProductQuantity(int? productId, int currentStock, List<Variation> variation) {
-    return shopRepoInterface.updateProductQuantity(productId, currentStock, variation);
+  Future updateProductQuantity(
+      int? productId, int currentStock, List<Variation> variation) {
+    return shopRepoInterface.updateProductQuantity(
+        productId, currentStock, variation);
   }
 
   // updateRestockProductQuantity
   @override
-  Future updateRestockProductQuantity(int? productId, int currentStock, List<Variation> variation) {
-   return shopRepoInterface.updateRestockProductQuantity(productId, currentStock, variation);
+  Future updateRestockProductQuantity(
+      int? productId, int currentStock, List<Variation> variation) {
+    return shopRepoInterface.updateRestockProductQuantity(
+        productId, currentStock, variation);
   }
-
 
   @override
   Future uploadDigitalProduct(File? filePath, String token) {
-   return shopRepoInterface.uploadDigitalProduct(filePath, token);
+    return shopRepoInterface.uploadDigitalProduct(filePath, token);
   }
 
   @override
@@ -76,24 +106,21 @@ class AddProductService implements AddProductServiceInterface{
 
   @override
   Future deleteDigitalVariationFile(int? productId, String variantKey) {
-   return shopRepoInterface.deleteDigitalVariationFile(productId, variantKey);
+    return shopRepoInterface.deleteDigitalVariationFile(productId, variantKey);
   }
 
- @override
- Future deleteProductPreview(int? id) {
-  return shopRepoInterface.deleteProductPreview(id);
- }
+  @override
+  Future deleteProductPreview(int? id) {
+    return shopRepoInterface.deleteProductPreview(id);
+  }
 
+  @override
+  Future getDigitalAuthor() {
+    return shopRepoInterface.getDigitalAuthor();
+  }
 
- @override
- Future getDigitalAuthor() {
-  return shopRepoInterface.getDigitalAuthor();
- }
-
- @override
- Future getPublishingHouse() {
-  return shopRepoInterface.getPublishingHouse();
- }
-
-
+  @override
+  Future getPublishingHouse() {
+    return shopRepoInterface.getPublishingHouse();
+  }
 }

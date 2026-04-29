@@ -4,37 +4,47 @@ import 'package:sixvalley_vendor_app/data/model/response/base/api_response.dart'
 import 'package:sixvalley_vendor_app/features/order/domain/repositories/order_repository_interface.dart';
 import 'package:sixvalley_vendor_app/utill/app_constants.dart';
 
-class OrderRepository implements OrderRepositoryInterface{
+class OrderRepository implements OrderRepositoryInterface {
   final DioClient? dioClient;
   OrderRepository({required this.dioClient});
 
   @override
   Future<ApiResponse> getOrderList(int offset, String status) async {
     try {
-      final response = await dioClient!.get('${AppConstants.orderListUri}?limit=10&offset=$offset&status=$status');
+      final response = await dioClient!.get(
+          '${AppConstants.orderListUri}?limit=10&offset=$offset&status=$status');
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
 
-
   @override
-  Future<ApiResponse> orderAddressEdit({String? orderID, String? addressType, String? contactPersonName, String? phone, String? city, String? zip,
-    String? address, String? email, String? latitude, String? longitude,
+  Future<ApiResponse> orderAddressEdit({
+    String? orderID,
+    String? addressType,
+    String? contactPersonName,
+    String? phone,
+    String? city,
+    String? zip,
+    String? address,
+    String? email,
+    String? latitude,
+    String? longitude,
   }) async {
     try {
-      final response = await dioClient!.post(AppConstants.orderAddressEdit, data: {
+      final response =
+          await dioClient!.post(AppConstants.orderAddressEdit, data: {
         "order_id": orderID,
         "contact_person_name": contactPersonName,
         "phone": phone,
-        "city" : city,
-        "zip" : zip,
-        "email" : email,
-        "address" : address,
+        "city": city,
+        "zip": zip,
+        "email": email,
+        "address": address,
         "latitude": latitude,
         "longitude": longitude,
-        "address_type" : addressType,
+        "address_type": addressType,
       });
       return ApiResponse.withSuccess(response);
     } catch (e) {
@@ -71,6 +81,4 @@ class OrderRepository implements OrderRepositoryInterface{
     // TODO: implement update
     throw UnimplementedError();
   }
-
-
 }

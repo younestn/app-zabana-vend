@@ -2,12 +2,11 @@ class OrderHistoryLogModel {
   String? status;
   String? userType;
   String? createdAt;
-  OrderHistoryLogModel(
-      {
-        this.status,
-        this.userType,
-        this.createdAt,
-        });
+  OrderHistoryLogModel({
+    this.status,
+    this.userType,
+    this.createdAt,
+  });
 
   OrderHistoryLogModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];

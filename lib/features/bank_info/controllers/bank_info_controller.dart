@@ -32,7 +32,8 @@ class BankInfoController extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
   BusinessAnalyticsFilterDataModel? _businessAnalyticsFilterData;
-  BusinessAnalyticsFilterDataModel? get businessAnalyticsFilterData => _businessAnalyticsFilterData;
+  BusinessAnalyticsFilterDataModel? get businessAnalyticsFilterData =>
+      _businessAnalyticsFilterData;
   int _revenueFilterTypeIndex = 0;
   int get revenueFilterTypeIndex => _revenueFilterTypeIndex;
   String? _revenueFilterType = '';
@@ -42,36 +43,38 @@ class BankInfoController extends ChangeNotifier {
   bool get showWarning => _showWarning;
 
   CurrentCommissionInvoiceModel? _currentMonthCommissionInvoice;
-CurrentCommissionInvoiceModel? get currentMonthCommissionInvoice => _currentMonthCommissionInvoice;
+  CurrentCommissionInvoiceModel? get currentMonthCommissionInvoice =>
+      _currentMonthCommissionInvoice;
 
-bool _isCommissionLoading = false;
-bool get isCommissionLoading => _isCommissionLoading;
+  bool _isCommissionLoading = false;
+  bool get isCommissionLoading => _isCommissionLoading;
 
-bool _isSendingReceipt = false;
-bool get isSendingReceipt => _isSendingReceipt;
+  bool _isSendingReceipt = false;
+  bool get isSendingReceipt => _isSendingReceipt;
 
-XFile? _selectedCommissionReceiptImage;
-XFile? get selectedCommissionReceiptImage => _selectedCommissionReceiptImage;
+  XFile? _selectedCommissionReceiptImage;
+  XFile? get selectedCommissionReceiptImage => _selectedCommissionReceiptImage;
 
-  void setRevenueFilterName(BuildContext context, String? filterName, bool notify) {
+  void setRevenueFilterName(
+      BuildContext context, String? filterName, bool notify) {
     _revenueFilterType = filterName;
     String? callingString;
-    if(_revenueFilterType == 'this_year'){
+    if (_revenueFilterType == 'this_year') {
       callingString = 'yearEarn';
-    }else if(_revenueFilterType == 'this_month'){
+    } else if (_revenueFilterType == 'this_month') {
       callingString = 'MonthEarn';
-    }else if(_revenueFilterType == 'this_week'){
+    } else if (_revenueFilterType == 'this_week') {
       callingString = 'WeekEarn';
     }
-   getDashboardRevenueData(context, callingString);
-    if(notify) {
+    getDashboardRevenueData(context, callingString);
+    if (notify) {
       notifyListeners();
     }
   }
 
   void setRevenueFilterType(int index, bool notify) {
     _revenueFilterTypeIndex = index;
-    if(notify) {
+    if (notify) {
       notifyListeners();
     }
   }
@@ -83,28 +86,30 @@ XFile? get selectedCommissionReceiptImage => _selectedCommissionReceiptImage;
   double _lim = 0.0;
   double get lim => _lim;
 
-
-  Future<void> getDashboardRevenueData(BuildContext context, String? filterType) async {
-    ApiResponse apiResponse = await bankInfoServiceInterface.chartFilterData(filterType);
-    if(apiResponse.response != null  && apiResponse.response!.data != null && apiResponse.response!.statusCode == 200) {
+  Future<void> getDashboardRevenueData(
+      BuildContext context, String? filterType) async {
+    ApiResponse apiResponse =
+        await bankInfoServiceInterface.chartFilterData(filterType);
+    if (apiResponse.response != null &&
+        apiResponse.response!.data != null &&
+        apiResponse.response!.statusCode == 200) {
       _userEarnings = [];
-      _userCommissions  = [];
+      _userCommissions = [];
       _earnings = [];
-      _commission =[];
+      _commission = [];
       _earnings.addAll(apiResponse.response!.data['seller_earn']);
       _commission.addAll(apiResponse.response!.data['commission_earn']);
-      for(dynamic data in _earnings) {
-        try{
+      for (dynamic data in _earnings) {
+        try {
           _userEarnings!.add(data.toDouble());
-        }catch(e){
+        } catch (e) {
           _userEarnings!.add(double.parse(data.toString()));
         }
-
       }
-      for(dynamic data in _commission) {
-        try{
+      for (dynamic data in _commission) {
+        try {
           _userCommissions!.add(data.toDouble());
-        }catch(e){
+        } catch (e) {
           _userCommissions!.add(double.parse(data.toString()));
         }
       }
@@ -117,15 +122,15 @@ XFile? get selectedCommissionReceiptImage => _selectedCommissionReceiptImage;
       counts.sort();
       comCounts.sort();
       double max = 0;
-      max = counts.isNotEmpty? counts[counts.length-1]??0 : 0;
+      max = counts.isNotEmpty ? counts[counts.length - 1] ?? 0 : 0;
       double maxx = 0;
-      maxx = counts.isNotEmpty?comCounts[comCounts.length-1]??0:0;
-      if(max>maxx){
+      maxx = counts.isNotEmpty ? comCounts[comCounts.length - 1] ?? 0 : 0;
+      if (max > maxx) {
         _lim = max;
-      }else{
+      } else {
         _lim = maxx;
       }
-    }else {
+    } else {
       ApiChecker.checkApi(apiResponse);
     }
     notifyListeners();
@@ -136,10 +141,15 @@ XFile? get selectedCommissionReceiptImage => _selectedCommissionReceiptImage;
     notifyListeners();
   }
 
-  Future<ResponseModel?> updateBankInfo(BuildContext context,ProfileInfoModel updateUserModel, ProfileBody seller, String token) async {
+  Future<ResponseModel?> updateBankInfo(
+      BuildContext context,
+      ProfileInfoModel updateUserModel,
+      ProfileBody seller,
+      String token) async {
     _isLoading = true;
     notifyListeners();
-    ResponseModel responseModel = await bankInfoServiceInterface.updateBank(updateUserModel, seller, token);
+    ResponseModel responseModel = await bankInfoServiceInterface.updateBank(
+        updateUserModel, seller, token);
     _isLoading = false;
     notifyListeners();
     return responseModel;
@@ -149,30 +159,33 @@ XFile? get selectedCommissionReceiptImage => _selectedCommissionReceiptImage;
     return bankInfoServiceInterface.getBankToken();
   }
 
-
-  void setAnalyticsFilterName(BuildContext context, String? filterName, bool notify) {
+  void setAnalyticsFilterName(
+      BuildContext context, String? filterName, bool notify) {
     _analyticsName = filterName;
     getAnalyticsFilterData(context, _analyticsName);
-    if(notify) {
+    if (notify) {
       notifyListeners();
     }
   }
 
   void setAnalyticsFilterType(int index, bool notify) {
     _analyticsIndex = index;
-    if(notify) {
+    if (notify) {
       _businessAnalyticsFilterData = null;
       notifyListeners();
     }
   }
 
-  Future<void> getAnalyticsFilterData(BuildContext context, String? type) async {
+  Future<void> getAnalyticsFilterData(
+      BuildContext context, String? type) async {
     _isLoading = true;
-    ApiResponse response = await bankInfoServiceInterface.getOrderFilterData(type);
-    if(response.response != null && response.response!.statusCode == 200) {
-      _businessAnalyticsFilterData = BusinessAnalyticsFilterDataModel.fromJson(response.response!.data);
+    ApiResponse response =
+        await bankInfoServiceInterface.getOrderFilterData(type);
+    if (response.response != null && response.response!.statusCode == 200) {
+      _businessAnalyticsFilterData =
+          BusinessAnalyticsFilterDataModel.fromJson(response.response!.data);
       _isLoading = false;
-    }else {
+    } else {
       _isLoading = false;
       ApiChecker.checkApi(response);
     }
@@ -181,107 +194,110 @@ XFile? get selectedCommissionReceiptImage => _selectedCommissionReceiptImage;
 
   void setWarningValue(bool showWarning, {bool isUpdate = false}) {
     _showWarning = showWarning;
-    if(isUpdate) {
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
-  Future<void> getCurrentMonthCommissionInvoice(BuildContext context, {bool reload = false}) async {
-  if (reload) {
-    _currentMonthCommissionInvoice = null;
-  }
-
-  _isCommissionLoading = true;
-  notifyListeners();
-
-  final data = await bankInfoServiceInterface.getCurrentMonthCommissionInvoice();
-  if (data is CurrentCommissionInvoiceModel) {
-    _currentMonthCommissionInvoice = data;
-  }
-
-  _isCommissionLoading = false;
-  notifyListeners();
-}
-
-Future<void> pickCommissionReceiptImage() async {
-  final XFile? pickedImage = await ImagePicker().pickImage(
-    source: ImageSource.gallery,
-    maxWidth: 1200,
-    imageQuality: 85,
-  );
-
-  if (pickedImage != null) {
-    _selectedCommissionReceiptImage = pickedImage;
-    notifyListeners();
-  }
-}
-
-void clearCommissionReceiptImage({bool notify = true}) {
-  _selectedCommissionReceiptImage = null;
-  if (notify) {
-    notifyListeners();
-  }
-}
-
-String? _validateSelectedCommissionReceipt() {
-  if (_selectedCommissionReceiptImage == null) {
-    return 'يرجى اختيار صورة وصل الدفع';
-  }
-
-  final File file = File(_selectedCommissionReceiptImage!.path);
-
-  if (!file.existsSync()) {
-    return 'تعذر قراءة ملف الوصل المحدد';
-  }
-
-  final List<String> allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
-  final String fileName = _selectedCommissionReceiptImage!.name.toLowerCase();
-  final String fileExtension = fileName.contains('.') ? fileName.split('.').last : '';
-
-  if (!allowedExtensions.contains(fileExtension)) {
-    return 'صيغة الصورة غير مدعومة. الصيغ المسموحة: JPG, JPEG, PNG, WEBP';
-  }
-
-  final int fileSizeInBytes = file.lengthSync();
-  if (fileSizeInBytes > 5 * 1024 * 1024) {
-    return 'حجم الصورة كبير جدًا. الحد الأقصى 5 MB';
-  }
-
-  return null;
-}
-
-Future<ResponseModel> sendCommissionReceipt(
-  BuildContext context, {
-  required int invoiceId,
-  String? note,
-}) async {
-  final String? validationMessage = _validateSelectedCommissionReceipt();
-  if (validationMessage != null) {
-    return ResponseModel(false, validationMessage);
-  }
-
-  _isSendingReceipt = true;
-  notifyListeners();
-
-  try {
-    final ResponseModel responseModel = await bankInfoServiceInterface.sendCommissionReceipt(
-      invoiceId,
-      note,
-      _selectedCommissionReceiptImage!,
-    );
-
-    if (responseModel.isSuccess) {
-      _selectedCommissionReceiptImage = null;
-      await getCurrentMonthCommissionInvoice(context, reload: true);
+  Future<void> getCurrentMonthCommissionInvoice(BuildContext context,
+      {bool reload = false}) async {
+    if (reload) {
+      _currentMonthCommissionInvoice = null;
     }
 
-    return responseModel;
-  } catch (e) {
-    return ResponseModel(false, 'عذرًا، حدث خطأ أثناء الإرسال');
-  } finally {
-    _isSendingReceipt = false;
+    _isCommissionLoading = true;
+    notifyListeners();
+
+    final data =
+        await bankInfoServiceInterface.getCurrentMonthCommissionInvoice();
+    if (data is CurrentCommissionInvoiceModel) {
+      _currentMonthCommissionInvoice = data;
+    }
+
+    _isCommissionLoading = false;
     notifyListeners();
   }
-}
 
+  Future<void> pickCommissionReceiptImage() async {
+    final XFile? pickedImage = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 1200,
+      imageQuality: 85,
+    );
+
+    if (pickedImage != null) {
+      _selectedCommissionReceiptImage = pickedImage;
+      notifyListeners();
+    }
+  }
+
+  void clearCommissionReceiptImage({bool notify = true}) {
+    _selectedCommissionReceiptImage = null;
+    if (notify) {
+      notifyListeners();
+    }
+  }
+
+  String? _validateSelectedCommissionReceipt() {
+    if (_selectedCommissionReceiptImage == null) {
+      return 'يرجى اختيار صورة وصل الدفع';
+    }
+
+    final File file = File(_selectedCommissionReceiptImage!.path);
+
+    if (!file.existsSync()) {
+      return 'تعذر قراءة ملف الوصل المحدد';
+    }
+
+    final List<String> allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
+    final String fileName = _selectedCommissionReceiptImage!.name.toLowerCase();
+    final String fileExtension =
+        fileName.contains('.') ? fileName.split('.').last : '';
+
+    if (!allowedExtensions.contains(fileExtension)) {
+      return 'صيغة الصورة غير مدعومة. الصيغ المسموحة: JPG, JPEG, PNG, WEBP';
+    }
+
+    final int fileSizeInBytes = file.lengthSync();
+    if (fileSizeInBytes > 5 * 1024 * 1024) {
+      return 'حجم الصورة كبير جدًا. الحد الأقصى 5 MB';
+    }
+
+    return null;
+  }
+
+  Future<ResponseModel> sendCommissionReceipt(
+    BuildContext context, {
+    required int invoiceId,
+    String? note,
+  }) async {
+    final String? validationMessage = _validateSelectedCommissionReceipt();
+    if (validationMessage != null) {
+      return ResponseModel(false, validationMessage);
+    }
+
+    _isSendingReceipt = true;
+    notifyListeners();
+
+    try {
+      final ResponseModel responseModel =
+          await bankInfoServiceInterface.sendCommissionReceipt(
+        invoiceId,
+        note,
+        _selectedCommissionReceiptImage!,
+      );
+
+      if (responseModel.isSuccess) {
+        _selectedCommissionReceiptImage = null;
+        await getCurrentMonthCommissionInvoice(context, reload: true);
+      }
+
+      return responseModel;
+    } catch (e) {
+      return ResponseModel(false, 'عذرًا، حدث خطأ أثناء الإرسال');
+    } finally {
+      _isSendingReceipt = false;
+      notifyListeners();
+    }
+  }
 }

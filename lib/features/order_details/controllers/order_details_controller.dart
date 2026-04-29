@@ -21,10 +21,9 @@ import 'package:sixvalley_vendor_app/localization/language_constrants.dart';
 import 'package:sixvalley_vendor_app/main.dart';
 import 'package:sixvalley_vendor_app/utill/images.dart';
 
-class OrderDetailsController extends ChangeNotifier{
+class OrderDetailsController extends ChangeNotifier {
   final OrderDetailsServiceInterface orderDetailsServiceInterface;
   OrderDetailsController({required this.orderDetailsServiceInterface});
-
 
   List<OrderDetailsModel>? _orderDetails;
   List<OrderDetailsModel>? get orderDetails => _orderDetails;
@@ -34,16 +33,16 @@ class OrderDetailsController extends ChangeNotifier{
   String? get orderStatusType => _orderStatusType;
   int _paymentMethodIndex = 0;
   int get paymentMethodIndex => _paymentMethodIndex;
-  File? _selectedFileForImport ;
-  File? get selectedFileForImport =>_selectedFileForImport;
+  File? _selectedFileForImport;
+  File? get selectedFileForImport => _selectedFileForImport;
   final bool _isLoading = false;
-  bool get isLoading=> _isLoading;
+  bool get isLoading => _isLoading;
 
   bool _isUploadLoading = false;
-  bool get isUploadLoading=> _isUploadLoading;
+  bool get isUploadLoading => _isUploadLoading;
 
   bool _isUpdating = false;
-  bool get isUpdating=> _isUpdating;
+  bool get isUpdating => _isUpdating;
 
   Set<Marker> _markers = HashSet<Marker>();
   Set<Marker> get markers => _markers;
@@ -54,24 +53,27 @@ class OrderDetailsController extends ChangeNotifier{
 
   late OrderSetupModel orderSetupModel;
 
-
-  Future<void> getOrderDetails( String orderID) async {
+  Future<void> getOrderDetails(String orderID) async {
     _orderDetails = null;
-    ApiResponse apiResponse = await orderDetailsServiceInterface.getOrderDetails(orderID);
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    ApiResponse apiResponse =
+        await orderDetailsServiceInterface.getOrderDetails(orderID);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       _orderDetails = [];
-      apiResponse.response!.data.forEach((order) => _orderDetails!.add(OrderDetailsModel.fromJson(order)));
+      apiResponse.response!.data.forEach(
+          (order) => _orderDetails!.add(OrderDetailsModel.fromJson(order)));
     } else {
       ApiChecker.checkApi(apiResponse);
     }
     notifyListeners();
   }
 
-
   void initOrderStatusList(String type) async {
-    ApiResponse apiResponse = await orderDetailsServiceInterface.getOrderStatusList(type);
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-      _orderStatusList =[];
+    ApiResponse apiResponse =
+        await orderDetailsServiceInterface.getOrderStatusList(type);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      _orderStatusList = [];
       _orderStatusList.addAll(apiResponse.response!.data);
       _orderStatusType = apiResponse.response!.data[0];
     } else {
@@ -85,20 +87,26 @@ class OrderDetailsController extends ChangeNotifier{
     notifyListeners();
   }
 
-  void setSelectedFileName(File? fileName){
+  void setSelectedFileName(File? fileName) {
     _selectedFileForImport = fileName;
     notifyListeners();
   }
 
-  Future<ApiResponse> uploadReadyAfterSellDigitalProduct(BuildContext context, File? digitalProductAfterSellFile, String token, String orderId) async {
+  Future<ApiResponse> uploadReadyAfterSellDigitalProduct(BuildContext context,
+      File? digitalProductAfterSellFile, String token, String orderId) async {
     _isUploadLoading = true;
     notifyListeners();
-    ApiResponse  response = await orderDetailsServiceInterface.uploadAfterSellDigitalProduct(digitalProductAfterSellFile, token, orderId);
-    if(response.response!.statusCode == 200) {
+    ApiResponse response =
+        await orderDetailsServiceInterface.uploadAfterSellDigitalProduct(
+            digitalProductAfterSellFile, token, orderId);
+    if (response.response!.statusCode == 200) {
       Navigator.of(Get.context!).pop();
       _isUploadLoading = false;
-      showCustomSnackBarWidget(getTranslated("digital_product_uploaded_successfully", Get.context!), Get.context!, isError: false);
-    }else {
+      showCustomSnackBarWidget(
+          getTranslated("digital_product_uploaded_successfully", Get.context!),
+          Get.context!,
+          isError: false);
+    } else {
       _isUploadLoading = false;
     }
     _isUploadLoading = false;
@@ -106,40 +114,50 @@ class OrderDetailsController extends ChangeNotifier{
     return response;
   }
 
-  BillingAddressData getAddressForMap(BillingAddressData shipping, BillingAddressData? billing) {
-    if(shipping.latitude != null && shipping.longitude != null) {
+  BillingAddressData getAddressForMap(
+      BillingAddressData shipping, BillingAddressData? billing) {
+    if (shipping.latitude != null && shipping.longitude != null) {
       return shipping;
     } else if (billing?.latitude != null && billing?.longitude != null) {
       return billing!;
-    }else {
+    } else {
       return shipping;
     }
   }
 
-
   void setMarker(BillingAddressData address) async {
     _markers = HashSet<Marker>();
     Uint8List destinationImageData = await convertAssetToUnit8List(
-      Images.marker, width: 50,
+      Images.marker,
+      width: 50,
     );
 
     _markers.add(Marker(
       markerId: const MarkerId('destination'),
-      position: LatLng(double.parse(address.latitude!), double.parse(address.longitude!)),
+      position: LatLng(
+          double.parse(address.latitude!), double.parse(address.longitude!)),
       icon: BitmapDescriptor.bytes(destinationImageData),
     ));
 
     notifyListeners();
   }
 
-  Future<Uint8List> convertAssetToUnit8List(String imagePath, {int width = 50}) async {
+  Future<Uint8List> convertAssetToUnit8List(String imagePath,
+      {int width = 50}) async {
     ByteData data = await rootBundle.load(imagePath);
-    Codec codec = await instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
+    Codec codec = await instantiateImageCodec(data.buffer.asUint8List(),
+        targetWidth: width);
     FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ImageByteFormat.png))!.buffer.asUint8List();
+    return (await fi.image.toByteData(format: ImageByteFormat.png))!
+        .buffer
+        .asUint8List();
   }
 
-  void productDownload({required String url, required String fileName, required int index, bool isIos = false}) async {
+  void productDownload(
+      {required String url,
+      required String fileName,
+      required int index,
+      bool isIos = false}) async {
     _isDownloadLoading = true;
     _downloadIndex = index;
     notifyListeners();
@@ -152,14 +170,32 @@ class OrderDetailsController extends ChangeNotifier{
     var selectedFolderType = AndroidFolderType.download;
     final subFolderPathCtrl = TextEditingController();
 
+    List<String> fileTypes = [
+      '.txt',
+      '.jpg',
+      '.jpeg',
+      '.png',
+      '.gif',
+      '.bmp',
+      '.webp',
+      '.mp3',
+      '.wav',
+      '.ogg',
+      '.m4a',
+      '.aac',
+      '.mp4',
+      '.avi',
+      '.mkv',
+      '.webm',
+      '.3gp',
+      '.pdf',
+      '.doc'
+    ];
 
-    List<String> fileTypes = [ '.txt', '.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.mp3', '.wav', '.ogg', '.m4a', '.aac',
-      '.mp4', '.avi', '.mkv', '.webm', '.3gp', '.pdf', '.doc'];
-
-    if(isIos) {
-      HttpClientResponse apiResponse = await orderDetailsServiceInterface.productDownload(url);
+    if (isIos) {
+      HttpClientResponse apiResponse =
+          await orderDetailsServiceInterface.productDownload(url);
       if (apiResponse.statusCode == 200) {
-
         List<int> downloadData = [];
         Directory downloadDirectory;
 
@@ -167,7 +203,8 @@ class OrderDetailsController extends ChangeNotifier{
           downloadDirectory = await getApplicationDocumentsDirectory();
         } else {
           downloadDirectory = Directory('/storage/emulated/0/Download');
-          if (!await downloadDirectory.exists()) downloadDirectory = (await getExternalStorageDirectory())!;
+          if (!await downloadDirectory.exists())
+            downloadDirectory = (await getExternalStorageDirectory())!;
         }
 
         String filePathName = "${downloadDirectory.path}/$fileName";
@@ -175,13 +212,17 @@ class OrderDetailsController extends ChangeNotifier{
         bool fileExists = await savedFile.exists();
 
         if (fileExists) {
-          ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(content: Text("File already downloaded")));
+          ScaffoldMessenger.of(Get.context!).showSnackBar(
+              const SnackBar(content: Text("File already downloaded")));
           _isDownloadLoading = false;
         } else {
           apiResponse.listen((d) => downloadData.addAll(d), onDone: () {
             savedFile.writeAsBytes(downloadData);
           });
-          showCustomSnackBarWidget(getTranslated('product_downloaded_successfully', Get.context!), Get.context!, isError: false);
+          showCustomSnackBarWidget(
+              getTranslated('product_downloaded_successfully', Get.context!),
+              Get.context!,
+              isError: false);
 
           _isDownloadLoading = false;
           Navigator.of(Get.context!).pop();
@@ -189,7 +230,9 @@ class OrderDetailsController extends ChangeNotifier{
       } else {
         _isDownloadLoading = false;
 
-        showCustomSnackBarWidget(getTranslated('product_download_failed', Get.context!), Get.context!);
+        showCustomSnackBarWidget(
+            getTranslated('product_download_failed', Get.context!),
+            Get.context!);
         Navigator.of(Get.context!).pop();
       }
     } else {
@@ -199,10 +242,12 @@ class OrderDetailsController extends ChangeNotifier{
       File savedFile = File(filePathName);
       bool fileExists = await savedFile.exists();
 
-      if(fileExists) {
-        showCustomSnackBarWidget(getTranslated('file_already_downloaded', Get.context!), Get.context!);
-      } else{
-        task  = await FlutterDownloader.enqueue(
+      if (fileExists) {
+        showCustomSnackBarWidget(
+            getTranslated('file_already_downloaded', Get.context!),
+            Get.context!);
+      } else {
+        task = await FlutterDownloader.enqueue(
           url: url,
           savedDir: downloadDirectory.path,
           fileName: fileName,
@@ -211,9 +256,12 @@ class OrderDetailsController extends ChangeNotifier{
           openFileFromNotification: true,
         );
 
-        if(task != null) {
-          if(!fileTypes.contains(getFileExtension(fileName))){
-            showCustomSnackBarWidget(getTranslated('product_downloaded_successfully', Get.context!), Get.context!, isError: false);
+        if (task != null) {
+          if (!fileTypes.contains(getFileExtension(fileName))) {
+            showCustomSnackBarWidget(
+                getTranslated('product_downloaded_successfully', Get.context!),
+                Get.context!,
+                isError: false);
             await openFileManager(
               androidConfig: AndroidConfig(
                 folderType: selectedFolderType,
@@ -222,11 +270,13 @@ class OrderDetailsController extends ChangeNotifier{
                 folderPath: subFolderPathCtrl.text.trim(),
               ),
             );
-          }else {
+          } else {
             // Navigator.of(Get.context!).pop();
           }
-        } else{
-          showCustomSnackBarWidget(getTranslated('product_download_failed', Get.context!), Get.context!);
+        } else {
+          showCustomSnackBarWidget(
+              getTranslated('product_download_failed', Get.context!),
+              Get.context!);
           // Navigator.of(Get.context!).pop();
         }
       }
@@ -235,7 +285,6 @@ class OrderDetailsController extends ChangeNotifier{
     notifyListeners();
   }
 
-
   String getFileExtension(String fileName) {
     if (fileName.contains('.')) {
       return '.${fileName.split('.').last}';
@@ -243,51 +292,51 @@ class OrderDetailsController extends ChangeNotifier{
     return '';
   }
 
-
   void emptyOrderDetails() {
     _orderDetails = null;
     notifyListeners();
   }
 
-
-    Future<bool> setUpOrder({required OrderSetupModel orderSetupModel}) async {
-  bool isSuccess = false;
-  _isUpdating = true;
-  notifyListeners();
-
-  try {
-    ApiResponse apiResponse = await orderDetailsServiceInterface.setUpOrder(orderSetupModel);
-
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-      String? message = getTranslated('updated_successfully', Get.context!);
-      showCustomSnackBarWidget(
-        message,
-        Get.context!,
-        isToaster: true,
-        isError: false,
-        sanckBarType: SnackBarType.success,
-      );
-
-      await getOrderDetails(orderSetupModel.orderId.toString());
-      await Provider.of<OrderController>(Get.context!, listen: false)
-          .getOrderList(Get.context!, 1, 'all');
-
-      isSuccess = true;
-    } else {
-      ApiChecker.checkApi(apiResponse);
-    }
-  } finally {
-    _isUpdating = false;
+  Future<bool> setUpOrder({required OrderSetupModel orderSetupModel}) async {
+    bool isSuccess = false;
+    _isUpdating = true;
     notifyListeners();
+
+    try {
+      ApiResponse apiResponse =
+          await orderDetailsServiceInterface.setUpOrder(orderSetupModel);
+
+      if (apiResponse.response != null &&
+          apiResponse.response!.statusCode == 200) {
+        String? message = getTranslated('updated_successfully', Get.context!);
+        showCustomSnackBarWidget(
+          message,
+          Get.context!,
+          isToaster: true,
+          isError: false,
+          sanckBarType: SnackBarType.success,
+        );
+
+        await getOrderDetails(orderSetupModel.orderId.toString());
+        await Provider.of<OrderController>(Get.context!, listen: false)
+            .getOrderList(Get.context!, 1, 'all');
+
+        isSuccess = true;
+      } else {
+        ApiChecker.checkApi(apiResponse);
+      }
+    } finally {
+      _isUpdating = false;
+      notifyListeners();
+    }
+
+    return isSuccess;
   }
 
-  return isSuccess;
-}
-
-
-  void initializeOrderSetupModel({required Order? order}){
-    orderSetupModel = OrderSetupModel(orderId: order?.id, paymentStatus: order?.paymentStatus, orderStatus: order?.orderStatus);
+  void initializeOrderSetupModel({required Order? order}) {
+    orderSetupModel = OrderSetupModel(
+        orderId: order?.id,
+        paymentStatus: order?.paymentStatus,
+        orderStatus: order?.orderStatus);
   }
-
-
 }

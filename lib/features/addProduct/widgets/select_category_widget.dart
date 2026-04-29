@@ -38,18 +38,21 @@ class SelectCategoryWidgetState extends State<SelectCategoryWidget> {
                         categoryController.categoryList!.length >=
                             categoryController.categoryIndex!)
                     ? categoryController
-                        .categoryList![categoryController.categoryIndex! - 1].name
+                        .categoryList![categoryController.categoryIndex! - 1]
+                        .name
                     : null;
 
-            final String? selectedSubCategoryName =
-                (categoryController.subCategoryList != null &&
-                        categoryController.subCategoryIndex != null &&
-                        categoryController.subCategoryIndex! > 0 &&
-                        categoryController.subCategoryList!.length >=
-                            categoryController.subCategoryIndex!)
-                    ? categoryController
-                        .subCategoryList![categoryController.subCategoryIndex! - 1].name
-                    : null;
+            final String? selectedSubCategoryName = (categoryController
+                            .subCategoryList !=
+                        null &&
+                    categoryController.subCategoryIndex != null &&
+                    categoryController.subCategoryIndex! > 0 &&
+                    categoryController.subCategoryList!.length >=
+                        categoryController.subCategoryIndex!)
+                ? categoryController
+                    .subCategoryList![categoryController.subCategoryIndex! - 1]
+                    .name
+                : null;
 
             final String? selectedSubSubCategoryName =
                 (categoryController.subSubCategoryList != null &&
@@ -57,7 +60,8 @@ class SelectCategoryWidgetState extends State<SelectCategoryWidget> {
                         categoryController.subSubCategoryIndex! > 0 &&
                         categoryController.subSubCategoryList!.length >=
                             categoryController.subSubCategoryIndex!)
-                    ? categoryController.subSubCategoryList![
+                    ? categoryController
+                        .subSubCategoryList![
                             categoryController.subSubCategoryIndex! - 1]
                         .name
                     : null;
@@ -66,7 +70,6 @@ class SelectCategoryWidgetState extends State<SelectCategoryWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: Dimensions.paddingSizeSmall),
-
                 _buildSelectorField(
                   title: getTranslated('category', context) ?? 'الفئة',
                   placeholder:
@@ -79,14 +82,14 @@ class SelectCategoryWidgetState extends State<SelectCategoryWidget> {
                       items: categoryController.categoryList!
                           .map((e) => e.name ?? '')
                           .toList(),
-                      selectedIndex:
-                          categoryController.categoryIndex != null &&
-                                  categoryController.categoryIndex! > 0
-                              ? categoryController.categoryIndex! - 1
-                              : null,
+                      selectedIndex: categoryController.categoryIndex != null &&
+                              categoryController.categoryIndex! > 0
+                          ? categoryController.categoryIndex! - 1
+                          : null,
                       onSelect: (int index) {
                         final int selectedValue = index + 1;
-                        categoryController.setCategoryIndex(selectedValue, true);
+                        categoryController.setCategoryIndex(
+                            selectedValue, true);
                         categoryController.getSubCategoryList(
                           context,
                           categoryController.categorySelectedIndex,
@@ -98,18 +101,16 @@ class SelectCategoryWidgetState extends State<SelectCategoryWidget> {
                     );
                   },
                 ),
-
                 addProductController.productTypeIndex == 0
                     ? const SizedBox(height: Dimensions.paddingSizeMedium)
                     : const SizedBox.shrink(),
-
                 if (categoryController.subCategoryList != null &&
                     categoryController.subCategoryList!.isNotEmpty)
                   Column(
                     children: [
                       _buildSelectorField(
-                        title:
-                            getTranslated('sub_category', context) ?? 'الفئة الفرعية',
+                        title: getTranslated('sub_category', context) ??
+                            'الفئة الفرعية',
                         placeholder: getTranslated('sub_category', context) ??
                             'الفئة الفرعية',
                         value: selectedSubCategoryName,
@@ -138,14 +139,11 @@ class SelectCategoryWidgetState extends State<SelectCategoryWidget> {
                           );
                         },
                       ),
-
                       addProductController.productTypeIndex == 0
-                          ? const SizedBox(
-                              height: Dimensions.paddingSizeMedium)
+                          ? const SizedBox(height: Dimensions.paddingSizeMedium)
                           : const SizedBox.shrink(),
                     ],
                   ),
-
                 if (categoryController.subSubCategoryList != null &&
                     categoryController.subSubCategoryList!.isNotEmpty)
                   Column(
@@ -153,8 +151,9 @@ class SelectCategoryWidgetState extends State<SelectCategoryWidget> {
                       _buildSelectorField(
                         title: getTranslated('sub_sub_category', context) ??
                             'الفئة الفرعية جدًا',
-                        placeholder: getTranslated('sub_sub_category', context) ??
-                            'الفئة الفرعية جدًا',
+                        placeholder:
+                            getTranslated('sub_sub_category', context) ??
+                                'الفئة الفرعية جدًا',
                         value: selectedSubSubCategoryName,
                         onTap: () async {
                           await _showPickerBottomSheet(
@@ -163,11 +162,12 @@ class SelectCategoryWidgetState extends State<SelectCategoryWidget> {
                             items: categoryController.subSubCategoryList!
                                 .map((e) => e.name ?? '')
                                 .toList(),
-                            selectedIndex:
-                                categoryController.subSubCategoryIndex != null &&
-                                        categoryController.subSubCategoryIndex! > 0
-                                    ? categoryController.subSubCategoryIndex! - 1
-                                    : null,
+                            selectedIndex: categoryController
+                                            .subSubCategoryIndex !=
+                                        null &&
+                                    categoryController.subSubCategoryIndex! > 0
+                                ? categoryController.subSubCategoryIndex! - 1
+                                : null,
                             onSelect: (int index) {
                               final int selectedValue = index + 1;
                               categoryController.setSubSubCategoryIndex(
@@ -177,10 +177,8 @@ class SelectCategoryWidgetState extends State<SelectCategoryWidget> {
                           );
                         },
                       ),
-
                       addProductController.productTypeIndex == 0
-                          ? const SizedBox(
-                              height: Dimensions.paddingSizeMedium)
+                          ? const SizedBox(height: Dimensions.paddingSizeMedium)
                           : const SizedBox.shrink(),
                     ],
                   ),
@@ -223,8 +221,7 @@ class SelectCategoryWidgetState extends State<SelectCategoryWidget> {
                 width: 34,
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor.withValues(alpha: .08),
-                  borderRadius:
-                      BorderRadius.circular(Dimensions.radiusDefault),
+                  borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                 ),
                 child: Icon(
                   Icons.keyboard_arrow_down_rounded,
@@ -272,7 +269,6 @@ class SelectCategoryWidgetState extends State<SelectCategoryWidget> {
                   ),
                 ),
                 const SizedBox(height: Dimensions.paddingSizeDefault),
-
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: Dimensions.paddingSizeLarge,
@@ -284,8 +280,7 @@ class SelectCategoryWidgetState extends State<SelectCategoryWidget> {
                           title,
                           style: robotoBold.copyWith(
                             fontSize: Dimensions.fontSizeLarge,
-                            color:
-                                Theme.of(context).textTheme.bodyLarge?.color,
+                            color: Theme.of(context).textTheme.bodyLarge?.color,
                           ),
                         ),
                       ),
@@ -294,14 +289,14 @@ class SelectCategoryWidgetState extends State<SelectCategoryWidget> {
                         borderRadius:
                             BorderRadius.circular(Dimensions.radiusDefault),
                         child: Container(
-                          padding: const EdgeInsets.all(
-                              Dimensions.paddingSizeSmall),
+                          padding:
+                              const EdgeInsets.all(Dimensions.paddingSizeSmall),
                           decoration: BoxDecoration(
                             color: Theme.of(context)
                                 .primaryColor
                                 .withValues(alpha: .08),
-                            borderRadius: BorderRadius.circular(
-                                Dimensions.radiusDefault),
+                            borderRadius:
+                                BorderRadius.circular(Dimensions.radiusDefault),
                           ),
                           child: Icon(
                             Icons.close_rounded,
@@ -313,9 +308,7 @@ class SelectCategoryWidgetState extends State<SelectCategoryWidget> {
                     ],
                   ),
                 ),
-
                 const SizedBox(height: Dimensions.paddingSizeDefault),
-
                 Expanded(
                   child: ListView.separated(
                     padding: const EdgeInsets.fromLTRB(
@@ -349,8 +342,8 @@ class SelectCategoryWidgetState extends State<SelectCategoryWidget> {
                                     .primaryColor
                                     .withValues(alpha: .10)
                                 : Theme.of(context).cardColor,
-                            borderRadius: BorderRadius.circular(
-                                Dimensions.radiusDefault),
+                            borderRadius:
+                                BorderRadius.circular(Dimensions.radiusDefault),
                             border: Border.all(
                               color: isSelected
                                   ? Theme.of(context).primaryColor

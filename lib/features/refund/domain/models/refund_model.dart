@@ -23,29 +23,27 @@ class RefundModel {
   OrderDetails? orderDetails;
   Order? order;
 
-
   RefundModel(
       {this.id,
-        this.orderDetailsId,
-        this.customerId,
-        this.status,
-        this.amount,
-        this.productId,
-        this.orderId,
-        this.refundReason,
-        this.images,
-        this.imagesFullUrl,
-        this.createdAt,
-        this.updatedAt,
-        this.product,
-        this.customer,
-        this.approvedNote,
-        this.rejectedNote,
-        this.paymentInfo,
-        this.changeBy,
-        this.orderDetails,
-        this.order
-      });
+      this.orderDetailsId,
+      this.customerId,
+      this.status,
+      this.amount,
+      this.productId,
+      this.orderId,
+      this.refundReason,
+      this.images,
+      this.imagesFullUrl,
+      this.createdAt,
+      this.updatedAt,
+      this.product,
+      this.customer,
+      this.approvedNote,
+      this.rejectedNote,
+      this.paymentInfo,
+      this.changeBy,
+      this.orderDetails,
+      this.order});
 
   RefundModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -56,26 +54,29 @@ class RefundModel {
     productId = json['product_id'];
     orderId = json['order_id'];
     refundReason = json['refund_reason'];
-    if(json['images']!=null && json['images'] is List){
+    if (json['images'] != null && json['images'] is List) {
       images = json['images'].cast<String>();
     }
     if (json['images_full_url'] != null) {
-        imagesFullUrl = <ImageFullUrl>[];
+      imagesFullUrl = <ImageFullUrl>[];
       json['images_full_url'].forEach((v) {
         imagesFullUrl!.add(ImageFullUrl.fromJson(v));
       });
     }
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    product = json['product'] != null ? Product.fromJson(json['product']) : null;
+    product =
+        json['product'] != null ? Product.fromJson(json['product']) : null;
     approvedNote = json['approved_note'];
     rejectedNote = json['rejected_note'];
     paymentInfo = json['payment_info'];
     changeBy = json['change_by'];
-    customer = json['customer'] != null ? Customer.fromJson(json['customer']) : null;
-    orderDetails = json['order_details'] != null ? OrderDetails.fromJson(json['order_details']) : null;
+    customer =
+        json['customer'] != null ? Customer.fromJson(json['customer']) : null;
+    orderDetails = json['order_details'] != null
+        ? OrderDetails.fromJson(json['order_details'])
+        : null;
     order = json['order'] != null ? Order.fromJson(json['order']) : null;
-
   }
 
   Map<String, dynamic> toJson() {
@@ -130,25 +131,24 @@ class Product {
   double? discount;
   String? discountType;
 
-
-  Product(
-      {this.id,
-        this.addedBy,
-        this.userId,
-        this.name,
-        this.slug,
-        this.unit,
-        this.refundable,
-        this.thumbnail,
-        this.thumbnailFullUrl,
-        this.variantProduct,
-        this.attributes,
-        this.choiceOptions,
-        this.variation,
-        this.unitPrice,
-        this.discount,
-        this.discountType,
-      });
+  Product({
+    this.id,
+    this.addedBy,
+    this.userId,
+    this.name,
+    this.slug,
+    this.unit,
+    this.refundable,
+    this.thumbnail,
+    this.thumbnailFullUrl,
+    this.variantProduct,
+    this.attributes,
+    this.choiceOptions,
+    this.variation,
+    this.unitPrice,
+    this.discount,
+    this.discountType,
+  });
 
   Product.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -159,9 +159,9 @@ class Product {
     unit = json['unit'];
     refundable = json['refundable'];
     thumbnail = json['thumbnail'];
-    if(json['variant_product']!=null){
+    if (json['variant_product'] != null) {
       variantProduct = int.parse(json['variant_product'].toString());
-    }else{
+    } else {
       variantProduct = 0;
     }
 
@@ -172,9 +172,8 @@ class Product {
     discount = json['discount'].toDouble();
     discountType = json['discount_type'];
     thumbnailFullUrl = json['thumbnail_full_url'] != null
-      ? ImageFullUrl.fromJson(json['thumbnail_full_url'])
-      : null;
-
+        ? ImageFullUrl.fromJson(json['thumbnail_full_url'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -202,18 +201,14 @@ class Product {
 class OrderDetails {
   String? variant;
 
-
-  OrderDetails(
-      {
-        this.variant,
-       });
+  OrderDetails({
+    this.variant,
+  });
 
   OrderDetails.fromJson(Map<String, dynamic> json) {
-    if(json['variant']!=null){
+    if (json['variant'] != null) {
       variant = json['variant'];
     }
-
-
   }
 
   Map<String, dynamic> toJson() {

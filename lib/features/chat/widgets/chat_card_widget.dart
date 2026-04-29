@@ -18,42 +18,46 @@ class ChatCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final int typeIndex =
+        Provider.of<ChatController>(context, listen: false).userTypeIndex;
 
-  final int typeIndex = Provider.of<ChatController>(context, listen: false).userTypeIndex;
+    int? id = typeIndex == 0
+        ? (chat!.customer?.id ?? -1)
+        : typeIndex == 1
+            ? chat!.deliveryManId
+            : (chat!.adminId ?? 0);
 
-int? id = typeIndex == 0
-    ? (chat!.customer?.id ?? -1)
-    : typeIndex == 1
-        ? chat!.deliveryManId
-        : (chat!.adminId ?? 0);
-
-  String? image = typeIndex == 0
-    ? (chat!.customer != null ? chat?.customer?.imageFullUrl?.path : '')
-    : typeIndex == 1
-        ? chat!.deliveryMan?.imageFullUrl?.path
-        : chat!.admin?.imageFullUrl?.path;
+    String? image = typeIndex == 0
+        ? (chat!.customer != null ? chat?.customer?.imageFullUrl?.path : '')
+        : typeIndex == 1
+            ? chat!.deliveryMan?.imageFullUrl?.path
+            : chat!.admin?.imageFullUrl?.path;
 
     String name = typeIndex == 0
-    ? (chat!.customer != null
-        ? '${chat!.customer?.fName ?? ''} ${chat!.customer?.lName ?? ''}'.trim()
-        : 'Deleted')
-    : typeIndex == 1
-        ? '${chat!.deliveryMan?.fName ?? 'Deliveryman'} ${chat!.deliveryMan?.lName ?? ''}'.trim()
-        : '${chat!.admin?.fName ?? 'Admin'} ${chat!.admin?.lName ?? ''}'.trim();
-
+        ? (chat!.customer != null
+            ? '${chat!.customer?.fName ?? ''} ${chat!.customer?.lName ?? ''}'
+                .trim()
+            : 'Deleted')
+        : typeIndex == 1
+            ? '${chat!.deliveryMan?.fName ?? 'Deliveryman'} ${chat!.deliveryMan?.lName ?? ''}'
+                .trim()
+            : '${chat!.admin?.fName ?? 'Admin'} ${chat!.admin?.lName ?? ''}'
+                .trim();
 
     return Padding(
-      padding:  const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall),
+      padding: const EdgeInsets.symmetric(
+          vertical: Dimensions.paddingSizeExtraSmall),
       child: InkWell(
         splashColor: Colors.transparent,
-        onTap: (){
-
-          Provider.of<ChatController>(context, listen: false).seenMessage(context, id);
+        onTap: () {
+          Provider.of<ChatController>(context, listen: false)
+              .seenMessage(context, id);
           callBack();
 
-          if(name.trim() == "Deleted"){
-            showCustomSnackBarWidget('Customer was deleted', context,  sanckBarType: SnackBarType.success);
-          }else{
+          if (name.trim() == "Deleted") {
+            showCustomSnackBarWidget('Customer was deleted', context,
+                sanckBarType: SnackBarType.success);
+          } else {
             Navigator.push(context, MaterialPageRoute(builder: (_) {
               return ChatScreen(userId: id, name: name);
             }));
@@ -63,63 +67,107 @@ int? id = typeIndex == 0
           padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
           width: MediaQuery.sizeOf(context).width,
           decoration: BoxDecoration(
-            color: (chat?.seenBySeller ?? false)  ? null : Theme.of(context).primaryColor.withValues(alpha: 0.05),
+            color: (chat?.seenBySeller ?? false)
+                ? null
+                : Theme.of(context).primaryColor.withValues(alpha: 0.05),
           ),
-          child: Row(crossAxisAlignment: CrossAxisAlignment.center,mainAxisAlignment: MainAxisAlignment.center,children: [
-
-            ClipRRect(borderRadius: BorderRadius.circular(100),
-              child: CachedNetworkImage(
-                errorWidget: (ctx, url ,err )=>Image.asset(Images.placeholderImage,
-                  height: Dimensions.chatImage, width: Dimensions.chatImage, fit: BoxFit.cover,),
-                placeholder: (ctx, url )=>Image.asset(Images.placeholderImage),
-                imageUrl: '$image',
-                fit: BoxFit.cover, height: Dimensions.chatImage, width: Dimensions.chatImage,
-              ),
-            ),
-            const SizedBox(width: Dimensions.paddingSizeSmall,),
-
-            Expanded(
-              child: Column(crossAxisAlignment:CrossAxisAlignment.start, children: [
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(name, style: titilliumSemiBold.copyWith(
-                      color: (chat?.seenBySeller ?? false)
-                          ? Theme.of(context).textTheme.bodyLarge?.color?.withValues(alpha: 0.5)
-                          : Theme.of(context).textTheme.bodyLarge?.color,
-                    )),
-
-                    Text(
-                      DateConverter.customTime(DateTime.parse(chat!.createdAt!)),
-                      style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).hintColor),
+          child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: CachedNetworkImage(
+                    errorWidget: (ctx, url, err) => Image.asset(
+                      Images.placeholderImage,
+                      height: Dimensions.chatImage,
+                      width: Dimensions.chatImage,
+                      fit: BoxFit.cover,
                     ),
-                  ],
-                ),
-                const SizedBox(height: Dimensions.paddingSizeSmall),
-
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.center,children: [
-
-                  Flexible(
-                    child: Text( (chat!.message == null && chat!.attachment != null) ? getTranslated('sent_attachment', context)! : chat!.message??'',
-                      maxLines: 2,overflow: TextOverflow.ellipsis,
-                      style: titilliumRegular.copyWith(fontSize: Dimensions.fontSizeDefault,
-                          color: (chat?.seenBySeller ?? false) ? Theme.of(context).hintColor : Theme.of(context).textTheme.bodyLarge?.color,
-                      ),
-                    ),
+                    placeholder: (ctx, url) =>
+                        Image.asset(Images.placeholderImage),
+                    imageUrl: '$image',
+                    fit: BoxFit.cover,
+                    height: Dimensions.chatImage,
+                    width: Dimensions.chatImage,
                   ),
-
-                  if((chat?.unseenMessageCount ?? 0 )> 0)
-                    const SizedBox(width: Dimensions.paddingSizeSmall),
-                  if((chat?.unseenMessageCount ?? 0 )> 0)
-                    CircleAvatar(radius: 12, backgroundColor: Theme.of(context).primaryColor,
-                        child: Text('${chat?.unseenMessageCount ?? 0}', style: titilliumRegular.copyWith(
-                            color: Theme.of(context).cardColor,
-                            fontSize: Dimensions.fontSizeSmall,
-                        )),
-                    )
-                ]),
+                ),
+                const SizedBox(
+                  width: Dimensions.paddingSizeSmall,
+                ),
+                Expanded(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(name,
+                                style: titilliumSemiBold.copyWith(
+                                  color: (chat?.seenBySeller ?? false)
+                                      ? Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge
+                                          ?.color
+                                          ?.withValues(alpha: 0.5)
+                                      : Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge
+                                          ?.color,
+                                )),
+                            Text(
+                              DateConverter.customTime(
+                                  DateTime.parse(chat!.createdAt!)),
+                              style: robotoRegular.copyWith(
+                                  fontSize: Dimensions.fontSizeSmall,
+                                  color: Theme.of(context).hintColor),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: Dimensions.paddingSizeSmall),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  (chat!.message == null &&
+                                          chat!.attachment != null)
+                                      ? getTranslated(
+                                          'sent_attachment', context)!
+                                      : chat!.message ?? '',
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: titilliumRegular.copyWith(
+                                    fontSize: Dimensions.fontSizeDefault,
+                                    color: (chat?.seenBySeller ?? false)
+                                        ? Theme.of(context).hintColor
+                                        : Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge
+                                            ?.color,
+                                  ),
+                                ),
+                              ),
+                              if ((chat?.unseenMessageCount ?? 0) > 0)
+                                const SizedBox(
+                                    width: Dimensions.paddingSizeSmall),
+                              if ((chat?.unseenMessageCount ?? 0) > 0)
+                                CircleAvatar(
+                                  radius: 12,
+                                  backgroundColor:
+                                      Theme.of(context).primaryColor,
+                                  child:
+                                      Text('${chat?.unseenMessageCount ?? 0}',
+                                          style: titilliumRegular.copyWith(
+                                            color: Theme.of(context).cardColor,
+                                            fontSize: Dimensions.fontSizeSmall,
+                                          )),
+                                )
+                            ]),
+                      ]),
+                )
               ]),
-            )
-          ]),
         ),
       ),
     );

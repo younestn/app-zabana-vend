@@ -1,7 +1,1 @@
-enum PreviewType {
-  video,
-  audio,
-  pdf,
-  image,
-  others
-}
+enum PreviewType { video, audio, pdf, image, others }

@@ -1,12 +1,10 @@
-
 import 'package:sixvalley_vendor_app/features/shipping/domain/models/shipping_model.dart';
 import 'package:sixvalley_vendor_app/features/shipping/domain/repositories/shipping_repository_interface.dart';
 import 'package:sixvalley_vendor_app/features/shipping/domain/services/shipping_service_interface.dart';
 
-class ShippingService implements ShippingServiceInterface{
+class ShippingService implements ShippingServiceInterface {
   final ShippingRepositoryInterface shippingRepoInterface;
   ShippingService({required this.shippingRepoInterface});
-  
 
   @override
   Future addShipping(ShippingModel? shipping) {
@@ -35,12 +33,14 @@ class ShippingService implements ShippingServiceInterface{
 
   @override
   Future getShippingMethod(String token) {
-   return shippingRepoInterface.getShippingMethod(token);
+    return shippingRepoInterface.getShippingMethod(token);
   }
 
   @override
-  Future setCategoryWiseShippingCost(List<int?> ids, List<double> cost, List<int> multiPly) {
-    return shippingRepoInterface.setCategoryWiseShippingCost(ids, cost, multiPly);
+  Future setCategoryWiseShippingCost(
+      List<int?> ids, List<double> cost, List<int> multiPly) {
+    return shippingRepoInterface.setCategoryWiseShippingCost(
+        ids, cost, multiPly);
   }
 
   @override
@@ -50,26 +50,31 @@ class ShippingService implements ShippingServiceInterface{
 
   @override
   Future shippingOnOff(int? id, int status) {
-   return shippingRepoInterface.shippingOnOff(id, status);
+    return shippingRepoInterface.shippingOnOff(id, status);
   }
 
   @override
-  Future updateShipping(String? title, String? duration, double? cost, int? id) {
+  Future updateShipping(
+      String? title, String? duration, double? cost, int? id) {
     return shippingRepoInterface.updateShipping(title, duration, cost, id);
   }
 
   @override
-Future getNoestSettings(String token) {
-  return shippingRepoInterface.getNoestSettings(token);
-}
+  Future getNoestSettings(String token) {
+    return shippingRepoInterface.getNoestSettings(token);
+  }
 
-@override
-Future saveNoestSettings(String token, String? noestGuid, String? apiToken, int status) {
-  return shippingRepoInterface.saveNoestSettings(token, noestGuid, apiToken, status);
-}
+  @override
+  Future saveNoestSettings(
+      String token, String? noestGuid, String? apiToken, int status) {
+    return shippingRepoInterface.saveNoestSettings(
+        token, noestGuid, apiToken, status);
+  }
 
-@override
-Future testNoestConnection(String token, String? noestGuid, String? apiToken) {
-  return shippingRepoInterface.testNoestConnection(token, noestGuid, apiToken);
-}
+  @override
+  Future testNoestConnection(
+      String token, String? noestGuid, String? apiToken) {
+    return shippingRepoInterface.testNoestConnection(
+        token, noestGuid, apiToken);
+  }
 }

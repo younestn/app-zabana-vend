@@ -24,7 +24,7 @@ class LanguageController with ChangeNotifier {
     } else {
       _selectIndex = -1;
       _languages = [];
-      for (var product in AppConstants.languages)  {
+      for (var product in AppConstants.languages) {
         if (product.languageName!.toLowerCase().contains(query.toLowerCase())) {
           _languages.add(product);
         }

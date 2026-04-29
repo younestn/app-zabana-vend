@@ -4,8 +4,7 @@ class BusinessModel {
   String? _duration;
   int? _cost;
 
-  BusinessModel(
-      {int? id, String? title, String? duration, int? cost}) {
+  BusinessModel({int? id, String? title, String? duration, int? cost}) {
     _id = id;
     _title = title;
     _duration = duration;

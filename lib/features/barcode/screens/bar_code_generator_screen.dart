@@ -17,7 +17,6 @@ import 'package:sixvalley_vendor_app/common/basewidgets/custom_snackbar_widget.d
 import 'package:sixvalley_vendor_app/common/basewidgets/textfeild/custom_text_feild_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class BarCodeGenerateScreen extends StatefulWidget {
   final Product? product;
   const BarCodeGenerateScreen({super.key, this.product});
@@ -36,99 +35,146 @@ class _BarCodeGenerateScreenState extends State<BarCodeGenerateScreen> {
     quantityController.text = '4';
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarWidget(title: getTranslated('bar_code_generator', context)),
-      body: Consumer<BarcodeController>(
-        builder: (context, barCodeController,_) {
-          return Column(children: [
-            Column(children: [
-              Container(padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault, vertical: Dimensions.paddingSizeDefault),
-                child: Column(children: [
-
-                  Row(children: [
-                    Text('${getTranslated('code', context)} : '),
-                    Text('${widget.product!.code}', style: robotoRegular.copyWith(color: Theme.of(context).hintColor))],),
-
-                  Row(children: [
-                   Text('${getTranslated('product_name', context)} : '),
-                   Expanded(
-                     child: Text('${widget.product!.name}', maxLines: 2,overflow: TextOverflow.ellipsis,
-                        style: robotoRegular.copyWith(color: Theme.of(context).hintColor)),
-                  )],),
-              ],),),
-
-              CustomFieldWithTitleWidget(
-                isSKU: true,
-                limitSet: true,
-                setLimitTitle: getTranslated('maximum_quantity_270', context),
-                customTextField: CustomTextFieldWidget(
-                    isPhoneNumber: true,
-                    controller: quantityController),
-                title: '${getTranslated('qty', context)} (1-270)',
-                requiredField: true,
-              ),
-
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
-                const SizedBox(width: Dimensions.fontSizeSmall),
-                Expanded(child: CustomButtonWidget(btnTxt: getTranslated('generate', context),
-                onTap: (){
-                  if(int.parse(quantityController.text)>270 || int.parse(quantityController.text) ==0){
-                    showCustomSnackBarWidget(getTranslated('please_enter_from_1_to_270', context), context);
-                  }else{
-                   barCodeController.setBarCodeQuantity(int.parse(quantityController.text));
-                  }})),
-                const SizedBox(width: Dimensions.fontSizeSmall),
-
-                Expanded(child: CustomButtonWidget(btnTxt: getTranslated('download', context),
-                    onTap : () async {
-                        barCodeController.barCodeDownload(Get.context!, widget.product!.id,int.parse( quantityController.text)).then((value) async {
-                          _launchUrl(Uri.parse(barCodeController.printBarCode!));
-                        });
-                      })),
-
-                const SizedBox(width: Dimensions.fontSizeSmall),
-
-                Expanded(child: CustomButtonWidget(btnTxt: getTranslated('reset', context),onTap: (){
-                  quantityController.text = '4';
-                 barCodeController.setBarCodeQuantity(4);
-                },
-                backgroundColor: Theme.of(context).colorScheme.error,
-                )),
-                const SizedBox(width: Dimensions.fontSizeSmall),
-
-              ],)
-            ],),
+      appBar: CustomAppBarWidget(
+          title: getTranslated('bar_code_generator', context)),
+      body:
+          Consumer<BarcodeController>(builder: (context, barCodeController, _) {
+        return Column(
+          children: [
+            Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: Dimensions.paddingSizeDefault,
+                      vertical: Dimensions.paddingSizeDefault),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Text('${getTranslated('code', context)} : '),
+                          Text('${widget.product!.code}',
+                              style: robotoRegular.copyWith(
+                                  color: Theme.of(context).hintColor))
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text('${getTranslated('product_name', context)} : '),
+                          Expanded(
+                            child: Text('${widget.product!.name}',
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: robotoRegular.copyWith(
+                                    color: Theme.of(context).hintColor)),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                CustomFieldWithTitleWidget(
+                  isSKU: true,
+                  limitSet: true,
+                  setLimitTitle: getTranslated('maximum_quantity_270', context),
+                  customTextField: CustomTextFieldWidget(
+                      isPhoneNumber: true, controller: quantityController),
+                  title: '${getTranslated('qty', context)} (1-270)',
+                  requiredField: true,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const SizedBox(width: Dimensions.fontSizeSmall),
+                    Expanded(
+                        child: CustomButtonWidget(
+                            btnTxt: getTranslated('generate', context),
+                            onTap: () {
+                              if (int.parse(quantityController.text) > 270 ||
+                                  int.parse(quantityController.text) == 0) {
+                                showCustomSnackBarWidget(
+                                    getTranslated(
+                                        'please_enter_from_1_to_270', context),
+                                    context);
+                              } else {
+                                barCodeController.setBarCodeQuantity(
+                                    int.parse(quantityController.text));
+                              }
+                            })),
+                    const SizedBox(width: Dimensions.fontSizeSmall),
+                    Expanded(
+                        child: CustomButtonWidget(
+                            btnTxt: getTranslated('download', context),
+                            onTap: () async {
+                              barCodeController
+                                  .barCodeDownload(
+                                      Get.context!,
+                                      widget.product!.id,
+                                      int.parse(quantityController.text))
+                                  .then((value) async {
+                                _launchUrl(
+                                    Uri.parse(barCodeController.printBarCode!));
+                              });
+                            })),
+                    const SizedBox(width: Dimensions.fontSizeSmall),
+                    Expanded(
+                        child: CustomButtonWidget(
+                      btnTxt: getTranslated('reset', context),
+                      onTap: () {
+                        quantityController.text = '4';
+                        barCodeController.setBarCodeQuantity(4);
+                      },
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                    )),
+                    const SizedBox(width: Dimensions.fontSizeSmall),
+                  ],
+                )
+              ],
+            ),
             const SizedBox(height: Dimensions.paddingSizeDefault),
-
-            Expanded(child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
+            Expanded(
+                child: Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Dimensions.paddingSizeDefault),
               child: GridView.builder(
-                itemCount: barCodeController.barCodeQuantity,
+                  itemCount: barCodeController.barCodeQuantity,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                     mainAxisSpacing: 15,
                     crossAxisSpacing: 15,
-                    childAspectRatio: 1/1.2,
-                  ), itemBuilder: (barcode, index){
+                    childAspectRatio: 1 / 1.2,
+                  ),
+                  itemBuilder: (barcode, index) {
                     return Column(
                       children: [
-                        Text(AppConstants.companyName,
-                          style: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault),),
-                        Text('${widget.product!.name}', maxLines: 1,overflow: TextOverflow.ellipsis,
-                          style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall),),
-                        Text(PriceConverter.convertPrice(context, widget.product!.unitPrice)),
+                        Text(
+                          AppConstants.companyName,
+                          style: robotoBold.copyWith(
+                              fontSize: Dimensions.fontSizeDefault),
+                        ),
+                        Text(
+                          '${widget.product!.name}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: robotoRegular.copyWith(
+                              fontSize: Dimensions.fontSizeSmall),
+                        ),
+                        Text(PriceConverter.convertPrice(
+                            context, widget.product!.unitPrice)),
                         BarcodeWidget(
-                          data: 'code : ${widget.product!.code}',style: robotoRegular.copyWith(),
+                          data: 'code : ${widget.product!.code}',
+                          style: robotoRegular.copyWith(),
                           barcode: Barcode.code128(),
-                        )],);
-                }),
+                        )
+                      ],
+                    );
+                  }),
             ))
-          ],);
-        }
-      ),
+          ],
+        );
+      }),
     );
   }
 

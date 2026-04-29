@@ -11,14 +11,14 @@ class ProfileBody {
 
   ProfileBody(
       {String? sMethod,
-        String? fName,
-        String? lName,
-        String? bankName,
-        String? branch,
-        String? accountNo,
-        String? holderName,
-        String? password,
-        String? image}) {
+      String? fName,
+      String? lName,
+      String? bankName,
+      String? branch,
+      String? accountNo,
+      String? holderName,
+      String? password,
+      String? image}) {
     _sMethod = sMethod;
     _fName = fName;
     _lName = lName;

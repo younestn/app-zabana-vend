@@ -7,9 +7,11 @@ import 'package:sixvalley_vendor_app/features/bank_info/domain/models/current_co
 abstract class BankInfoServiceInterface {
   Future<dynamic> getBankList();
   Future<dynamic> chartFilterData(String? type);
-  Future<dynamic> updateBank(ProfileInfoModel userInfoModel, ProfileBody seller, String token);
+  Future<dynamic> updateBank(
+      ProfileInfoModel userInfoModel, ProfileBody seller, String token);
   String getBankToken();
   Future<dynamic> getOrderFilterData(String? type);
   Future<dynamic> getCurrentMonthCommissionInvoice();
-Future<ResponseModel> sendCommissionReceipt(int invoiceId, String? note, XFile receiptImage);
+  Future<ResponseModel> sendCommissionReceipt(
+      int invoiceId, String? note, XFile receiptImage);
 }

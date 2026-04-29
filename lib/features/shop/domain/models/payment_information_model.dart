@@ -44,15 +44,15 @@ class PaymentInfoData {
 
   PaymentInfoData(
       {this.id,
-        this.userId,
-        this.withdrawMethodId,
-        this.methodName,
-        this.methodInfo,
-        this.isActive,
-        this.isDefault,
-        this.createdAt,
-        this.updatedAt,
-        this.withdrawMethod});
+      this.userId,
+      this.withdrawMethodId,
+      this.methodName,
+      this.methodInfo,
+      this.isActive,
+      this.isDefault,
+      this.createdAt,
+      this.updatedAt,
+      this.withdrawMethod});
 
   PaymentInfoData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -60,15 +60,15 @@ class PaymentInfoData {
     withdrawMethodId = json['withdraw_method_id'];
     methodName = json['method_name'];
     methodInfo = json['method_info'] != null
-      ? Map<String, dynamic>.from(json['method_info'])
-      : null;
+        ? Map<String, dynamic>.from(json['method_info'])
+        : null;
     isActive = json['is_active'];
     isDefault = json['is_default'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     withdrawMethod = json['withdraw_method'] != null
-      ? WithdrawMethod.fromJson(json['withdraw_method'])
-      : null;
+        ? WithdrawMethod.fromJson(json['withdraw_method'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -102,12 +102,12 @@ class WithdrawMethod {
 
   WithdrawMethod(
       {this.id,
-        this.methodName,
-        this.methodFields,
-        this.isDefault,
-        this.isActive,
-        this.createdAt,
-        this.updatedAt});
+      this.methodName,
+      this.methodFields,
+      this.isDefault,
+      this.isActive,
+      this.createdAt,
+      this.updatedAt});
 
   WithdrawMethod.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -129,8 +129,7 @@ class WithdrawMethod {
     data['id'] = id;
     data['method_name'] = methodName;
     if (methodFields != null) {
-      data['method_fields'] =
-          methodFields!.map((v) => v.toJson()).toList();
+      data['method_fields'] = methodFields!.map((v) => v.toJson()).toList();
     }
     data['is_default'] = isDefault;
     data['is_active'] = isActive;
@@ -147,7 +146,7 @@ class InfoMethodFields {
   int? isRequired;
 
   InfoMethodFields(
-    {this.inputType, this.inputName, this.placeholder, this.isRequired});
+      {this.inputType, this.inputName, this.placeholder, this.isRequired});
 
   InfoMethodFields.fromJson(Map<String, dynamic> json) {
     inputType = json['input_type'];
@@ -165,7 +164,6 @@ class InfoMethodFields {
     return data;
   }
 }
-
 
 class MethodInfo {
   String? date;

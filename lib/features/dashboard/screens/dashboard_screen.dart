@@ -39,16 +39,28 @@ class DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    String languageCode = Provider.of<LocalizationController>(context, listen: false).locale.countryCode == 'US'?
-    'en':Provider.of<LocalizationController>(context, listen: false).locale.countryCode!.toLowerCase();
+    String languageCode =
+        Provider.of<LocalizationController>(context, listen: false)
+                    .locale
+                    .countryCode ==
+                'US'
+            ? 'en'
+            : Provider.of<LocalizationController>(context, listen: false)
+                .locale
+                .countryCode!
+                .toLowerCase();
     Provider.of<ProfileController>(context, listen: false).getSellerInfo();
-    Provider.of<DigitalProductController>(context, listen: false).getDigitalAuthor();
-    Provider.of<DigitalProductController>(context, listen: false).getPublishingHouse();
-    Provider.of<CategoryController>(context,listen: false).getCategoryList(context, null, languageCode);
-    Provider.of<CartController>(context,listen: false).getCartData();
+    Provider.of<DigitalProductController>(context, listen: false)
+        .getDigitalAuthor();
+    Provider.of<DigitalProductController>(context, listen: false)
+        .getPublishingHouse();
+    Provider.of<CategoryController>(context, listen: false)
+        .getCategoryList(context, null, languageCode);
+    Provider.of<CartController>(context, listen: false).getCartData();
     Provider.of<ShopController>(context, listen: false).getShopInfo();
 
-    Provider.of<TransactionController>(context, listen: false).getTransactionList(context,'all','','');
+    Provider.of<TransactionController>(context, listen: false)
+        .getTransactionList(context, 'all', '', '');
     Provider.of<WalletController>(context, listen: false).getPaymentInfoList();
 
     _screens = [
@@ -57,10 +69,8 @@ class DashboardScreenState extends State<DashboardScreen> {
           setPage(1);
         });
       }),
-
       const OrderScreen(),
       const RefundScreen(fromNotification: false),
-
     ];
 
     NetworkInfo.checkConnectivity(context);
@@ -77,7 +87,7 @@ class DashboardScreenState extends State<DashboardScreen> {
           _onWillPop(context);
         }
 
-        if(didPop) return;
+        if (didPop) return;
       },
       child: Scaffold(
         key: _scaffoldKey,
@@ -103,11 +113,10 @@ class DashboardScreenState extends State<DashboardScreen> {
               });
             } else {
               showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                backgroundColor: Colors.transparent,
-                builder: (con) => const MenuBottomSheetWidget()
-              );
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (con) => const MenuBottomSheetWidget());
             }
           },
         ),
@@ -126,14 +135,19 @@ class DashboardScreenState extends State<DashboardScreen> {
   BottomNavigationBarItem _barItem(String icon, String? label, int index) {
     return BottomNavigationBarItem(
       icon: Padding(
-        padding: const EdgeInsets.only(bottom : Dimensions.paddingSizeExtraSmall),
+        padding:
+            const EdgeInsets.only(bottom: Dimensions.paddingSizeExtraSmall),
         child: Stack(
           clipBehavior: Clip.none,
           children: [
-            SizedBox(width: index == _pageIndex ? Dimensions.iconSizeLarge : Dimensions.iconSizeMedium,
-              child: Image.asset(icon, color: index == _pageIndex ?
-              Theme.of(context).primaryColor : Theme.of(context).hintColor)
-            ),
+            SizedBox(
+                width: index == _pageIndex
+                    ? Dimensions.iconSizeLarge
+                    : Dimensions.iconSizeMedium,
+                child: Image.asset(icon,
+                    color: index == _pageIndex
+                        ? Theme.of(context).primaryColor
+                        : Theme.of(context).hintColor)),
           ],
         ),
       ),
@@ -148,17 +162,19 @@ class DashboardScreenState extends State<DashboardScreen> {
     });
   }
 
-
   Future<bool> _onWillPop(BuildContext context) async {
-    showAnimatedDialogWidget(context,  ConfirmationDialogWidget(icon: Images.logOut,
-      title: getTranslated('exit_app', context),
-      description: getTranslated('do_you_want_to_exit_the_app', context),
-      onYesPressed: (){
-        SystemNavigator.pop();
-      },
-    ), isFlip: true);
+    showAnimatedDialogWidget(
+        context,
+        ConfirmationDialogWidget(
+          icon: Images.logOut,
+          title: getTranslated('exit_app', context),
+          description: getTranslated('do_you_want_to_exit_the_app', context),
+          onYesPressed: () {
+            SystemNavigator.pop();
+          },
+        ),
+        isFlip: true);
 
     return true;
   }
-
 }

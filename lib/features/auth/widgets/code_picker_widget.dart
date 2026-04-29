@@ -122,7 +122,7 @@ class CodePickerWidget extends StatefulWidget {
     List<Map<String, String>> jsonList = countryList;
 
     List<CountryCode> elements =
-    jsonList.map((json) => CountryCode.fromJson(json)).toList();
+        jsonList.map((json) => CountryCode.fromJson(json)).toList();
 
     if (comparator != null) {
       elements.sort(comparator);
@@ -130,12 +130,12 @@ class CodePickerWidget extends StatefulWidget {
 
     if (countryFilter != null && countryFilter!.isNotEmpty) {
       final uppercaseCustomList =
-      countryFilter!.map((criteria) => criteria.toUpperCase()).toList();
+          countryFilter!.map((criteria) => criteria.toUpperCase()).toList();
       elements = elements
           .where((criteria) =>
-      uppercaseCustomList.contains(criteria.code) ||
-          uppercaseCustomList.contains(criteria.name) ||
-          uppercaseCustomList.contains(criteria.dialCode))
+              uppercaseCustomList.contains(criteria.code) ||
+              uppercaseCustomList.contains(criteria.name) ||
+              uppercaseCustomList.contains(criteria.dialCode))
           .toList();
     }
     return CodePickerWidgetState(elements);
@@ -160,13 +160,18 @@ class CodePickerWidgetState extends State<CodePickerWidget> {
     } else {
       internalWidget = TextButton(
         onPressed: widget.enabled ? showCodePickerWidgetDialog : null,
-        child: Padding( padding: widget.padding,
-          child: Flex( direction: Axis.horizontal, mainAxisSize: MainAxisSize.min,
+        child: Padding(
+          padding: widget.padding,
+          child: Flex(
+            direction: Axis.horizontal,
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               if (widget.showFlagMain != null
                   ? widget.showFlagMain!
                   : widget.showFlag)
-                Flexible(flex: widget.alignLeft ? 0 : 1, fit: widget.alignLeft ? FlexFit.tight : FlexFit.loose,
+                Flexible(
+                  flex: widget.alignLeft ? 0 : 1,
+                  fit: widget.alignLeft ? FlexFit.tight : FlexFit.loose,
                   child: Container(
                     clipBehavior: widget.flagDecoration == null
                         ? Clip.none
@@ -231,9 +236,9 @@ class CodePickerWidgetState extends State<CodePickerWidget> {
     if (oldWidget.initialSelection != widget.initialSelection) {
       if (widget.initialSelection != null) {
         selectedItem = elements.firstWhere(
-                (criteria) =>
-            (criteria.code!.toUpperCase() ==
-                widget.initialSelection!.toUpperCase()) ||
+            (criteria) =>
+                (criteria.code!.toUpperCase() ==
+                    widget.initialSelection!.toUpperCase()) ||
                 (criteria.dialCode == widget.initialSelection) ||
                 (criteria.name!.toUpperCase() ==
                     widget.initialSelection!.toUpperCase()),
@@ -251,9 +256,9 @@ class CodePickerWidgetState extends State<CodePickerWidget> {
 
     if (widget.initialSelection != null) {
       selectedItem = elements.firstWhere(
-              (item) =>
-          (item.code!.toUpperCase() ==
-              widget.initialSelection!.toUpperCase()) ||
+          (item) =>
+              (item.code!.toUpperCase() ==
+                  widget.initialSelection!.toUpperCase()) ||
               (item.dialCode == widget.initialSelection) ||
               (item.name!.toUpperCase() ==
                   widget.initialSelection!.toUpperCase()),
@@ -264,17 +269,17 @@ class CodePickerWidgetState extends State<CodePickerWidget> {
 
     favoriteElements = elements
         .where((item) =>
-    widget.favorite.firstWhereOrNull((criteria) =>
-    item.code!.toUpperCase() == criteria.toUpperCase() ||
-        item.dialCode == criteria ||
-        item.name!.toUpperCase() == criteria.toUpperCase()) !=
-        null)
+            widget.favorite.firstWhereOrNull((criteria) =>
+                item.code!.toUpperCase() == criteria.toUpperCase() ||
+                item.dialCode == criteria ||
+                item.name!.toUpperCase() == criteria.toUpperCase()) !=
+            null)
         .toList();
   }
 
   void showCodePickerWidgetDialog() async {
     final item = await showDialog(
-      barrierColor: widget.barrierColor ?? Colors.grey.withValues(alpha:0.5),
+      barrierColor: widget.barrierColor ?? Colors.grey.withValues(alpha: 0.5),
       context: context,
       builder: (context) => Center(
         child: Dialog(

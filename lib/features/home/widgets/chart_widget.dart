@@ -23,14 +23,24 @@ class ChartWidget extends StatelessWidget {
             color: Theme.of(context).primaryColor.withValues(alpha: 0.05),
             spreadRadius: -3,
             blurRadius: 12,
-            offset: Offset.fromDirection(0,6),
+            offset: Offset.fromDirection(0, 6),
           )
         ],
       ),
-      child: Padding(padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall, horizontal: Dimensions.paddingSizeSmall),
-        child: Consumer<BankInfoController>(builder: (context, bankInfo, child) {
-          return (bankInfo.userCommissions!=null && bankInfo.userEarnings != null) ?
-          const TransactionChart() : SizedBox(height : 300,  child: EarningStatisticsShimmer(isDarkMode: Provider.of<ThemeController>(context).darkTheme));
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+            vertical: Dimensions.paddingSizeExtraSmall,
+            horizontal: Dimensions.paddingSizeSmall),
+        child:
+            Consumer<BankInfoController>(builder: (context, bankInfo, child) {
+          return (bankInfo.userCommissions != null &&
+                  bankInfo.userEarnings != null)
+              ? const TransactionChart()
+              : SizedBox(
+                  height: 300,
+                  child: EarningStatisticsShimmer(
+                      isDarkMode:
+                          Provider.of<ThemeController>(context).darkTheme));
         }),
       ),
     );

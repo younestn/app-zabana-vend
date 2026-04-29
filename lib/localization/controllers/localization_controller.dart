@@ -14,7 +14,8 @@ class LocalizationController extends ChangeNotifier {
   }
 
   int? _languageIndex;
-  Locale _locale = Locale(AppConstants.languages[0].languageCode!, AppConstants.languages[0].countryCode);
+  Locale _locale = Locale(AppConstants.languages[0].languageCode!,
+      AppConstants.languages[0].countryCode);
   bool _isLtr = true;
   Locale get locale => _locale;
   bool get isLtr => _isLtr;
@@ -22,25 +23,28 @@ class LocalizationController extends ChangeNotifier {
   List<LanguageModel> _languages = [];
   List<LanguageModel> get languages => _languages;
 
-
   void setLanguage(Locale locale, int index) {
     _locale = locale;
     _languageIndex = index;
-    if(_locale.languageCode == 'ar') {
+    if (_locale.languageCode == 'ar') {
       _isLtr = false;
-    }else {
+    } else {
       _isLtr = true;
     }
     _saveLanguage(_locale);
-    Provider.of<AuthController>(Get.context!, listen: false).setCurrentLanguage(_locale.languageCode);
+    Provider.of<AuthController>(Get.context!, listen: false)
+        .setCurrentLanguage(_locale.languageCode);
     notifyListeners();
   }
 
   Future<void> _loadCurrentLanguage() async {
-    _locale = Locale(sharedPreferences!.getString(AppConstants.languageCode) ?? AppConstants.languages[0].languageCode!,
-        sharedPreferences!.getString(AppConstants.countryCode) ?? AppConstants.languages[0].countryCode);
-    for(int index=0; index<AppConstants.languages.length; index++) {
-      if(AppConstants.languages[index].languageCode == _locale.languageCode) {
+    _locale = Locale(
+        sharedPreferences!.getString(AppConstants.languageCode) ??
+            AppConstants.languages[0].languageCode!,
+        sharedPreferences!.getString(AppConstants.countryCode) ??
+            AppConstants.languages[0].countryCode);
+    for (int index = 0; index < AppConstants.languages.length; index++) {
+      if (AppConstants.languages[index].languageCode == _locale.languageCode) {
         _languageIndex = index;
         break;
       }
@@ -52,13 +56,12 @@ class LocalizationController extends ChangeNotifier {
   }
 
   Future<void> _saveLanguage(Locale locale) async {
-    sharedPreferences!.setString(AppConstants.languageCode, locale.languageCode);
+    sharedPreferences!
+        .setString(AppConstants.languageCode, locale.languageCode);
     sharedPreferences!.setString(AppConstants.countryCode, locale.countryCode!);
   }
 
   String? getCurrentLanguage() {
-  return sharedPreferences!.getString(AppConstants.languageCode) ?? 'en';
-}
-
-
+    return sharedPreferences!.getString(AppConstants.languageCode) ?? 'en';
+  }
 }

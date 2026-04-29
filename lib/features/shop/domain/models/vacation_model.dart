@@ -6,14 +6,14 @@ class VacationModel {
   String? vacationNote;
   String? method;
 
-  VacationModel(
-      {this.vacationStatus,
-        this.vacationDurationType,
-        this.vacationStartDate,
-        this.vacationEndDate,
-        this.vacationNote,
-        this.method = 'put',
-      });
+  VacationModel({
+    this.vacationStatus,
+    this.vacationDurationType,
+    this.vacationStartDate,
+    this.vacationEndDate,
+    this.vacationNote,
+    this.method = 'put',
+  });
 
   VacationModel.fromJson(Map<String, dynamic> json) {
     vacationStatus = json['vacation_status'];
@@ -34,5 +34,4 @@ class VacationModel {
       '_method': method,
     };
   }
-
 }

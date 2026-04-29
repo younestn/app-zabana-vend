@@ -13,8 +13,10 @@ class WalletTransactionListViewWidget extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: transactionProvider!.transactionList!.length,
-      itemBuilder: (context, index) => TransactionWidget(transactionModel: transactionProvider!.transactionList![index]),
-      separatorBuilder: (BuildContext context, int index) => const SizedBox(height: Dimensions.paddingSizeExtraSmall),
+      itemBuilder: (context, index) => TransactionWidget(
+          transactionModel: transactionProvider!.transactionList![index]),
+      separatorBuilder: (BuildContext context, int index) =>
+          const SizedBox(height: Dimensions.paddingSizeExtraSmall),
     );
   }
 }

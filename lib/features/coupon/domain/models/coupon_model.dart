@@ -53,24 +53,24 @@ class Coupons {
 
   Coupons(
       {this.id,
-        this.addedBy,
-        this.couponType,
-        this.couponBearer,
-        this.sellerId,
-        this.customerId,
-        this.title,
-        this.code,
-        this.startDate,
-        this.expireDate,
-        this.minPurchase,
-        this.maxDiscount,
-        this.discount,
-        this.discountType,
-        this.status,
-        this.createdAt,
-        this.updatedAt,
-        this.limit,
-        this.orderCount});
+      this.addedBy,
+      this.couponType,
+      this.couponBearer,
+      this.sellerId,
+      this.customerId,
+      this.title,
+      this.code,
+      this.startDate,
+      this.expireDate,
+      this.minPurchase,
+      this.maxDiscount,
+      this.discount,
+      this.discountType,
+      this.status,
+      this.createdAt,
+      this.updatedAt,
+      this.limit,
+      this.orderCount});
 
   Coupons.fromJson(Map<String, dynamic> json) {
     id = json['id'];

@@ -8,23 +8,30 @@ class TransactionShimmerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final baseColor = Theme.of(context).disabledColor.withValues(alpha: 0.2);
-    final highlightColor = Theme.of(context).disabledColor.withValues(alpha:0.1);
+    final highlightColor =
+        Theme.of(context).disabledColor.withValues(alpha: 0.1);
 
     return Shimmer.fromColors(
       baseColor: baseColor,
       highlightColor: highlightColor,
       child: ListView.builder(
-        padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
+        padding:
+            const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
         itemCount: 10,
         itemBuilder: (context, index) => Container(
           margin: const EdgeInsets.fromLTRB(
-            Dimensions.paddingSizeSmall, 0, Dimensions.paddingSizeSmall, Dimensions.paddingSizeSmall,
+            Dimensions.paddingSizeSmall,
+            0,
+            Dimensions.paddingSizeSmall,
+            Dimensions.paddingSizeSmall,
           ),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Dimensions.paddingSizeExtraSmall),
+            borderRadius:
+                BorderRadius.circular(Dimensions.paddingSizeExtraSmall),
             color: Theme.of(context).hintColor.withValues(alpha: 0.3),
           ),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             // Header section
             Container(
               padding: const EdgeInsets.symmetric(
@@ -51,7 +58,8 @@ class TransactionShimmerWidget extends StatelessWidget {
             Container(
               width: MediaQuery.of(context).size.width,
               padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-              child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              child:
+                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

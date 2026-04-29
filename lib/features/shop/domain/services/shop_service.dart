@@ -7,7 +7,7 @@ import 'package:sixvalley_vendor_app/features/shop/domain/models/withdrawal_meth
 import 'package:sixvalley_vendor_app/features/shop/domain/repositories/shop_repository_interface.dart';
 import 'package:sixvalley_vendor_app/features/shop/domain/services/shop_service_interface.dart';
 
-class ShopService implements ShopServiceInterface{
+class ShopService implements ShopServiceInterface {
   final ShopRepositoryInterface shopRepositoryInterface;
   ShopService({required this.shopRepositoryInterface});
 
@@ -21,13 +21,25 @@ class ShopService implements ShopServiceInterface{
     return shopRepositoryInterface.temporaryClose(status);
   }
 
-
-
   @override
-  Future updateShop(ShopModel userInfoModel, File? file, XFile? shopBanner, XFile? secondaryBanner, XFile? offerBanner, {String? minimumOrderAmount, String? freeDeliveryStatus, String? freeDeliveryOverAmount,
-    String? taxIdentificationNumber, String? tinExpireDate, String? stockLimit, XFile? tinCertificate}) {
-    return shopRepositoryInterface.updateShop(userInfoModel, file, shopBanner, secondaryBanner, offerBanner, minimumOrderAmount: minimumOrderAmount, freeDeliveryOverAmount: freeDeliveryOverAmount, freeDeliveryStatus: freeDeliveryStatus,
-      taxIdentificationNumber: taxIdentificationNumber, tinExpireDate: tinExpireDate, stockLimit: stockLimit, tinCertificate :  tinCertificate);
+  Future updateShop(ShopModel userInfoModel, File? file, XFile? shopBanner,
+      XFile? secondaryBanner, XFile? offerBanner,
+      {String? minimumOrderAmount,
+      String? freeDeliveryStatus,
+      String? freeDeliveryOverAmount,
+      String? taxIdentificationNumber,
+      String? tinExpireDate,
+      String? stockLimit,
+      XFile? tinCertificate}) {
+    return shopRepositoryInterface.updateShop(
+        userInfoModel, file, shopBanner, secondaryBanner, offerBanner,
+        minimumOrderAmount: minimumOrderAmount,
+        freeDeliveryOverAmount: freeDeliveryOverAmount,
+        freeDeliveryStatus: freeDeliveryStatus,
+        taxIdentificationNumber: taxIdentificationNumber,
+        tinExpireDate: tinExpireDate,
+        stockLimit: stockLimit,
+        tinCertificate: tinCertificate);
   }
 
   @override
@@ -70,14 +82,8 @@ class ShopService implements ShopServiceInterface{
     return shopRepositoryInterface.updateSetupGuideApp(key, value);
   }
 
-
-
   @override
-  Future<HttpClientResponse> downloadTinCertificate(String url) async{
+  Future<HttpClientResponse> downloadTinCertificate(String url) async {
     return await shopRepositoryInterface.downloadTinCertificate(url);
   }
-
-
-
-
 }

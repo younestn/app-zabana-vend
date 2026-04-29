@@ -9,31 +9,42 @@ class DropDownForShippingTypeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Padding(
-      padding: const EdgeInsets.fromLTRB(Dimensions.paddingSizeDefault, Dimensions.paddingSizeDefault, Dimensions.paddingSizeDefault, 0),
-      child: Consumer<ShippingController>(
-        builder: (context, shippingProvider, _) {
-          return Container(padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
-            decoration: BoxDecoration(color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(Dimensions.paddingSizeExtraSmall),
-              border: Border.all(width: .5, color: Theme.of(context).hintColor.withValues(alpha:.7)),
-            ),
-            child: DropdownButton<String>(
-              value: shippingProvider.selectedShippingTypeName,
-              items: shippingProvider.shippingType.map((String value) {
-                return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(getTranslated(value, context)!));
-              }).toList(),
-              onChanged: (val) {
-                shippingProvider.setShippingTypeIndex(context, val == 'category_wise'? 0: val == 'order_wise'?1:2);
-              },
-              isExpanded: true,
-              underline: const SizedBox(),
-            ),
-          );
-        }
-      ),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(Dimensions.paddingSizeDefault,
+          Dimensions.paddingSizeDefault, Dimensions.paddingSizeDefault, 0),
+      child:
+          Consumer<ShippingController>(builder: (context, shippingProvider, _) {
+        return Container(
+          padding: const EdgeInsets.symmetric(
+              horizontal: Dimensions.paddingSizeSmall),
+          decoration: BoxDecoration(
+            color: Theme.of(context).cardColor,
+            borderRadius:
+                BorderRadius.circular(Dimensions.paddingSizeExtraSmall),
+            border: Border.all(
+                width: .5,
+                color: Theme.of(context).hintColor.withValues(alpha: .7)),
+          ),
+          child: DropdownButton<String>(
+            value: shippingProvider.selectedShippingTypeName,
+            items: shippingProvider.shippingType.map((String value) {
+              return DropdownMenuItem<String>(
+                  value: value, child: Text(getTranslated(value, context)!));
+            }).toList(),
+            onChanged: (val) {
+              shippingProvider.setShippingTypeIndex(
+                  context,
+                  val == 'category_wise'
+                      ? 0
+                      : val == 'order_wise'
+                          ? 1
+                          : 2);
+            },
+            isExpanded: true,
+            underline: const SizedBox(),
+          ),
+        );
+      }),
     );
   }
 }

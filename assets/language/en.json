@@ -1092,5 +1092,21 @@
   "same_as_shipping_address": "Same as shipping address",
   "no_brand": "No Brand",
   "your_app_is_deprecated": "The app you using is deprecated. A newer version of this app is available. Please update your app.",
-  "update_now": "Update Now"
+  "update_now": "Update Now",
+  "seller_badge": "Seller Badge",
+  "your_current_badge": "Your Current Badge",
+  "badge_not_evaluated_yet": "Badge not evaluated yet",
+  "new_seller": "New Seller",
+  "rising_seller": "Rising Seller",
+  "verified_seller": "Verified Seller",
+  "trusted_seller": "Trusted Seller",
+  "elite_seller": "Elite Seller",
+  "compliance_score": "Compliance Score",
+  "automatic_badge": "Automatic badge",
+  "manual_badge": "Manual badge",
+  "badge_assigned_by_admin": "Assigned by admin",
+  "badge_level": "Badge level",
+  "seller_performance": "Seller Performance",
+  "view_your_seller_badge": "View your seller badge",
+  "badge_based_on_performance": "This badge is based on shop performance and compliance"
 }

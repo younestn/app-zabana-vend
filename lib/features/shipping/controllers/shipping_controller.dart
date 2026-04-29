@@ -18,109 +18,126 @@ import 'package:sixvalley_vendor_app/features/settings/screens/order_wise_shippi
 import 'package:sixvalley_vendor_app/features/shipping/screens/category_wise_shipping_screen.dart';
 import 'package:sixvalley_vendor_app/features/shipping/widgets/product_wise_shipping_widget.dart';
 
-
 class ShippingController extends ChangeNotifier {
   final ShippingServiceInterface shippingServiceInterface;
   ShippingController({required this.shippingServiceInterface});
 
   List<ShippingModel>? _shippingList;
-  List<ShippingModel>? get  shippingList => _shippingList;
+  List<ShippingModel>? get shippingList => _shippingList;
   int _shippingIndex = 0;
   int get shippingIndex => _shippingIndex;
   bool _isLoading = false;
   bool get isLoading => _isLoading;
   NoestSettingsModel? _noestSettingsModel;
-NoestSettingsModel? get noestSettingsModel => _noestSettingsModel;
+  NoestSettingsModel? get noestSettingsModel => _noestSettingsModel;
 
-List<NoestDeliveryMethodModel> get noestDeliveryMethods => _noestSettingsModel?.deliveryMethods ?? [];
+  List<NoestDeliveryMethodModel> get noestDeliveryMethods =>
+      _noestSettingsModel?.deliveryMethods ?? [];
 
-bool _isNoestLoading = false;
-bool get isNoestLoading => _isNoestLoading;
+  bool _isNoestLoading = false;
+  bool get isNoestLoading => _isNoestLoading;
 
-bool _isNoestConnectionLoading = false;
-bool get isNoestConnectionLoading => _isNoestConnectionLoading;
+  bool _isNoestConnectionLoading = false;
+  bool get isNoestConnectionLoading => _isNoestConnectionLoading;
 
   List<AllCategoryShippingCost>? _categoryWiseShipping;
-  List<AllCategoryShippingCost>? get categoryWiseShipping => _categoryWiseShipping;
-String _getErrorMessage(dynamic error) {
-  if (error is String) {
-    return error.toString();
-  } else {
-    ErrorResponse errorResponse = error;
-    if (errorResponse.errors != null && errorResponse.errors!.isNotEmpty) {
-      return errorResponse.errors![0].message ?? 'error';
+  List<AllCategoryShippingCost>? get categoryWiseShipping =>
+      _categoryWiseShipping;
+  String _getErrorMessage(dynamic error) {
+    if (error is String) {
+      return error.toString();
+    } else {
+      ErrorResponse errorResponse = error;
+      if (errorResponse.errors != null && errorResponse.errors!.isNotEmpty) {
+        return errorResponse.errors![0].message ?? 'error';
+      }
+      return 'error';
     }
-    return 'error';
-  }
-}
-Future<void> getNoestSettings() async {
-  String token = Provider.of<AuthController>(Get.context!, listen: false).getUserToken();
-  ApiResponse apiResponse = await shippingServiceInterface.getNoestSettings(token);
-
-  if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-    _noestSettingsModel = NoestSettingsModel.fromJson(apiResponse.response!.data);
-  } else {
-    ApiChecker.checkApi(apiResponse);
-  }
-  notifyListeners();
-}
-
-Future<void> saveNoestSettings(String? noestGuid, String? apiToken, int status, Function callback) async {
-  _isNoestLoading = true;
-  notifyListeners();
-
-  String token = Provider.of<AuthController>(Get.context!, listen: false).getUserToken();
-  ApiResponse apiResponse = await shippingServiceInterface.saveNoestSettings(token, noestGuid, apiToken, status);
-
-  if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-    await getNoestSettings();
-    callback(true, apiResponse.response!.data['message'] ?? '');
-  } else {
-    callback(false, _getErrorMessage(apiResponse.error));
   }
 
-  _isNoestLoading = false;
-  notifyListeners();
-}
+  Future<void> getNoestSettings() async {
+    String token =
+        Provider.of<AuthController>(Get.context!, listen: false).getUserToken();
+    ApiResponse apiResponse =
+        await shippingServiceInterface.getNoestSettings(token);
 
-Future<void> testNoestConnection(String? noestGuid, String? apiToken, Function callback) async {
-  _isNoestConnectionLoading = true;
-  notifyListeners();
-
-  String token = Provider.of<AuthController>(Get.context!, listen: false).getUserToken();
-  ApiResponse apiResponse = await shippingServiceInterface.testNoestConnection(token, noestGuid, apiToken);
-
-  if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-    await getNoestSettings();
-    callback(true, apiResponse.response!.data['message'] ?? '');
-  } else {
-    callback(false, _getErrorMessage(apiResponse.error));
-  }
-
-  _isNoestConnectionLoading = false;
-  notifyListeners();
-}
-
-
-  Future<void> getShippingList(String token) async {
-    _shippingIndex = 0;
-    ApiResponse apiResponse = await shippingServiceInterface.getShippingMethod(token);
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-      _shippingList = [];
-      apiResponse.response!.data.forEach((shippingMethod) => _shippingList!.add(ShippingModel.fromJson(shippingMethod)));
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      _noestSettingsModel =
+          NoestSettingsModel.fromJson(apiResponse.response!.data);
     } else {
       ApiChecker.checkApi(apiResponse);
     }
     notifyListeners();
   }
 
+  Future<void> saveNoestSettings(String? noestGuid, String? apiToken,
+      int status, Function callback) async {
+    _isNoestLoading = true;
+    notifyListeners();
+
+    String token =
+        Provider.of<AuthController>(Get.context!, listen: false).getUserToken();
+    ApiResponse apiResponse = await shippingServiceInterface.saveNoestSettings(
+        token, noestGuid, apiToken, status);
+
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      await getNoestSettings();
+      callback(true, apiResponse.response!.data['message'] ?? '');
+    } else {
+      callback(false, _getErrorMessage(apiResponse.error));
+    }
+
+    _isNoestLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> testNoestConnection(
+      String? noestGuid, String? apiToken, Function callback) async {
+    _isNoestConnectionLoading = true;
+    notifyListeners();
+
+    String token =
+        Provider.of<AuthController>(Get.context!, listen: false).getUserToken();
+    ApiResponse apiResponse = await shippingServiceInterface
+        .testNoestConnection(token, noestGuid, apiToken);
+
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      await getNoestSettings();
+      callback(true, apiResponse.response!.data['message'] ?? '');
+    } else {
+      callback(false, _getErrorMessage(apiResponse.error));
+    }
+
+    _isNoestConnectionLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> getShippingList(String token) async {
+    _shippingIndex = 0;
+    ApiResponse apiResponse =
+        await shippingServiceInterface.getShippingMethod(token);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      _shippingList = [];
+      apiResponse.response!.data.forEach((shippingMethod) =>
+          _shippingList!.add(ShippingModel.fromJson(shippingMethod)));
+    } else {
+      ApiChecker.checkApi(apiResponse);
+    }
+    notifyListeners();
+  }
 
   Future addShippingMethod(ShippingModel? shipping, Function callback) async {
     _isLoading = true;
     notifyListeners();
-    ApiResponse apiResponse = await shippingServiceInterface.addShipping(shipping);
+    ApiResponse apiResponse =
+        await shippingServiceInterface.addShipping(shipping);
 
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       callback(true, '');
       notifyListeners();
     } else {
@@ -142,12 +159,16 @@ Future<void> testNoestConnection(String? noestGuid, String? apiToken, Function c
     _isLoading = false;
     notifyListeners();
   }
-  Future updateShippingMethod( String? title,String? duration,double? cost, int? id, Function callback) async {
+
+  Future updateShippingMethod(String? title, String? duration, double? cost,
+      int? id, Function callback) async {
     _isLoading = true;
     notifyListeners();
-    ApiResponse apiResponse = await shippingServiceInterface.updateShipping(title,duration,cost,id);
+    ApiResponse apiResponse = await shippingServiceInterface.updateShipping(
+        title, duration, cost, id);
 
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       callback(true, '');
     } else {
       String? errorMessage;
@@ -168,15 +189,20 @@ Future<void> testNoestConnection(String? noestGuid, String? apiToken, Function c
     _isLoading = false;
     notifyListeners();
   }
+
   Future<void> deleteShipping(int? id) async {
     _isLoading = true;
     notifyListeners();
     ApiResponse response = await shippingServiceInterface.deleteShipping(id);
-    if(response.response!.statusCode == 200) {
+    if (response.response!.statusCode == 200) {
       Navigator.pop(Get.context!);
-      showCustomSnackBarWidget(getTranslated('shipping_method_deleted_successfully', Get.context!),Get.context!, isError: false);
-     getShippingList(Provider.of<AuthController>(Get.context!,listen: false).getUserToken());
-    }else {
+      showCustomSnackBarWidget(
+          getTranslated('shipping_method_deleted_successfully', Get.context!),
+          Get.context!,
+          isError: false);
+      getShippingList(Provider.of<AuthController>(Get.context!, listen: false)
+          .getUserToken());
+    } else {
       ApiChecker.checkApi(response);
     }
     _isLoading = false;
@@ -185,37 +211,41 @@ Future<void> testNoestConnection(String? noestGuid, String? apiToken, Function c
 
   List<bool> _isMultiply = [];
   List<int> _isMultiplyInt = [];
-  List<int> get isMultiplyInt =>_isMultiplyInt;
+  List<int> get isMultiplyInt => _isMultiplyInt;
   List<bool> get isMultiply => _isMultiply;
   void toggleMultiply(BuildContext context, bool isOk, int index) {
     _isMultiply[index] = isOk;
-    if(_isMultiply[index]){
+    if (_isMultiply[index]) {
       _isMultiplyInt[index] = 1;
-    }else{
+    } else {
       _isMultiplyInt[index] = 0;
     }
     notifyListeners();
-
   }
 
-  List<int?> _ids =[];
+  List<int?> _ids = [];
   List<int?> get ids => _ids;
   Future<void> getCategoryWiseShippingMethod() async {
-    ApiResponse apiResponse = await shippingServiceInterface.getCategoryWiseShippingMethod();
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-      _categoryWiseShipping =[];
-      _isMultiply =[];
-      _isMultiplyInt =[];
-      _ids =[];
-      _categoryWiseShipping!.addAll(CategoryWiseShippingModel.fromJson(apiResponse.response!.data).allCategoryShippingCost!);
-      apiResponse.response!.data['all_category_shipping_cost'].forEach((isMulti) {
-
-        AllCategoryShippingCost shippingCost = AllCategoryShippingCost.fromJson(isMulti);
+    ApiResponse apiResponse =
+        await shippingServiceInterface.getCategoryWiseShippingMethod();
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      _categoryWiseShipping = [];
+      _isMultiply = [];
+      _isMultiplyInt = [];
+      _ids = [];
+      _categoryWiseShipping!.addAll(
+          CategoryWiseShippingModel.fromJson(apiResponse.response!.data)
+              .allCategoryShippingCost!);
+      apiResponse.response!.data['all_category_shipping_cost']
+          .forEach((isMulti) {
+        AllCategoryShippingCost shippingCost =
+            AllCategoryShippingCost.fromJson(isMulti);
         _ids.add(shippingCost.id);
-        if(shippingCost.multiplyQty??false){
+        if (shippingCost.multiplyQty ?? false) {
           _isMultiply.add(true);
           _isMultiplyInt.add(1);
-        }else{
+        } else {
           _isMultiply.add(false);
           _isMultiplyInt.add(0);
         }
@@ -226,23 +256,22 @@ Future<void> testNoestConnection(String? noestGuid, String? apiToken, Function c
     notifyListeners();
   }
 
-  String? _selectedShippingType ='';
-  String? get selectedShippingType =>_selectedShippingType;
+  String? _selectedShippingType = '';
+  String? get selectedShippingType => _selectedShippingType;
   Future<void> getSelectedShippingMethodType(BuildContext context) async {
-    ApiResponse apiResponse = await shippingServiceInterface.getSelectedShippingMethodType();
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    ApiResponse apiResponse =
+        await shippingServiceInterface.getSelectedShippingMethodType();
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       _selectedShippingType = apiResponse.response!.data['type'];
-      Provider.of<SplashController>(Get.context!,listen: false).initShippingType(_selectedShippingType);
-      if(_selectedShippingType == 'order_wise'){
+      Provider.of<SplashController>(Get.context!, listen: false)
+          .initShippingType(_selectedShippingType);
+      if (_selectedShippingType == 'order_wise') {
         setShippingType(0);
-
-      }
-      else if(_selectedShippingType == 'product_wise'){
+      } else if (_selectedShippingType == 'product_wise') {
         setShippingType(1);
-
-      }else{
+      } else {
         setShippingType(2);
-
       }
     } else {
       ApiChecker.checkApi(apiResponse);
@@ -250,58 +279,70 @@ Future<void> testNoestConnection(String? noestGuid, String? apiToken, Function c
     notifyListeners();
   }
 
-  void setShippingType(int index){
+  void setShippingType(int index) {
     _shippingIndex = index;
     notifyListeners();
   }
 
-  Future<ApiResponse> setShippingMethodType(BuildContext context, String? type) async {
-    ApiResponse apiResponse = await shippingServiceInterface.setShippingMethodType(type);
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-     showCustomSnackBarWidget(getTranslated('shipping_method_updated_successfully', Get.context!), Get.context!, isToaster: true, isError: false);
+  Future<ApiResponse> setShippingMethodType(
+      BuildContext context, String? type) async {
+    ApiResponse apiResponse =
+        await shippingServiceInterface.setShippingMethodType(type);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      showCustomSnackBarWidget(
+          getTranslated('shipping_method_updated_successfully', Get.context!),
+          Get.context!,
+          isToaster: true,
+          isError: false);
     } else {
       ApiChecker.checkApi(apiResponse);
     }
     notifyListeners();
     return apiResponse;
-
   }
 
-  Future<ApiResponse> setCategoryWiseShippingCost(BuildContext context, List<int? >  ids, List<double> cost, List<int> multiPly) async {
+  Future<ApiResponse> setCategoryWiseShippingCost(BuildContext context,
+      List<int?> ids, List<double> cost, List<int> multiPly) async {
     _isLoading = true;
     notifyListeners();
-    ApiResponse apiResponse = await shippingServiceInterface.setCategoryWiseShippingCost(ids, cost, multiPly);
+    ApiResponse apiResponse = await shippingServiceInterface
+        .setCategoryWiseShippingCost(ids, cost, multiPly);
 
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       getCategoryWiseShippingMethod();
-      showCustomSnackBarWidget(getTranslated('category_cost_updated_successfully', Get.context!), Get.context!, isToaster: true, isError: false);
-
+      showCustomSnackBarWidget(
+          getTranslated('category_cost_updated_successfully', Get.context!),
+          Get.context!,
+          isToaster: true,
+          isError: false);
     } else {
-       ApiChecker.checkApi(apiResponse);
-
+      ApiChecker.checkApi(apiResponse);
     }
     _isLoading = false;
     notifyListeners();
     return apiResponse;
   }
 
-   List<TextEditingController> _shippingCostController = [];
-   List<TextEditingController> get shippingCostController=>_shippingCostController;
-   List<FocusNode> _shippingCostNode = [];
-   List<FocusNode> get shippingCostNode=> _shippingCostNode;
+  List<TextEditingController> _shippingCostController = [];
+  List<TextEditingController> get shippingCostController =>
+      _shippingCostController;
+  List<FocusNode> _shippingCostNode = [];
+  List<FocusNode> get shippingCostNode => _shippingCostNode;
 
-  void setShippingCost(){
-    _shippingCostController =[];
-    _shippingCostNode =[];
-    for(int i= 0; i<categoryWiseShipping!.length; i++){
+  void setShippingCost() {
+    _shippingCostController = [];
+    _shippingCostNode = [];
+    for (int i = 0; i < categoryWiseShipping!.length; i++) {
       for (var categoryWiseShipping in categoryWiseShipping!) {
-        _shippingCostController.add(TextEditingController(text: PriceConverter.convertPriceWithoutSymbol(Get.context!, categoryWiseShipping.cost))) ;
-        _shippingCostNode.add(FocusNode()) ;
-
+        _shippingCostController.add(TextEditingController(
+            text: PriceConverter.convertPriceWithoutSymbol(
+                Get.context!, categoryWiseShipping.cost)));
+        _shippingCostNode.add(FocusNode());
       }
     }
   }
-
 
   List<String> shippingType = ['category_wise', 'order_wise', 'product_type'];
   int _selectedShippingTypeIndex = 0;
@@ -310,41 +351,47 @@ Future<void> testNoestConnection(String? noestGuid, String? apiToken, Function c
   String _selectedShippingTypeName = 'category_wise';
   String get selectedShippingTypeName => _selectedShippingTypeName;
 
-  void iniType (String name){
+  void iniType(String name) {
     _selectedShippingTypeName = name;
-
   }
 
-
-  void setShippingTypeIndex(BuildContext context, int value, {bool notify = false}){
+  void setShippingTypeIndex(BuildContext context, int value,
+      {bool notify = false}) {
     _selectedShippingTypeIndex = value;
-    if(_selectedShippingTypeIndex == 0){
+    if (_selectedShippingTypeIndex == 0) {
       _selectedShippingTypeName = 'category_wise';
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const CategoryWiseShippingScreen()));
-    }else if(_selectedShippingTypeIndex == 1){
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (_) => const CategoryWiseShippingScreen()));
+    } else if (_selectedShippingTypeIndex == 1) {
       _selectedShippingTypeName = 'order_wise';
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const OrderWiseShippingScreen()));
-    }else{
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (_) => const OrderWiseShippingScreen()));
+    } else {
       _selectedShippingTypeName = 'product_type';
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const ProductWiseShippingWidget()));
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (_) => const ProductWiseShippingWidget()));
     }
     notifyListeners();
   }
 
-  Future shippingOnOff(BuildContext context, int? id, int status, int? index) async {
+  Future shippingOnOff(
+      BuildContext context, int? id, int status, int? index) async {
     _isLoading = true;
     notifyListeners();
-    ApiResponse apiResponse = await shippingServiceInterface.shippingOnOff(id,status);
+    ApiResponse apiResponse =
+        await shippingServiceInterface.shippingOnOff(id, status);
 
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       _shippingList![index!].status = status;
-      showCustomSnackBarWidget(getTranslated('status_updated_successfully', Get.context!), Get.context!, isError: false);
-    } else {
-
-    }
+      showCustomSnackBarWidget(
+          getTranslated('status_updated_successfully', Get.context!),
+          Get.context!,
+          isError: false);
+    } else {}
     _isLoading = false;
     notifyListeners();
   }
-
-
 }

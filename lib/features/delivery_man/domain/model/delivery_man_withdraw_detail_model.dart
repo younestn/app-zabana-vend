@@ -1,4 +1,3 @@
-
 import 'package:sixvalley_vendor_app/features/delivery_man/domain/model/delivery_man_detail_model.dart';
 
 class DeliveryManWithdrawDetailModel {
@@ -8,7 +7,7 @@ class DeliveryManWithdrawDetailModel {
 
   DeliveryManWithdrawDetailModel.fromJson(Map<String, dynamic> json) {
     details =
-    json['details'] != null ? Details.fromJson(json['details']) : null;
+        json['details'] != null ? Details.fromJson(json['details']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -31,19 +30,19 @@ class Details {
 
   Details(
       {this.id,
-        this.amount,
-        this.transactionNote,
-        this.approved,
-        this.createdAt,
-        this.updatedAt,
-        this.deliveryMen});
+      this.amount,
+      this.transactionNote,
+      this.approved,
+      this.createdAt,
+      this.updatedAt,
+      this.deliveryMen});
 
   Details.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    if(json['amount'] != null){
-      try{
+    if (json['amount'] != null) {
+      try {
         amount = json['amount'].toDouble();
-      }catch(e){
+      } catch (e) {
         amount = double.parse(json['amount'].toString());
       }
     }
@@ -71,5 +70,3 @@ class Details {
     return data;
   }
 }
-
-

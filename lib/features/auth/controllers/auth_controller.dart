@@ -35,7 +35,7 @@ class AuthController with ChangeNotifier {
   bool _isActiveRememberMe = false;
   bool get isActiveRememberMe => _isActiveRememberMe;
   int _selectionTabIndex = 1;
-  int get selectionTabIndex =>_selectionTabIndex;
+  int get selectionTabIndex => _selectionTabIndex;
   String _verificationCode = '';
   String get verificationCode => _verificationCode;
   bool _isEnableVerificationCode = false;
@@ -47,7 +47,8 @@ class AuthController with ChangeNotifier {
   String get email => _email;
   String get phone => _phone;
   bool _isPhoneNumberVerificationButtonLoading = false;
-  bool get isPhoneNumberVerificationButtonLoading => _isPhoneNumberVerificationButtonLoading;
+  bool get isPhoneNumberVerificationButtonLoading =>
+      _isPhoneNumberVerificationButtonLoading;
   String? _countryDialCode = '+880';
   String? get countryDialCode => _countryDialCode;
 
@@ -87,20 +88,23 @@ class AuthController with ChangeNotifier {
   bool _isUnAuthorize = false;
   bool get isUnAuthorize => _isUnAuthorize;
 
-  Future<ApiResponse> login(BuildContext context, {String? emailAddress, String? password}) async {
+  Future<ApiResponse> login(BuildContext context,
+      {String? emailAddress, String? password}) async {
     _isLoading = true;
     notifyListeners();
-    ApiResponse apiResponse = await authServiceInterface.login(emailAddress: emailAddress, password: password);
+    ApiResponse apiResponse = await authServiceInterface.login(
+        emailAddress: emailAddress, password: password);
     _isLoading = false;
     notifyListeners();
-    if(apiResponse.response?.statusCode == 200) {
-      await Provider.of<AuthController>(Get.context!, listen: false).updateToken(Get.context!);
+    if (apiResponse.response?.statusCode == 200) {
+      await Provider.of<AuthController>(Get.context!, listen: false)
+          .updateToken(Get.context!);
       setCurrentLanguage(
-  Provider.of<LocalizationController>(Get.context!, listen: false)
-      .locale
-      .languageCode
-      .toLowerCase(),
-);
+        Provider.of<LocalizationController>(Get.context!, listen: false)
+            .locale
+            .languageCode
+            .toLowerCase(),
+      );
       setUnAuthorize(false);
       notifyListeners();
     }
@@ -108,20 +112,21 @@ class AuthController with ChangeNotifier {
   }
 
   Future<void> setCurrentLanguage(String currentLanguage) async {
-      await authServiceInterface.setLanguageCode(currentLanguage);
+    await authServiceInterface.setLanguageCode(currentLanguage);
   }
 
   Future<ResponseModel> forgotPassword(String email) async {
     _isLoading = true;
     notifyListeners();
-    ResponseModel responseModel = await authServiceInterface.forgotPassword(email);
+    ResponseModel responseModel =
+        await authServiceInterface.forgotPassword(email);
     _isLoading = false;
     notifyListeners();
     return responseModel;
   }
 
   Future<void> updateToken(BuildContext context) async {
-      await authServiceInterface.updateToken();
+    await authServiceInterface.updateToken();
   }
 
   void updateTermsAndCondition(bool? value) {
@@ -134,9 +139,9 @@ class AuthController with ChangeNotifier {
     notifyListeners();
   }
 
-  void setIndexForTabBar(int index, {bool isNotify = true}){
+  void setIndexForTabBar(int index, {bool isNotify = true}) {
     _selectionTabIndex = index;
-    if(isNotify){
+    if (isNotify) {
       notifyListeners();
     }
   }
@@ -146,7 +151,7 @@ class AuthController with ChangeNotifier {
   }
 
   Future<bool> clearSharedData({bool fromUnAuthorizationError = false}) async {
-    if(fromUnAuthorizationError){
+    if (fromUnAuthorizationError) {
       if (kDebugMode) {
         print("===Inside==fromUnAuthorizationError");
       }
@@ -175,7 +180,6 @@ class AuthController with ChangeNotifier {
     return authServiceInterface.getUserToken();
   }
 
-
   void updateVerificationCode(String query) {
     if (query.length == 4) {
       _isEnableVerificationCode = true;
@@ -186,60 +190,71 @@ class AuthController with ChangeNotifier {
     notifyListeners();
   }
 
-
-
   Future<ResponseModel> verifyOtp(String phone) async {
     _isPhoneNumberVerificationButtonLoading = true;
     _verificationMsg = '';
     notifyListeners();
-    ResponseModel responseModel = await authServiceInterface.verifyOtp(phone, _verificationCode);
+    ResponseModel responseModel =
+        await authServiceInterface.verifyOtp(phone, _verificationCode);
     _isPhoneNumberVerificationButtonLoading = false;
     _verificationMsg = responseModel.message;
     notifyListeners();
     return responseModel;
   }
 
-
-  Future<ResponseModel> resetPassword(String identity, String otp, String password, String confirmPassword) async {
+  Future<ResponseModel> resetPassword(String identity, String otp,
+      String password, String confirmPassword) async {
     _isPhoneNumberVerificationButtonLoading = true;
     _verificationMsg = '';
     notifyListeners();
-    ResponseModel responseModel = await authServiceInterface.resetPassword(identity,otp,password,confirmPassword);
+    ResponseModel responseModel = await authServiceInterface.resetPassword(
+        identity, otp, password, confirmPassword);
     _isPhoneNumberVerificationButtonLoading = false;
     _verificationMsg = responseModel.message;
     notifyListeners();
     return responseModel;
   }
 
-
-  void pickImage(bool isProfile, bool shopLogo, bool isRemove, {bool secondary = false, bool offer = false}) async {
-    if(isRemove) {
+  void pickImage(bool isProfile, bool shopLogo, bool isRemove,
+      {bool secondary = false, bool offer = false}) async {
+    if (isRemove) {
       _sellerProfileImage = null;
       _shopLogo = null;
       _shopBanner = null;
       secondaryBanner = null;
-    }else {
+    } else {
       if (isProfile) {
-        _sellerProfileImage = await ImagePicker().pickImage(source: ImageSource.gallery);
-      } else if(shopLogo){
+        _sellerProfileImage =
+            await ImagePicker().pickImage(source: ImageSource.gallery);
+      } else if (shopLogo) {
         _shopLogo = await ImagePicker().pickImage(source: ImageSource.gallery);
-      }else if(secondary){
-        secondaryBanner = await ImagePicker().pickImage(source: ImageSource.gallery);
-      }else if(offer){
-        offerBanner = await ImagePicker().pickImage(source: ImageSource.gallery);
-      }else {
-        _shopBanner = await ImagePicker().pickImage(source: ImageSource.gallery);
+      } else if (secondary) {
+        secondaryBanner =
+            await ImagePicker().pickImage(source: ImageSource.gallery);
+      } else if (offer) {
+        offerBanner =
+            await ImagePicker().pickImage(source: ImageSource.gallery);
+      } else {
+        _shopBanner =
+            await ImagePicker().pickImage(source: ImageSource.gallery);
       }
     }
     notifyListeners();
   }
 
-  Future<ApiResponse> registration(BuildContext context,RegisterModel registerModel, XFile? tinCertificate) async {
+  Future<ApiResponse> registration(BuildContext context,
+      RegisterModel registerModel, XFile? tinCertificate) async {
     _isLoading = true;
     notifyListeners();
-    ApiResponse  response = await authServiceInterface.registration(_sellerProfileImage, _shopLogo, _shopBanner, secondaryBanner, registerModel, tinCertificate);
+    ApiResponse response = await authServiceInterface.registration(
+        _sellerProfileImage,
+        _shopLogo,
+        _shopBanner,
+        secondaryBanner,
+        registerModel,
+        tinCertificate);
 
-    if(response.response?.statusCode == 200) {
+    if (response.response?.statusCode == 200) {
       _isLoading = false;
       firstNameController.clear();
       lastNameController.clear();
@@ -254,25 +269,34 @@ class AuthController with ChangeNotifier {
       _shopBanner = null;
       secondaryBanner = null;
       Provider.of<ShopController>(Get.context!, listen: false).clearShopModel();
-      showCustomSnackBarWidget(getTranslated("you_are_successfully_registered", Get.context!), Get.context!, isError: false, sanckBarType: SnackBarType.success);
-    } else if (response.response?.data is String && jsonDecode(response.response?.data ?? '')["message"][0]["message"] != null) {
-      showCustomSnackBarWidget('${jsonDecode(response.response?.data ?? '')["message"][0]["message"]}', Get.context!, sanckBarType: SnackBarType.warning);
+      showCustomSnackBarWidget(
+          getTranslated("you_are_successfully_registered", Get.context!),
+          Get.context!,
+          isError: false,
+          sanckBarType: SnackBarType.success);
+    } else if (response.response?.data is String &&
+        jsonDecode(response.response?.data ?? '')["message"][0]["message"] !=
+            null) {
+      showCustomSnackBarWidget(
+          '${jsonDecode(response.response?.data ?? '')["message"][0]["message"]}',
+          Get.context!,
+          sanckBarType: SnackBarType.warning);
     } else {
       log("---->log===> ${response.response?.statusCode}/${response.error}/${response.response?.statusMessage}/${response.response?.data}");
       _isLoading = false;
-      showCustomSnackBarWidget("The email has already been taken", Get.context!, sanckBarType: SnackBarType.warning);
+      showCustomSnackBarWidget("The email has already been taken", Get.context!,
+          sanckBarType: SnackBarType.warning);
     }
     _isLoading = false;
     notifyListeners();
     return response;
   }
 
-  void setCountryDialCode (String? setValue){
+  void setCountryDialCode(String? setValue) {
     _countryDialCode = setValue;
   }
 
-
-  void emptyRegistrationData ({bool isUpdate = false}) {
+  void emptyRegistrationData({bool isUpdate = false}) {
     firstNameController.clear();
     lastNameController.clear();
     phoneController.clear();
@@ -285,57 +309,58 @@ class AuthController with ChangeNotifier {
     _shopLogo = null;
     _shopBanner = null;
     secondaryBanner = null;
-    if(isUpdate){
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
-  void validPassCheck(String pass, {bool isUpdate = true}){
+  void validPassCheck(String pass, {bool isUpdate = true}) {
     _lengthCheck = false;
     _numberCheck = false;
     _uppercaseCheck = false;
     _lowercaseCheck = false;
     _spatialCheck = false;
 
-    if(pass.length > 7){
+    if (pass.length > 7) {
       _lengthCheck = true;
     }
-    if(pass.contains(RegExp(r'[a-z]'))){
+    if (pass.contains(RegExp(r'[a-z]'))) {
       _lowercaseCheck = true;
     }
-    if(pass.contains(RegExp(r'[A-Z]'))){
+    if (pass.contains(RegExp(r'[A-Z]'))) {
       _uppercaseCheck = true;
     }
-    if(pass.contains(RegExp(r'[ .!@#$&*~^%]'))){
+    if (pass.contains(RegExp(r'[ .!@#$&*~^%]'))) {
       _spatialCheck = true;
     }
-    if(pass.contains(RegExp(r'[\d+]'))){
+    if (pass.contains(RegExp(r'[\d+]'))) {
       _numberCheck = true;
     }
-    if(isUpdate) {
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
-  void showHidePass({bool isUpdate = true}){
-    _showPassView = ! _showPassView;
-    if(isUpdate) {
+  void showHidePass({bool isUpdate = true}) {
+    _showPassView = !_showPassView;
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
-
-  bool isPasswordValid (){
-    return (_lengthCheck && _numberCheck && _lowercaseCheck && _uppercaseCheck && _spatialCheck && _numberCheck);
+  bool isPasswordValid() {
+    return (_lengthCheck &&
+        _numberCheck &&
+        _lowercaseCheck &&
+        _uppercaseCheck &&
+        _spatialCheck &&
+        _numberCheck);
   }
-
 
   void setUnAuthorize(bool value, {bool update = false}) {
     _isUnAuthorize = value;
-    if(update) {
+    if (update) {
       notifyListeners();
     }
   }
-
-
 }

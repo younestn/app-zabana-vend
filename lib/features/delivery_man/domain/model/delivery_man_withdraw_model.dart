@@ -39,21 +39,20 @@ class Withdraws {
   String? createdAt;
   String? updatedAt;
 
-
   Withdraws(
       {this.id,
-        this.amount,
-        this.transactionNote,
-        this.approved,
-        this.createdAt,
-        this.updatedAt});
+      this.amount,
+      this.transactionNote,
+      this.approved,
+      this.createdAt,
+      this.updatedAt});
 
   Withdraws.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    if(json['amount'] != null){
-      try{
+    if (json['amount'] != null) {
+      try {
         amount = json['amount'].toDouble();
-      }catch(e){
+      } catch (e) {
         amount = double.parse(json['amount'].toString());
       }
     }
@@ -62,7 +61,6 @@ class Withdraws {
     approved = json['approved'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-
   }
 
   Map<String, dynamic> toJson() {
@@ -77,5 +75,3 @@ class Withdraws {
     return data;
   }
 }
-
-

@@ -4,8 +4,7 @@ import 'package:sixvalley_vendor_app/data/model/response/base/api_response.dart'
 import 'package:sixvalley_vendor_app/features/settings/domain/models/business_model.dart';
 import 'package:sixvalley_vendor_app/features/settings/domain/repositories/buisness_repository_interface.dart';
 
-class BusinessRepository implements BusinessRepositoryInterface{
-
+class BusinessRepository implements BusinessRepositoryInterface {
   @override
   Future add(value) {
     // TODO: implement add
@@ -25,16 +24,21 @@ class BusinessRepository implements BusinessRepositoryInterface{
   }
 
   @override
-  Future getList({int? offset = 1}) async{
+  Future getList({int? offset = 1}) async {
     try {
       List<BusinessModel> businessList = [
-        BusinessModel(id: 0, title: 'Superb Discount', duration: '2-5', cost: 200),
-        BusinessModel(id: 1, title: 'New Discount', duration: '5-10', cost: 500),
+        BusinessModel(
+            id: 0, title: 'Superb Discount', duration: '2-5', cost: 200),
+        BusinessModel(
+            id: 1, title: 'New Discount', duration: '5-10', cost: 500),
       ];
 
-      final response = Response(data: businessList,statusCode: 200, requestOptions: RequestOptions(path: ""));
-      return  ApiResponse.withSuccess(response);
-    } catch (e){
+      final response = Response(
+          data: businessList,
+          statusCode: 200,
+          requestOptions: RequestOptions(path: ""));
+      return ApiResponse.withSuccess(response);
+    } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }

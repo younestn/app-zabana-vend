@@ -35,51 +35,65 @@ class AddProductScreen extends StatefulWidget {
   final AddProductModel? addProduct;
   final EditProductModel? editProduct;
   final bool fromHome;
-  const AddProductScreen({super.key, this.product,  this.addProduct, this.editProduct,  this.fromHome = false});
+  const AddProductScreen(
+      {super.key,
+      this.product,
+      this.addProduct,
+      this.editProduct,
+      this.fromHome = false});
   @override
   AddProductScreenState createState() => AddProductScreenState();
 }
 
-class AddProductScreenState extends State<AddProductScreen> with TickerProviderStateMixin {
+class AddProductScreenState extends State<AddProductScreen>
+    with TickerProviderStateMixin {
   TabController? _tabController;
   int? length;
   late bool _update;
-  int cat=0, subCat=0, subSubCat=0, unit=0, brand=0;
+  int cat = 0, subCat = 0, subSubCat = 0, unit = 0, brand = 0;
   String? unitValue = '';
   List<String> titleList = [];
   List<String> descriptionList = [];
   List<String> authors = [];
   List<String> publishingHouses = [];
-  final List<String> deliveryTypeList =['ready_after_sell', 'ready_product'];
+  final List<String> deliveryTypeList = ['ready_after_sell', 'ready_product'];
   FocusNode _publishingFocus = FocusNode();
   FocusNode _authorFocus = FocusNode();
   final ScrollController _scrollController = ScrollController();
   double optionHeight = 0;
 
-Future<void> _load() async {
-  final categoryController = Provider.of<CategoryController>(context, listen: false);
-  final localizationController = Provider.of<LocalizationController>(context, listen: false);
-  final splashController = Provider.of<SplashController>(Get.context!, listen: false);
-  final variationController = Provider.of<VariationController>(Get.context!, listen: false);
-  final productController = Provider.of<ProductController>(Get.context!, listen: false);
+  Future<void> _load() async {
+    final categoryController =
+        Provider.of<CategoryController>(context, listen: false);
+    final localizationController =
+        Provider.of<LocalizationController>(context, listen: false);
+    final splashController =
+        Provider.of<SplashController>(Get.context!, listen: false);
+    final variationController =
+        Provider.of<VariationController>(Get.context!, listen: false);
+    final productController =
+        Provider.of<ProductController>(Get.context!, listen: false);
 
-  categoryController.resetCategory();
+    categoryController.resetCategory();
 
-  String languageCode = localizationController.locale.languageCode.toLowerCase();
+    String languageCode =
+        localizationController.locale.languageCode.toLowerCase();
 
-  await Future.wait([
-    categoryController.getCategoryList(Get.context!, widget.product, languageCode),
-    splashController.getColorList(),
-    variationController.getAttributeList(Get.context!, widget.product, languageCode),
-    productController.getBrandList(Get.context!, languageCode),
-  ]);
+    await Future.wait([
+      categoryController.getCategoryList(
+          Get.context!, widget.product, languageCode),
+      splashController.getColorList(),
+      variationController.getAttributeList(
+          Get.context!, widget.product, languageCode),
+      productController.getBrandList(Get.context!, languageCode),
+    ]);
 
-  if (_update && widget.product?.brandId == null) {
-    productController.setBrandIndex(1, false);
-  } else if (!_update) {
-    productController.setBrandIndex(0, false);
+    if (_update && widget.product?.brandId == null) {
+      productController.setBrandIndex(1, false);
+    } else if (!_update) {
+      productController.setBrandIndex(0, false);
+    }
   }
-}
 
   @override
   void initState() {
@@ -88,858 +102,1653 @@ Future<void> _load() async {
     _update = widget.product != null;
 
     _tabController = TabController(length: 1, initialIndex: 0, vsync: this);
-_tabController?.addListener(() {});
+    _tabController?.addListener(() {});
 
-Provider.of<AddProductController>(context,listen: false).setSelectedPageIndex(0, isUpdate: false);
-_load();
-length = 1;
+    Provider.of<AddProductController>(context, listen: false)
+        .setSelectedPageIndex(0, isUpdate: false);
+    _load();
+    length = 1;
     Provider.of<VariationController>(context, listen: false).initColorCode();
-    if(widget.product != null){
+    if (widget.product != null) {
       unitValue = widget.product!.unit;
-      Provider.of<AddProductController>(context,listen: false).productCode.text = widget.product!.code ?? '123456';
-      Provider.of<AddProductController>(context,listen: false).getEditProduct(context, widget.product!.id);
-      Provider.of<AddProductImageController>(context,listen: false).getProductImage(widget.product!.id.toString());
-      Provider.of<AddProductController>(context,listen: false).setValueForUnit(widget.product!.unit.toString()) ;
-      Provider.of<AddProductController>(context,listen: false).setProductTypeIndex(widget.product!.productType == "physical" ? 0 : 1, false);
-      Provider.of<DigitalProductController>(context,listen: false).setDigitalProductTypeIndex(widget.product!.digitalProductType == "ready_after_sell"? 0 : 1, false);
-      if(widget.product!.productType == 'digital') {
-        Provider.of<DigitalProductController>(context,listen: false).setAuthorPublishingData(widget.product!);
+      Provider.of<AddProductController>(context, listen: false)
+          .productCode
+          .text = widget.product!.code ?? '123456';
+      Provider.of<AddProductController>(context, listen: false)
+          .getEditProduct(context, widget.product!.id);
+      Provider.of<AddProductImageController>(context, listen: false)
+          .getProductImage(widget.product!.id.toString());
+      Provider.of<AddProductController>(context, listen: false)
+          .setValueForUnit(widget.product!.unit.toString());
+      Provider.of<AddProductController>(context, listen: false)
+          .setProductTypeIndex(
+              widget.product!.productType == "physical" ? 0 : 1, false);
+      Provider.of<DigitalProductController>(context, listen: false)
+          .setDigitalProductTypeIndex(
+              widget.product!.digitalProductType == "ready_after_sell" ? 0 : 1,
+              false);
+      if (widget.product!.productType == 'digital') {
+        Provider.of<DigitalProductController>(context, listen: false)
+            .setAuthorPublishingData(widget.product!);
       }
-    }else{
-      Provider.of<AddProductController>(context,listen: false).productCode.text = _generateSKU();
-      Provider.of<AddProductController>(context,listen: false).setValueForUnit('select_unit') ;
-      Provider.of<VariationController>(context, listen: false).setCurrentStock('1');
-      Provider.of<AddProductController>(context,listen: false).
-      getTitleAndDescriptionList(Provider.of<SplashController>(context,listen: false).configModel!.languageList!, null);
-      Provider.of<AddProductController>(context,listen: false).emptyDigitalProductData();
+    } else {
+      Provider.of<AddProductController>(context, listen: false)
+          .productCode
+          .text = _generateSKU();
+      Provider.of<AddProductController>(context, listen: false)
+          .setValueForUnit('select_unit');
+      Provider.of<VariationController>(context, listen: false)
+          .setCurrentStock('1');
+      Provider.of<AddProductController>(context, listen: false)
+          .getTitleAndDescriptionList(
+              Provider.of<SplashController>(context, listen: false)
+                  .configModel!
+                  .languageList!,
+              null);
+      Provider.of<AddProductController>(context, listen: false)
+          .emptyDigitalProductData();
     }
 
-
-    if(Provider.of<DigitalProductController>(context, listen: false).authorsList!.isNotEmpty) {
-      for (var author in Provider.of<DigitalProductController>(context, listen: false).authorsList!) {
+    if (Provider.of<DigitalProductController>(context, listen: false)
+        .authorsList!
+        .isNotEmpty) {
+      for (var author
+          in Provider.of<DigitalProductController>(context, listen: false)
+              .authorsList!) {
         authors.add(author.name!);
       }
     }
 
-    if(Provider.of<DigitalProductController>(context, listen: false).publishingHouseList!.isNotEmpty) {
-      for (var author in Provider.of<DigitalProductController>(context, listen: false).publishingHouseList!) {
+    if (Provider.of<DigitalProductController>(context, listen: false)
+        .publishingHouseList!
+        .isNotEmpty) {
+      for (var author
+          in Provider.of<DigitalProductController>(context, listen: false)
+              .publishingHouseList!) {
         publishingHouses.add(author.name!);
       }
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-
     double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
 
     late List<int?> brandIds;
 
-     return Scaffold(
-      appBar: CustomAppBarWidget(title: widget.product != null ? getTranslated('update_product', context) : getTranslated('add_product', context),),
-
-       body: Consumer<AddProductController>(
-         builder: (context, resProvider, child){
-
-          return widget.product !=null && resProvider.editProduct == null ?
-          const Center(child: CircularProgressIndicator()) :
-          length != null? Consumer<SplashController>(
-            builder: (context, splashController, _) {
-              return Column( crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: Dimensions.paddingSizeExtraSmall),
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: Dimensions.fontSizeExtraLarge),
-                    child: AddProductTitleBar(),
-                  ),
-
-                  Expanded(child: Padding(
-                    padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                    child: SingleChildScrollView(
-                      controller: _scrollController,
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
-                        AddProductSectionWidget(
-                          title: getTranslated('product_name', context)!,
-                          childrens: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: Dimensions.paddingSizeSmall),
+    return Scaffold(
+      appBar: CustomAppBarWidget(
+        title: widget.product != null
+            ? getTranslated('update_product', context)
+            : getTranslated('add_product', context),
+      ),
+      body: Consumer<AddProductController>(
+        builder: (context, resProvider, child) {
+          return widget.product != null && resProvider.editProduct == null
+              ? const Center(child: CircularProgressIndicator())
+              : length != null
+                  ? Consumer<SplashController>(
+                      builder: (context, splashController, _) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                              height: Dimensions.paddingSizeExtraSmall),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: Dimensions.fontSizeExtraLarge),
+                            child: AddProductTitleBar(),
+                          ),
+                          Expanded(
                               child: Padding(
-                                padding: const EdgeInsets.only(top: Dimensions.paddingSizeMedium, left: Dimensions.paddingEye, bottom: Dimensions.paddingEye),
-                                child: SizedBox(width: MediaQuery.of(context).size.width,
-                                  child: TabBar(
-                                    tabAlignment: TabAlignment.start,
-                                    isScrollable: true,
-                                    dividerColor: Colors.transparent,
-                                    controller: _tabController,
-                                    indicatorColor: Theme.of(context).primaryColor,
-                                    indicatorWeight: 12,
-                                    indicatorSize: TabBarIndicatorSize.tab,
-                                    indicatorPadding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
-                                    indicator: BoxDecoration(
-                                      border: Border(bottom: BorderSide(color: Theme.of(context).primaryColor, width: 2,),
-                                      ),
-                                    ),
-                                    unselectedLabelStyle: robotoRegular.copyWith(color: Theme.of(context).hintColor,),
-                                    labelStyle: robotoBold.copyWith(fontSize: Dimensions.fontSizeLarge,
-                                      color: Theme.of(context).disabledColor,),
-                                    tabs: _generateTabChildren(),
-                                  ),
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(height: 240,
-                                child: TabBarView(controller: _tabController, children: _generateTabPage(resProvider))),
-                          ],
-                        ),
-                        const SizedBox(height: Dimensions.paddingSizeSmall),
-
-
-
-                        AddProductSectionWidget(
-                          title: getTranslated('general_setup', context)!,
-                          childrens: <Widget>[
-                            const SizedBox(height: Dimensions.paddingSizeSmall),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeMedium),
-                              child: SelectCategoryWidget(product: widget.product),
-                            ),
-
-                            Provider.of<SplashController>(context, listen: false).configModel?.brandSetting == "1"  && resProvider.productTypeIndex != 1 ?
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeMedium),
+                            padding: EdgeInsets.only(
+                                bottom:
+                                    MediaQuery.of(context).viewInsets.bottom),
+                            child: SingleChildScrollView(
+                              controller: _scrollController,
                               child: Column(
-                                children: [
-                                  Consumer<ProductController>(
-                                    builder: (context, productController, _) {
-                                      brandIds = [];
-                                      brandIds.add(-1);
-                                      brandIds.add(0);
-                                      if(productController.brandList != null) {
-                                        for(int index = 0; index<productController.brandList!.length; index++) {
-                                          brandIds.add(productController.brandList![index].id);
-                                        }
-                                        if(_update && widget.product!.brandId != null) {
-                                          if(brand == 0){
-                                            productController.setBrandIndex(brandIds.indexOf(widget.product!.brandId), false);
-                                            brand++;
-                                          }
-                                        }
-                                      }
-
-                                      return DropdownDecoratorWidget(
-                                        child: DropdownButton<int>(
-                                          value: productController.brandIndex,
-                                          icon: const Icon(Icons.keyboard_arrow_down_outlined),
-                                          borderRadius: const BorderRadius.all(Radius.circular(Dimensions.paddingEye)),
-                                          items: brandIds.map((int? value) {
-                                            return DropdownMenuItem<int>(
-                                              value: brandIds.indexOf(value),
-                                              child: Text(
-                                                value == 0 ? getTranslated('no_brand', context)! : value == -1
-                                                    ? getTranslated('select_brand', context)!
-                                                    : productController.brandList![(brandIds.indexOf(value)-2)].name!,
-                                                style: robotoMedium.copyWith(color: value == -1 ? Theme.of(context).hintColor : null),
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    AddProductSectionWidget(
+                                      title: getTranslated(
+                                          'product_name', context)!,
+                                      childrens: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: Dimensions.paddingSizeSmall),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: Dimensions
+                                                    .paddingSizeMedium,
+                                                left: Dimensions.paddingEye,
+                                                bottom: Dimensions.paddingEye),
+                                            child: SizedBox(
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              child: TabBar(
+                                                tabAlignment:
+                                                    TabAlignment.start,
+                                                isScrollable: true,
+                                                dividerColor:
+                                                    Colors.transparent,
+                                                controller: _tabController,
+                                                indicatorColor:
+                                                    Theme.of(context)
+                                                        .primaryColor,
+                                                indicatorWeight: 12,
+                                                indicatorSize:
+                                                    TabBarIndicatorSize.tab,
+                                                indicatorPadding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: Dimensions
+                                                            .paddingSizeSmall),
+                                                indicator: BoxDecoration(
+                                                  border: Border(
+                                                    bottom: BorderSide(
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                      width: 2,
+                                                    ),
+                                                  ),
+                                                ),
+                                                unselectedLabelStyle:
+                                                    robotoRegular.copyWith(
+                                                  color: Theme.of(context)
+                                                      .hintColor,
+                                                ),
+                                                labelStyle: robotoBold.copyWith(
+                                                  fontSize:
+                                                      Dimensions.fontSizeLarge,
+                                                  color: Theme.of(context)
+                                                      .disabledColor,
+                                                ),
+                                                tabs: _generateTabChildren(),
                                               ),
-                                            );
-                                          }).toList(),
-                                          onChanged: (int? value) {
-                                            productController.setBrandIndex(value, true);
-                                            // resProvider.changeBrandSelectedIndex(value);
-                                          },
-                                          isExpanded: true,
-                                          underline: const SizedBox(),
+                                            ),
+                                          ),
                                         ),
-                                      );
-                                    }
-                                  ),
+                                        SizedBox(
+                                            height: 240,
+                                            child: TabBarView(
+                                                controller: _tabController,
+                                                children: _generateTabPage(
+                                                    resProvider))),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                        height: Dimensions.paddingSizeSmall),
+                                    AddProductSectionWidget(
+                                      title: getTranslated(
+                                          'general_setup', context)!,
+                                      childrens: <Widget>[
+                                        const SizedBox(
+                                            height:
+                                                Dimensions.paddingSizeSmall),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal:
+                                                  Dimensions.paddingSizeMedium),
+                                          child: SelectCategoryWidget(
+                                              product: widget.product),
+                                        ),
+                                        Provider.of<SplashController>(context,
+                                                            listen: false)
+                                                        .configModel
+                                                        ?.brandSetting ==
+                                                    "1" &&
+                                                resProvider.productTypeIndex !=
+                                                    1
+                                            ? Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: Dimensions
+                                                            .paddingSizeMedium),
+                                                child: Column(
+                                                  children: [
+                                                    Consumer<ProductController>(
+                                                        builder: (context,
+                                                            productController,
+                                                            _) {
+                                                      brandIds = [];
+                                                      brandIds.add(-1);
+                                                      brandIds.add(0);
+                                                      if (productController
+                                                              .brandList !=
+                                                          null) {
+                                                        for (int index = 0;
+                                                            index <
+                                                                productController
+                                                                    .brandList!
+                                                                    .length;
+                                                            index++) {
+                                                          brandIds.add(
+                                                              productController
+                                                                  .brandList![
+                                                                      index]
+                                                                  .id);
+                                                        }
+                                                        if (_update &&
+                                                            widget.product!
+                                                                    .brandId !=
+                                                                null) {
+                                                          if (brand == 0) {
+                                                            productController
+                                                                .setBrandIndex(
+                                                                    brandIds.indexOf(widget
+                                                                        .product!
+                                                                        .brandId),
+                                                                    false);
+                                                            brand++;
+                                                          }
+                                                        }
+                                                      }
 
+                                                      return DropdownDecoratorWidget(
+                                                        child:
+                                                            DropdownButton<int>(
+                                                          value:
+                                                              productController
+                                                                  .brandIndex,
+                                                          icon: const Icon(Icons
+                                                              .keyboard_arrow_down_outlined),
+                                                          borderRadius:
+                                                              const BorderRadius
+                                                                  .all(
+                                                                  Radius.circular(
+                                                                      Dimensions
+                                                                          .paddingEye)),
+                                                          items: brandIds.map(
+                                                              (int? value) {
+                                                            return DropdownMenuItem<
+                                                                int>(
+                                                              value: brandIds
+                                                                  .indexOf(
+                                                                      value),
+                                                              child: Text(
+                                                                value == 0
+                                                                    ? getTranslated(
+                                                                        'no_brand',
+                                                                        context)!
+                                                                    : value ==
+                                                                            -1
+                                                                        ? getTranslated(
+                                                                            'select_brand',
+                                                                            context)!
+                                                                        : productController
+                                                                            .brandList![(brandIds.indexOf(value) -
+                                                                                2)]
+                                                                            .name!,
+                                                                style: robotoMedium.copyWith(
+                                                                    color: value ==
+                                                                            -1
+                                                                        ? Theme.of(context)
+                                                                            .hintColor
+                                                                        : null),
+                                                              ),
+                                                            );
+                                                          }).toList(),
+                                                          onChanged:
+                                                              (int? value) {
+                                                            productController
+                                                                .setBrandIndex(
+                                                                    value,
+                                                                    true);
+                                                            // resProvider.changeBrandSelectedIndex(value);
+                                                          },
+                                                          isExpanded: true,
+                                                          underline:
+                                                              const SizedBox(),
+                                                        ),
+                                                      );
+                                                    }),
+                                                    const SizedBox(
+                                                        height: Dimensions
+                                                            .paddingSizeMedium),
+                                                  ],
+                                                ),
+                                              )
+                                            : const SizedBox(),
+                                        resProvider.productTypeIndex == 0
+                                            ? Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: Dimensions
+                                                            .paddingSizeMedium),
+                                                child: Column(
+                                                  children: [
+                                                    DropdownDecoratorWidget(
+                                                      title: 'unit',
+                                                      child: InkWell(
+                                                        onTap: () =>
+                                                            _showUnitSelectorBottomSheet(
+                                                                resProvider),
+                                                        borderRadius: BorderRadius
+                                                            .circular(Dimensions
+                                                                .radiusDefault),
+                                                        child: SizedBox(
+                                                          height: 56,
+                                                          child: Row(
+                                                            children: [
+                                                              Expanded(
+                                                                child: Text(
+                                                                  (resProvider.unitValue == null ||
+                                                                          resProvider.unitValue ==
+                                                                              'select_unit' ||
+                                                                          resProvider.unitValue ==
+                                                                              'null')
+                                                                      ? getTranslated(
+                                                                          'select_unit',
+                                                                          context)!
+                                                                      : resProvider
+                                                                          .unitValue!,
+                                                                  style: robotoMedium
+                                                                      .copyWith(
+                                                                    color: (resProvider.unitValue == null ||
+                                                                            resProvider.unitValue ==
+                                                                                'select_unit' ||
+                                                                            resProvider.unitValue ==
+                                                                                'null')
+                                                                        ? Theme.of(context)
+                                                                            .hintColor
+                                                                        : Theme.of(context)
+                                                                            .textTheme
+                                                                            .bodyLarge
+                                                                            ?.color,
+                                                                    fontSize:
+                                                                        Dimensions
+                                                                            .fontSizeDefault,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Container(
+                                                                height: 34,
+                                                                width: 34,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .primaryColor
+                                                                      .withValues(
+                                                                          alpha:
+                                                                              .08),
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                          Dimensions
+                                                                              .radiusDefault),
+                                                                ),
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .keyboard_arrow_down_rounded,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .primaryColor,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            : const SizedBox(),
+                                        Container(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              Dimensions.paddingSizeMedium,
+                                              0,
+                                              Dimensions.paddingSizeMedium,
+                                              0),
+                                          child: Column(children: [
+                                            Row(
+                                              children: [
+                                                const Spacer(),
+                                                InkWell(
+                                                  splashColor:
+                                                      Colors.transparent,
+                                                  onTap: () {
+                                                    resProvider.productCode
+                                                        .text = _generateSKU();
+                                                  },
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: Dimensions
+                                                            .paddingSizeExtraSmall),
+                                                    child: Text(
+                                                        getTranslated(
+                                                            'generate_code',
+                                                            context)!,
+                                                        style: robotoMedium.copyWith(
+                                                            fontSize: Dimensions
+                                                                .fontSizeDefault,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .primaryColor)),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(
+                                                height: Dimensions
+                                                    .paddingSizeExtraSmall),
+                                            CustomTextFieldWidget(
+                                              formProduct: true,
+                                              required: true,
+                                              border: true,
+                                              borderColor: Theme.of(context)
+                                                  .primaryColor
+                                                  .withValues(alpha: .25),
+                                              controller:
+                                                  resProvider.productCode,
+                                              textInputAction:
+                                                  TextInputAction.next,
+                                              textInputType: TextInputType.text,
+                                              isAmount: false,
+                                              hintText: getTranslated(
+                                                  'product_code_sku', context)!,
+                                            ),
+                                          ]),
+                                        ),
+                                        const SizedBox(
+                                            height:
+                                                Dimensions.paddingSizeDefault),
+                                        Provider.of<SplashController>(context,
+                                                        listen: false)
+                                                    .configModel!
+                                                    .digitalProductSetting ==
+                                                "1"
+                                            ? DigitalProductWidget(
+                                                resProvider: resProvider,
+                                                product: widget.product)
+                                            : const SizedBox(),
+                                        Consumer<DigitalProductController>(
+                                            builder: (context,
+                                                digitalProductController,
+                                                child) {
+                                          return Column(
+                                            children: [
+                                              //Author
+                                              resProvider.productTypeIndex == 1
+                                                  ? Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: Dimensions
+                                                              .paddingSizeMedium,
+                                                          vertical: Dimensions
+                                                              .paddingSizeSmall),
+                                                      child:
+                                                          Autocomplete<String>(
+                                                        optionsBuilder:
+                                                            (TextEditingValue
+                                                                value) {
+                                                          if (value
+                                                              .text.isEmpty) {
+                                                            return const Iterable<
+                                                                String>.empty();
+                                                          } else {
+                                                            return authors.where(
+                                                                (author) => author
+                                                                    .toLowerCase()
+                                                                    .contains(value
+                                                                        .text
+                                                                        .toLowerCase()));
+                                                          }
+                                                        },
+                                                        fieldViewBuilder:
+                                                            (context,
+                                                                controller,
+                                                                node,
+                                                                onComplete) {
+                                                          _authorFocus = node;
+                                                          if (!node.hasFocus) {
+                                                            _authorFocus
+                                                                .unfocus();
+                                                          } else {
+                                                            _authorFocus
+                                                                .requestFocus();
+                                                          }
+                                                          return TextField(
+                                                            keyboardType:
+                                                                TextInputType
+                                                                    .text,
+                                                            controller:
+                                                                controller,
+                                                            focusNode: node,
+                                                            onEditingComplete:
+                                                                onComplete,
+                                                            onSubmitted:
+                                                                (value) {
+                                                              if (digitalProductController
+                                                                  .selectedAuthors!
+                                                                  .isEmpty) {
+                                                                _scrollController.jumpTo(
+                                                                    _scrollController
+                                                                            .offset +
+                                                                        20);
+                                                              }
+                                                              digitalProductController
+                                                                  .addAuthor(
+                                                                      value);
+                                                              // controller.text = '';
+                                                            },
+                                                            onChanged: (value) =>
+                                                                _onChangeOptionHeight(
+                                                                    value,
+                                                                    authors),
+                                                            decoration:
+                                                                InputDecoration(
+                                                              contentPadding: const EdgeInsets
+                                                                  .symmetric(
+                                                                  vertical:
+                                                                      Dimensions
+                                                                          .paddingSize,
+                                                                  horizontal:
+                                                                      Dimensions
+                                                                          .paddingSizeMedium),
+                                                              hintText:
+                                                                  getTranslated(
+                                                                      'author_creator_artist',
+                                                                      context),
+                                                              hintStyle: TextStyle(
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .hintColor),
+                                                              labelText:
+                                                                  getTranslated(
+                                                                      'author_creator_artist',
+                                                                      context),
+                                                              labelStyle: TextStyle(
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .bodyLarge
+                                                                      ?.color),
+                                                              border:
+                                                                  InputBorder
+                                                                      .none,
+                                                              focusedBorder: OutlineInputBorder(
+                                                                  borderSide: BorderSide(
+                                                                      color: Theme.of(
+                                                                              context)
+                                                                          .primaryColor),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              8)),
+                                                              enabledBorder: OutlineInputBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              8),
+                                                                  borderSide: BorderSide(
+                                                                      color: Theme.of(
+                                                                              context)
+                                                                          .primaryColor
+                                                                          .withValues(
+                                                                              alpha:
+                                                                                  .25),
+                                                                      width:
+                                                                          .75)),
+                                                            ),
+                                                          );
+                                                        },
+                                                        displayStringForOption:
+                                                            (value) => value,
+                                                        onSelected:
+                                                            (String value) {
+                                                          // resProvider.addAuthor(value);
+                                                        },
+                                                        optionsViewBuilder:
+                                                            (BuildContext
+                                                                    context,
+                                                                AutocompleteOnSelected<
+                                                                        String>
+                                                                    onSelected,
+                                                                Iterable<String>
+                                                                    options) {
+                                                          return Align(
+                                                            alignment: Alignment
+                                                                .topLeft,
+                                                            child: Container(
+                                                              height: (keyboardHeight ==
+                                                                          0 &&
+                                                                      (_authorFocus
+                                                                          .hasFocus))
+                                                                  ? 155
+                                                                  : 250,
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      right:
+                                                                          8.0), // Add padding to the right
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.9, // Adjust the width if needed
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .cardColor,
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                        Dimensions
+                                                                            .radiusDefault),
+                                                                boxShadow: [
+                                                                  BoxShadow(
+                                                                      color: Colors
+                                                                          .grey[Provider.of<ThemeController>(context)
+                                                                              .darkTheme
+                                                                          ? 800
+                                                                          : 200]!,
+                                                                      spreadRadius:
+                                                                          0.5,
+                                                                      blurRadius:
+                                                                          0.3)
+                                                                ],
+                                                              ),
+                                                              child: ListView
+                                                                  .builder(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .zero,
+                                                                itemCount:
+                                                                    options
+                                                                        .length,
+                                                                itemBuilder:
+                                                                    (BuildContext
+                                                                            context,
+                                                                        int index) {
+                                                                  final String
+                                                                      option =
+                                                                      options.elementAt(
+                                                                          index);
+                                                                  return InkWell(
+                                                                    onTap: () {
+                                                                      onSelected(
+                                                                          option);
+                                                                    },
+                                                                    child:
+                                                                        Builder(
+                                                                      builder:
+                                                                          (BuildContext
+                                                                              context) {
+                                                                        final bool
+                                                                            highlight =
+                                                                            AutocompleteHighlightedOption.of(context) ==
+                                                                                index;
+                                                                        if (highlight) {
+                                                                          SchedulerBinding
+                                                                              .instance
+                                                                              .addPostFrameCallback((Duration timeStamp) {
+                                                                            Scrollable.ensureVisible(context,
+                                                                                alignment: 0.5);
+                                                                          }, debugLabel: 'AutocompleteOptions.ensureVisible');
+                                                                        }
+                                                                        return Container(
+                                                                          color: highlight
+                                                                              ? Theme.of(context).focusColor
+                                                                              : null,
+                                                                          padding: const EdgeInsets
+                                                                              .all(
+                                                                              16.0),
+                                                                          child:
+                                                                              Text(option),
+                                                                        );
+                                                                      },
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                    )
+                                                  : const SizedBox(),
 
-                                  const SizedBox(height: Dimensions.paddingSizeMedium),
-                                ],
-                              ),
-                            ) : const SizedBox(),
+                                              if (resProvider
+                                                          .productTypeIndex ==
+                                                      1 &&
+                                                  digitalProductController
+                                                      .selectedAuthors!
+                                                      .isNotEmpty)
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: Dimensions
+                                                          .paddingSizeMedium),
+                                                  child: SizedBox(
+                                                    height: (resProvider
+                                                                    .productTypeIndex ==
+                                                                1 &&
+                                                            digitalProductController
+                                                                .selectedAuthors!
+                                                                .isNotEmpty)
+                                                        ? 40
+                                                        : 0,
+                                                    child:
+                                                        (digitalProductController
+                                                                .selectedAuthors!
+                                                                .isNotEmpty)
+                                                            ? ListView.builder(
+                                                                itemCount:
+                                                                    digitalProductController
+                                                                        .selectedAuthors!
+                                                                        .length,
+                                                                scrollDirection:
+                                                                    Axis.horizontal,
+                                                                itemBuilder:
+                                                                    (context,
+                                                                        index) {
+                                                                  return Padding(
+                                                                    padding: const EdgeInsets
+                                                                        .all(
+                                                                        Dimensions
+                                                                            .paddingSizeVeryTiny),
+                                                                    child:
+                                                                        Container(
+                                                                      padding: const EdgeInsets
+                                                                          .symmetric(
+                                                                          horizontal:
+                                                                              Dimensions.paddingSizeMedium),
+                                                                      margin: const EdgeInsets
+                                                                          .only(
+                                                                          right:
+                                                                              Dimensions.paddingSizeSmall),
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        color: Theme.of(context)
+                                                                            .primaryColor
+                                                                            .withValues(alpha: .20),
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(Dimensions.paddingSizeDefault),
+                                                                      ),
+                                                                      child: Row(
+                                                                          children: [
+                                                                            Consumer<SplashController>(builder: (ctx,
+                                                                                colorP,
+                                                                                child) {
+                                                                              return Text(
+                                                                                digitalProductController.selectedAuthors![index],
+                                                                                style: robotoRegular.copyWith(color: ColorHelper.blendColors(Colors.white, Theme.of(context).textTheme.bodyLarge!.color!, 0.7)),
+                                                                              );
+                                                                            }),
+                                                                            const SizedBox(width: Dimensions.paddingSizeSmall),
+                                                                            InkWell(
+                                                                              splashColor: Colors.transparent,
+                                                                              onTap: () {
+                                                                                digitalProductController.removeAuthor(index);
+                                                                              },
+                                                                              child: Icon(Icons.close, size: 15, color: ColorHelper.blendColors(Colors.white, Theme.of(context).textTheme.bodyLarge!.color!, 0.7)),
+                                                                            ),
+                                                                          ]),
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              )
+                                                            : const SizedBox(),
+                                                  ),
+                                                ),
 
+                                              const SizedBox(
+                                                  height: Dimensions
+                                                      .paddingSizeSmall),
 
-                            resProvider.productTypeIndex == 0
-    ? Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeMedium),
-        child: Column(
-          children: [
-            DropdownDecoratorWidget(
-              title: 'unit',
-              child: InkWell(
-                onTap: () => _showUnitSelectorBottomSheet(resProvider),
-                borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                child: SizedBox(
-                  height: 56,
+                                              ///Publishing
+                                              resProvider.productTypeIndex == 1
+                                                  ? Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: Dimensions
+                                                              .paddingSizeMedium,
+                                                          vertical: Dimensions
+                                                              .paddingSizeSmall),
+                                                      child:
+                                                          Autocomplete<String>(
+                                                        optionsBuilder:
+                                                            (TextEditingValue
+                                                                value) {
+                                                          if (value
+                                                              .text.isEmpty) {
+                                                            return const Iterable<
+                                                                String>.empty();
+                                                          } else {
+                                                            return publishingHouses.where(
+                                                                (author) => author
+                                                                    .toLowerCase()
+                                                                    .contains(value
+                                                                        .text
+                                                                        .toLowerCase()));
+                                                          }
+                                                        },
+                                                        fieldViewBuilder:
+                                                            (context,
+                                                                controller,
+                                                                node,
+                                                                onComplete) {
+                                                          _publishingFocus =
+                                                              node;
+                                                          if (!node.hasFocus) {
+                                                            _publishingFocus
+                                                                .unfocus();
+                                                          } else {
+                                                            _publishingFocus
+                                                                .requestFocus();
+                                                          }
+                                                          return TextField(
+                                                            keyboardType:
+                                                                TextInputType
+                                                                    .text,
+                                                            controller:
+                                                                controller,
+                                                            focusNode: node,
+                                                            onEditingComplete:
+                                                                onComplete,
+                                                            onSubmitted:
+                                                                (value) {
+                                                              if (digitalProductController
+                                                                  .selectedPublishingHouse!
+                                                                  .isEmpty) {
+                                                                _scrollController.jumpTo(
+                                                                    _scrollController
+                                                                            .offset +
+                                                                        20);
+                                                              }
+                                                              digitalProductController
+                                                                  .addPublishingHouse(
+                                                                      value);
+                                                            },
+                                                            onChanged: (value) =>
+                                                                _onChangeOptionHeight(
+                                                                    value,
+                                                                    publishingHouses),
+                                                            decoration:
+                                                                InputDecoration(
+                                                              hintText:
+                                                                  getTranslated(
+                                                                      'publishing_house',
+                                                                      context),
+                                                              contentPadding: const EdgeInsets
+                                                                  .symmetric(
+                                                                  vertical:
+                                                                      Dimensions
+                                                                          .paddingSize,
+                                                                  horizontal:
+                                                                      Dimensions
+                                                                          .paddingSizeMedium),
+                                                              hintStyle: TextStyle(
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .hintColor),
+                                                              labelText:
+                                                                  getTranslated(
+                                                                      'publishing_house',
+                                                                      context),
+                                                              labelStyle: TextStyle(
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .bodyLarge
+                                                                      ?.color),
+                                                              border:
+                                                                  InputBorder
+                                                                      .none,
+                                                              focusedBorder: OutlineInputBorder(
+                                                                  borderSide: BorderSide(
+                                                                      color: Theme.of(
+                                                                              context)
+                                                                          .primaryColor)),
+                                                              enabledBorder: OutlineInputBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              8),
+                                                                  borderSide: BorderSide(
+                                                                      color: Theme.of(
+                                                                              context)
+                                                                          .primaryColor
+                                                                          .withValues(
+                                                                              alpha:
+                                                                                  .25),
+                                                                      width:
+                                                                          .75)),
+                                                            ),
+                                                          );
+                                                        },
+                                                        displayStringForOption:
+                                                            (value) => value,
+                                                        onSelected:
+                                                            (String value) {
+                                                          // resProvider.addAuthor(value);
+                                                        },
+                                                        optionsViewBuilder:
+                                                            (BuildContext
+                                                                    context,
+                                                                AutocompleteOnSelected<
+                                                                        String>
+                                                                    onSelected,
+                                                                Iterable<String>
+                                                                    options) {
+                                                          return Align(
+                                                            alignment: Alignment
+                                                                .topLeft,
+                                                            child: Container(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      right:
+                                                                          8.0), // Add padding to the right
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.9, //
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .cardColor,
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                        Dimensions
+                                                                            .radiusDefault),
+                                                                boxShadow: [
+                                                                  BoxShadow(
+                                                                      color: Colors
+                                                                          .grey[Provider.of<ThemeController>(context)
+                                                                              .darkTheme
+                                                                          ? 800
+                                                                          : 200]!,
+                                                                      spreadRadius:
+                                                                          0.5,
+                                                                      blurRadius:
+                                                                          0.3)
+                                                                ],
+                                                              ),
+
+                                                              // Adjust the width if needed
+                                                              child: ListView
+                                                                  .builder(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .zero,
+                                                                itemCount:
+                                                                    options
+                                                                        .length,
+                                                                itemBuilder:
+                                                                    (BuildContext
+                                                                            context,
+                                                                        int index) {
+                                                                  final String
+                                                                      option =
+                                                                      options.elementAt(
+                                                                          index);
+                                                                  return InkWell(
+                                                                    onTap: () {
+                                                                      onSelected(
+                                                                          option);
+                                                                    },
+                                                                    child:
+                                                                        Builder(
+                                                                      builder:
+                                                                          (BuildContext
+                                                                              context) {
+                                                                        final bool
+                                                                            highlight =
+                                                                            AutocompleteHighlightedOption.of(context) ==
+                                                                                index;
+                                                                        if (highlight) {
+                                                                          SchedulerBinding
+                                                                              .instance
+                                                                              .addPostFrameCallback((Duration timeStamp) {
+                                                                            Scrollable.ensureVisible(context,
+                                                                                alignment: 0.5);
+                                                                          }, debugLabel: 'AutocompleteOptions.ensureVisible');
+                                                                        }
+                                                                        return Container(
+                                                                          color: highlight
+                                                                              ? Theme.of(context).focusColor
+                                                                              : null,
+                                                                          padding: const EdgeInsets
+                                                                              .all(
+                                                                              16.0),
+                                                                          child:
+                                                                              Text(option),
+                                                                        );
+                                                                      },
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                    )
+                                                  : const SizedBox(),
+
+                                              if (resProvider
+                                                          .productTypeIndex ==
+                                                      1 &&
+                                                  digitalProductController
+                                                      .selectedPublishingHouse!
+                                                      .isNotEmpty)
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: Dimensions
+                                                          .paddingSizeMedium),
+                                                  child: SizedBox(
+                                                    height: (resProvider
+                                                                    .productTypeIndex ==
+                                                                1 &&
+                                                            digitalProductController
+                                                                .selectedPublishingHouse!
+                                                                .isNotEmpty)
+                                                        ? 40
+                                                        : 0,
+                                                    child: (digitalProductController
+                                                            .selectedPublishingHouse!
+                                                            .isNotEmpty)
+                                                        ? ListView.builder(
+                                                            itemCount:
+                                                                digitalProductController
+                                                                    .selectedPublishingHouse!
+                                                                    .length,
+                                                            scrollDirection:
+                                                                Axis.horizontal,
+                                                            itemBuilder:
+                                                                (context,
+                                                                    index) {
+                                                              return Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    Dimensions
+                                                                        .paddingSizeVeryTiny),
+                                                                child:
+                                                                    Container(
+                                                                  padding: const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          Dimensions
+                                                                              .paddingSizeMedium),
+                                                                  margin: const EdgeInsets
+                                                                      .only(
+                                                                      right: Dimensions
+                                                                          .paddingSizeSmall),
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: Theme.of(
+                                                                            context)
+                                                                        .primaryColor
+                                                                        .withValues(
+                                                                            alpha:
+                                                                                .20),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            Dimensions.paddingSizeDefault),
+                                                                  ),
+                                                                  child: Row(
+                                                                      children: [
+                                                                        Consumer<SplashController>(builder: (ctx,
+                                                                            colorP,
+                                                                            child) {
+                                                                          return Text(
+                                                                            digitalProductController.selectedPublishingHouse![index],
+                                                                            style:
+                                                                                robotoRegular.copyWith(color: ColorHelper.blendColors(Colors.white, Theme.of(context).textTheme.bodyLarge!.color!, 0.7)),
+                                                                          );
+                                                                        }),
+                                                                        const SizedBox(
+                                                                            width:
+                                                                                Dimensions.paddingSizeSmall),
+                                                                        InkWell(
+                                                                          splashColor:
+                                                                              Colors.transparent,
+                                                                          onTap:
+                                                                              () {
+                                                                            digitalProductController.removePublishingHouse(index);
+                                                                          },
+                                                                          child: Icon(
+                                                                              Icons.close,
+                                                                              size: 15,
+                                                                              color: ColorHelper.blendColors(Colors.white, Theme.of(context).textTheme.bodyLarge!.color!, 0.7)),
+                                                                        ),
+                                                                      ]),
+                                                                ),
+                                                              );
+                                                            },
+                                                          )
+                                                        : const SizedBox(),
+                                                  ),
+                                                ),
+                                              //End Author Publishing
+
+                                              const SizedBox(
+                                                  height: Dimensions
+                                                      .paddingSizeSmall),
+
+                                              resProvider.productTypeIndex == 1
+                                                  ? Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: Dimensions
+                                                              .paddingSizeMedium),
+                                                      child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            DropdownDecoratorWidget(
+                                                              title:
+                                                                  'delivery_type',
+                                                              child:
+                                                                  DropdownButton<
+                                                                      String>(
+                                                                icon: const Icon(
+                                                                    Icons
+                                                                        .keyboard_arrow_down_outlined),
+                                                                borderRadius: const BorderRadius
+                                                                    .all(
+                                                                    Radius.circular(
+                                                                        Dimensions
+                                                                            .paddingEye)),
+                                                                value: digitalProductController
+                                                                            .digitalProductTypeIndex ==
+                                                                        0
+                                                                    ? 'ready_after_sell'
+                                                                    : 'ready_product',
+                                                                items: deliveryTypeList
+                                                                    .map((String
+                                                                        value) {
+                                                                  return DropdownMenuItem<
+                                                                          String>(
+                                                                      value:
+                                                                          value,
+                                                                      child: Text(
+                                                                          getTranslated(
+                                                                              value,
+                                                                              context)!,
+                                                                          style:
+                                                                              robotoMedium));
+                                                                }).toList(),
+                                                                onChanged:
+                                                                    (value) {
+                                                                  digitalProductController
+                                                                      .setDigitalProductTypeIndex(
+                                                                          value == 'ready_after_sell'
+                                                                              ? 0
+                                                                              : 1,
+                                                                          true);
+                                                                },
+                                                                isExpanded:
+                                                                    true,
+                                                                underline:
+                                                                    const SizedBox(),
+                                                              ),
+                                                            ),
+                                                          ]),
+                                                    )
+                                                  : const SizedBox(),
+                                            ],
+                                          );
+                                        }),
+                                        const SizedBox(height: 15),
+                                      ],
+                                    ),
+                                  ]),
+                            ),
+                          )),
+                          SizedBox(height: optionHeight),
+                          Container(
+                            padding: const EdgeInsets.all(
+                                Dimensions.paddingSizeDefault),
+                            decoration: BoxDecoration(
+                              color: (keyboardHeight > 0 &&
+                                      (_publishingFocus.hasFocus ||
+                                          _authorFocus.hasFocus))
+                                  ? Colors.transparent
+                                  : Theme.of(context).cardColor,
+                              boxShadow: (keyboardHeight > 0 &&
+                                      (_publishingFocus.hasFocus ||
+                                          _authorFocus.hasFocus))
+                                  ? null
+                                  : [
+                                      BoxShadow(
+                                          color: Colors.grey[
+                                              Provider.of<ThemeController>(
+                                                          context)
+                                                      .darkTheme
+                                                  ? 800
+                                                  : 200]!,
+                                          spreadRadius: 0.5,
+                                          blurRadius: 0.3)
+                                    ],
+                            ),
+                            child: (keyboardHeight > 0 &&
+                                    (_publishingFocus.hasFocus ||
+                                        _authorFocus.hasFocus))
+                                ? const SizedBox()
+                                : Consumer<AddProductController>(
+                                    builder: (context, resProvider, _) {
+                                    return !resProvider.isLoading
+                                        ? SizedBox(
+                                            height: 50,
+                                            child: Consumer<CategoryController>(
+                                                builder: (context,
+                                                    categoryController, _) {
+                                              return InkWell(
+                                                onTap: categoryController
+                                                            .categoryList ==
+                                                        null
+                                                    ? null
+                                                    : () {
+                                                        final productController =
+                                                            Provider.of<
+                                                                    ProductController>(
+                                                                context,
+                                                                listen: false);
+                                                        final categoryController =
+                                                            Provider.of<
+                                                                    CategoryController>(
+                                                                context,
+                                                                listen: false);
+
+                                                        final int arabicIndex =
+                                                            _getArabicLanguageIndex();
+                                                        resProvider
+                                                            .syncArabicContentToAllLanguages(
+                                                                arabicIndex);
+
+                                                        bool haveBlankTitle =
+                                                            false;
+                                                        bool haveBlankDes =
+                                                            false;
+                                                        for (TextEditingController title
+                                                            in resProvider
+                                                                .titleControllerList) {
+                                                          if (title
+                                                              .text.isEmpty) {
+                                                            haveBlankTitle =
+                                                                true;
+                                                            break;
+                                                          }
+                                                        }
+                                                        for (TextEditingController des
+                                                            in resProvider
+                                                                .descriptionControllerList) {
+                                                          if (des
+                                                              .text.isEmpty) {
+                                                            haveBlankDes = true;
+                                                            break;
+                                                          }
+                                                        }
+
+                                                        if (haveBlankTitle) {
+                                                          showCustomSnackBarWidget(
+                                                              getTranslated(
+                                                                  'please_input_all_title',
+                                                                  context),
+                                                              context,
+                                                              sanckBarType:
+                                                                  SnackBarType
+                                                                      .warning);
+                                                        } else if (haveBlankDes) {
+                                                          showCustomSnackBarWidget(
+                                                              getTranslated(
+                                                                  'please_input_all_des',
+                                                                  context),
+                                                              context,
+                                                              sanckBarType:
+                                                                  SnackBarType
+                                                                      .warning);
+                                                        }
+                                                        // else if ((resProvider.productTypeIndex == 1 &&resProvider.digitalProductTypeIndex == 1 &&
+                                                        //     resProvider.selectedFileForImport == null) && widget.product == null ) {
+                                                        //   showCustomSnackBarWidget(getTranslated('please_choose_digital_product',context),context,  sanckBarType: SnackBarType.warning);
+                                                        // }
+                                                        else if (categoryController
+                                                                    .categoryIndex ==
+                                                                0 ||
+                                                            categoryController
+                                                                    .categoryIndex ==
+                                                                -1) {
+                                                          showCustomSnackBarWidget(
+                                                              getTranslated(
+                                                                  'select_a_category',
+                                                                  context),
+                                                              context,
+                                                              sanckBarType:
+                                                                  SnackBarType
+                                                                      .warning);
+                                                        }
+                                                        //Brand optional
+                                                        // else if (productController.brandIndex == 0 && Provider.of<SplashController>(context, listen: false).configModel!.brandSetting == "1" && resProvider.productTypeIndex != 1) {
+                                                        //   showCustomSnackBarWidget(getTranslated('select_a_brand',context),context,  sanckBarType: SnackBarType.warning);
+                                                        // }
+                                                        else if ((resProvider
+                                                                        .unitValue ==
+                                                                    'select_unit' ||
+                                                                resProvider
+                                                                        .unitValue ==
+                                                                    null) &&
+                                                            resProvider
+                                                                    .productTypeIndex ==
+                                                                0) {
+                                                          showCustomSnackBarWidget(
+                                                              getTranslated(
+                                                                  'select_a_unit',
+                                                                  context),
+                                                              context,
+                                                              sanckBarType:
+                                                                  SnackBarType
+                                                                      .warning);
+                                                        } else if (resProvider
+                                                                    .productCode
+                                                                    .text ==
+                                                                '' ||
+                                                            resProvider
+                                                                .productCode
+                                                                .text
+                                                                .isEmpty) {
+                                                          showCustomSnackBarWidget(
+                                                              getTranslated(
+                                                                  'product_code_is_required',
+                                                                  context),
+                                                              context,
+                                                              sanckBarType:
+                                                                  SnackBarType
+                                                                      .warning);
+                                                        } else if (resProvider
+                                                                    .productCode
+                                                                    .text
+                                                                    .length <
+                                                                6 ||
+                                                            resProvider
+                                                                    .productCode
+                                                                    .text ==
+                                                                '000000') {
+                                                          showCustomSnackBarWidget(
+                                                              getTranslated(
+                                                                  'product_code_minimum_6_digit',
+                                                                  context),
+                                                              context,
+                                                              sanckBarType:
+                                                                  SnackBarType
+                                                                      .warning);
+                                                        } else {
+                                                          for (TextEditingController textEditingController
+                                                              in resProvider
+                                                                  .titleControllerList) {
+                                                            titleList.add(
+                                                                textEditingController
+                                                                    .text
+                                                                    .trim());
+                                                          }
+                                                          // if(resProvider.productTypeIndex == 1 &&resProvider.digitalProductTypeIndex == 1 &&
+                                                          //     resProvider.selectedFileForImport != null ) {
+                                                          //   resProvider.uploadDigitalProduct(Provider.of<AuthController>(context,listen: false).getUserToken());
+                                                          // }
+                                                          resProvider
+                                                              .setSelectedPageIndex(
+                                                                  1,
+                                                                  isUpdate:
+                                                                      true);
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder: (_) => AddProductNextScreen(
+                                                                      categoryId: categoryController.categoryList![categoryController.categoryIndex! - 1].id
+                                                                          .toString(),
+                                                                      subCategoryId: categoryController.subCategoryIndex != 0
+                                                                          ? categoryController.subCategoryList![categoryController.subCategoryIndex! - 1].id
+                                                                              .toString()
+                                                                          : "-1",
+                                                                      subSubCategoryId: (categoryController.subSubCategoryIndex != 0 && categoryController.subSubCategoryIndex! != -1)
+                                                                          ? categoryController.subSubCategoryList![categoryController.subSubCategoryIndex! - 1].id
+                                                                              .toString()
+                                                                          : "-1",
+                                                                      brandId: Provider.of<SplashController>(Get.context!, listen: false).configModel!.brandSetting == "1" && resProvider.productTypeIndex != 1
+                                                                          ? brandIds[productController.brandIndex!]
+                                                                              .toString()
+                                                                          : null,
+                                                                      unit:
+                                                                          unitValue,
+                                                                      product: widget
+                                                                          .product,
+                                                                      addProduct:
+                                                                          widget.addProduct)));
+                                                        }
+                                                      },
+                                                child: Container(
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  height: 40,
+                                                  decoration: BoxDecoration(
+                                                    color: categoryController
+                                                                .categoryList ==
+                                                            null
+                                                        ? Theme.of(context)
+                                                            .hintColor
+                                                        : Theme.of(context)
+                                                            .primaryColor,
+                                                    borderRadius: BorderRadius
+                                                        .circular(Dimensions
+                                                            .paddingSizeExtraSmall),
+                                                  ),
+                                                  child: Center(
+                                                      child: Text(
+                                                    getTranslated(
+                                                        'next', context)!,
+                                                    style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: Dimensions
+                                                            .fontSizeLarge),
+                                                  )),
+                                                ),
+                                              );
+                                            }),
+                                          )
+                                        : const SizedBox();
+                                  }),
+                          )
+                        ],
+                      );
+                    })
+                  : const SizedBox();
+        },
+      ),
+    );
+  }
+
+  Future<void> _showUnitSelectorBottomSheet(
+      AddProductController resProvider) async {
+    final List<String> units =
+        Provider.of<SplashController>(context, listen: false)
+                .configModel!
+                .unit ??
+            [];
+
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return SafeArea(
+          child: Container(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * .72,
+            ),
+            decoration: BoxDecoration(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(24),
+              ),
+            ),
+            child: Column(
+              children: [
+                const SizedBox(height: Dimensions.paddingSizeSmall),
+                Container(
+                  width: 44,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).hintColor.withValues(alpha: .35),
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                ),
+                const SizedBox(height: Dimensions.paddingSizeDefault),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Dimensions.paddingSizeLarge,
+                  ),
                   child: Row(
                     children: [
                       Expanded(
                         child: Text(
-                          (resProvider.unitValue == null ||
-                                  resProvider.unitValue == 'select_unit' ||
-                                  resProvider.unitValue == 'null')
-                              ? getTranslated('select_unit', context)!
-                              : resProvider.unitValue!,
-                          style: robotoMedium.copyWith(
-                            color: (resProvider.unitValue == null ||
-                                    resProvider.unitValue == 'select_unit' ||
-                                    resProvider.unitValue == 'null')
-                                ? Theme.of(context).hintColor
-                                : Theme.of(context).textTheme.bodyLarge?.color,
-                            fontSize: Dimensions.fontSizeDefault,
+                          getTranslated('select_unit', context) ??
+                              'اختيار الوحدة',
+                          style: robotoBold.copyWith(
+                            fontSize: Dimensions.fontSizeLarge,
+                            color: Theme.of(context).textTheme.bodyLarge?.color,
                           ),
                         ),
                       ),
-                      Container(
-                        height: 34,
-                        width: 34,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor.withValues(alpha: .08),
-                          borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                        ),
-                        child: Icon(
-                          Icons.keyboard_arrow_down_rounded,
-                          color: Theme.of(context).primaryColor,
+                      InkWell(
+                        onTap: () => Navigator.pop(context),
+                        borderRadius:
+                            BorderRadius.circular(Dimensions.radiusDefault),
+                        child: Container(
+                          padding:
+                              const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context)
+                                .primaryColor
+                                .withValues(alpha: .08),
+                            borderRadius:
+                                BorderRadius.circular(Dimensions.radiusDefault),
+                          ),
+                          child: Icon(
+                            Icons.close_rounded,
+                            size: 20,
+                            color: Theme.of(context).primaryColor,
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ),
-          ],
-        ),
-      )
-    : const SizedBox(),
-
-
-                            Container(padding: const EdgeInsets.fromLTRB(Dimensions.paddingSizeMedium, 0, Dimensions.paddingSizeMedium, 0),
-                              child: Column(children: [
-                                Row(
-                                  children: [
-                                    const Spacer(),
-                                    InkWell(
-                                      splashColor: Colors.transparent,
-                                      onTap: (){
-                                        resProvider.productCode.text = _generateSKU();
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall),
-                                        child: Text(getTranslated('generate_code', context)!, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).primaryColor)),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: Dimensions.paddingSizeExtraSmall),
-
-                                CustomTextFieldWidget(
-                                  formProduct: true,
-                                  required: true,
-                                  border: true,
-                                  borderColor: Theme.of(context).primaryColor.withValues(alpha: .25),
-                                  controller: resProvider.productCode,
-                                  textInputAction: TextInputAction.next,
-                                  textInputType: TextInputType.text,
-                                  isAmount: false,
-                                  hintText: getTranslated('product_code_sku', context)!,
-                                ),
-                              ]),
-                            ),
-                            const SizedBox(height: Dimensions.paddingSizeDefault),
-
-
-                           Provider.of<SplashController>(context, listen: false).configModel!.digitalProductSetting == "1"?
-                           DigitalProductWidget(resProvider: resProvider, product: widget.product) : const SizedBox(),
-
-                            Consumer<DigitalProductController>(
-                              builder: (context, digitalProductController, child){
-                                return Column(
-                                  children: [
-
-                                    //Author
-                                    resProvider.productTypeIndex == 1 ?
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeMedium, vertical: Dimensions.paddingSizeSmall),
-                                      child: Autocomplete<String>(
-                                        optionsBuilder: (TextEditingValue value) {
-                                          if (value.text.isEmpty) {
-                                            return const Iterable<String>.empty();
-                                          } else {
-                                            return authors.where((author) => author.toLowerCase().contains(value.text.toLowerCase()));
-                                          }
-                                        },
-                                        fieldViewBuilder: (context, controller, node, onComplete) {
-                                          _authorFocus = node;
-                                          if(!node.hasFocus){
-                                            _authorFocus.unfocus();
-                                          } else{
-                                            _authorFocus.requestFocus();
-                                          }
-                                          return TextField(
-                                            keyboardType: TextInputType.text,
-                                            controller: controller,
-                                            focusNode: node,
-                                            onEditingComplete: onComplete,
-                                            onSubmitted: (value) {
-                                              if(digitalProductController.selectedAuthors!.isEmpty){
-                                                _scrollController.jumpTo(_scrollController.offset + 20);
-                                              }
-                                              digitalProductController.addAuthor(value);
-                                              // controller.text = '';
-                                            },
-                                            onChanged: (value)=> _onChangeOptionHeight(value, authors),
-                                            decoration: InputDecoration(
-                                              contentPadding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSize, horizontal: Dimensions.paddingSizeMedium),
-                                              hintText: getTranslated('author_creator_artist', context),
-                                              hintStyle: TextStyle(color: Theme.of(context).hintColor),
-                                              labelText: getTranslated('author_creator_artist', context),
-                                              labelStyle: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
-                                              border: InputBorder.none,
-                                              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).primaryColor), borderRadius: BorderRadius.circular(8)),
-                                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8),
-                                                  borderSide: BorderSide(color: Theme.of(context).primaryColor.withValues(alpha: .25), width: .75)),
-                                            ),
-                                          );
-                                        },
-                                        displayStringForOption: (value) =>  value,
-                                        onSelected: (String value) {
-                                          // resProvider.addAuthor(value);
-                                        },
-                                        optionsViewBuilder: (BuildContext context, AutocompleteOnSelected<String> onSelected, Iterable<String> options) {
-                                          return Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              height:  (keyboardHeight == 0 &&  (_authorFocus.hasFocus)) ? 155 : 250,
-                                              padding: const EdgeInsets.only(right: 8.0), // Add padding to the right
-                                              width: MediaQuery.of(context).size.width * 0.9, // Adjust the width if needed
-                                              decoration: BoxDecoration(
-                                                color: Theme.of(context).cardColor,
-                                                borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                                                boxShadow: [BoxShadow(color: Colors.grey[Provider.of<ThemeController>(context).darkTheme ? 800 : 200]!,
-                                                    spreadRadius: 0.5, blurRadius: 0.3)],
-                                              ),
-                                              child: ListView.builder(
-                                                padding: EdgeInsets.zero,
-                                                itemCount: options.length,
-                                                itemBuilder: (BuildContext context, int index) {
-                                                  final String option = options.elementAt(index);
-                                                  return InkWell(
-                                                    onTap: () {
-                                                      onSelected(option);
-                                                    },
-                                                    child: Builder(
-                                                      builder: (BuildContext context) {
-                                                        final bool highlight = AutocompleteHighlightedOption.of(context) == index;
-                                                        if (highlight) {
-                                                          SchedulerBinding.instance.addPostFrameCallback((Duration timeStamp) {
-                                                            Scrollable.ensureVisible(context, alignment: 0.5);
-                                                          }, debugLabel: 'AutocompleteOptions.ensureVisible');
-                                                        }
-                                                        return Container(
-                                                          color: highlight ? Theme.of(context).focusColor : null,
-                                                          padding: const EdgeInsets.all(16.0),
-                                                          child: Text(option),
-                                                        );
-                                                      },
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ) : const SizedBox(),
-
-                                    if(resProvider.productTypeIndex == 1 && digitalProductController.selectedAuthors!.isNotEmpty)
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeMedium),
-                                      child: SizedBox(height: (resProvider.productTypeIndex == 1 && digitalProductController.selectedAuthors!.isNotEmpty) ? 40 : 0,
-                                        child: (digitalProductController.selectedAuthors!.isNotEmpty) ?
-                                        ListView.builder(
-                                          itemCount: digitalProductController.selectedAuthors!.length,
-                                          scrollDirection: Axis.horizontal,
-                                          itemBuilder: (context, index) {
-                                            return Padding(
-                                              padding: const EdgeInsets.all(Dimensions.paddingSizeVeryTiny),
-                                              child: Container(
-                                                padding: const EdgeInsets.symmetric(horizontal : Dimensions.paddingSizeMedium),
-                                                margin: const EdgeInsets.only(right: Dimensions.paddingSizeSmall),
-                                                decoration: BoxDecoration(color: Theme.of(context).primaryColor.withValues(alpha:.20),
-                                                  borderRadius: BorderRadius.circular(Dimensions.paddingSizeDefault),
-                                                ),
-                                                child: Row(children: [
-                                                  Consumer<SplashController>(builder: (ctx, colorP,child){
-                                                    return Text(digitalProductController.selectedAuthors![index],
-                                                      style: robotoRegular.copyWith(color: ColorHelper.blendColors(Colors.white, Theme.of(context).textTheme.bodyLarge!.color!, 0.7)),);
-                                                  }),
-                                                  const SizedBox(width: Dimensions.paddingSizeSmall),
-                                                  InkWell(
-                                                    splashColor: Colors.transparent,
-                                                    onTap: (){digitalProductController.removeAuthor(index);},
-                                                    child: Icon(Icons.close, size: 15, color: ColorHelper.blendColors(Colors.white, Theme.of(context).textTheme.bodyLarge!.color!, 0.7)),
-                                                  ),
-                                                ]),
-                                              ),
-                                            );
-                                          },
-                                        ) : const SizedBox(),
-                                      ),
-                                    ),
-
-                                    const SizedBox(height: Dimensions.paddingSizeSmall),
-
-
-                                    ///Publishing
-                                    resProvider.productTypeIndex == 1  ?
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeMedium, vertical: Dimensions.paddingSizeSmall),
-                                      child: Autocomplete<String> (
-                                        optionsBuilder: (TextEditingValue value) {
-                                          if (value.text.isEmpty) {
-                                            return const Iterable<String>.empty();
-                                          } else {
-                                            return publishingHouses.where((author) => author.toLowerCase().contains(value.text.toLowerCase()));
-                                          }
-                                        },
-                                        fieldViewBuilder: (context, controller, node, onComplete) {
-                                          _publishingFocus = node;
-                                          if(!node.hasFocus){
-                                            _publishingFocus.unfocus();
-                                          } else{
-                                            _publishingFocus.requestFocus();
-                                          }
-                                          return TextField(
-                                            keyboardType: TextInputType.text,
-                                            controller: controller,
-                                            focusNode: node,
-                                            onEditingComplete: onComplete,
-                                            onSubmitted: (value) {
-                                              if(digitalProductController.selectedPublishingHouse!.isEmpty){
-                                                _scrollController.jumpTo(_scrollController.offset + 20);
-                                              }
-                                              digitalProductController.addPublishingHouse(value);
-                                            },
-                                            onChanged: (value)=> _onChangeOptionHeight(value, publishingHouses),
-                                            decoration: InputDecoration(
-                                              hintText: getTranslated('publishing_house', context),
-                                              contentPadding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSize, horizontal: Dimensions.paddingSizeMedium),
-                                              hintStyle: TextStyle(color: Theme.of(context).hintColor),
-                                              labelText: getTranslated('publishing_house', context),
-                                              labelStyle: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
-                                              border: InputBorder.none,
-                                              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).primaryColor)),
-                                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8),
-                                                  borderSide: BorderSide(color: Theme.of(context).primaryColor.withValues(alpha: .25), width: .75)
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        displayStringForOption: (value) =>  value,
-                                        onSelected: (String value) {
-                                          // resProvider.addAuthor(value);
-                                        },
-
-                                        optionsViewBuilder: (BuildContext context, AutocompleteOnSelected<String> onSelected, Iterable<String> options) {
-                                          return Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              padding: const EdgeInsets.only(right: 8.0), // Add padding to the right
-                                              width: MediaQuery.of(context).size.width * 0.9, //
-                                              decoration: BoxDecoration(
-                                                color: Theme.of(context).cardColor,
-                                                borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                                                boxShadow: [BoxShadow(color: Colors.grey[Provider.of<ThemeController>(context).darkTheme ? 800 : 200]!,
-                                                    spreadRadius: 0.5, blurRadius: 0.3)],
-                                              ),
-
-                                              // Adjust the width if needed
-                                              child: ListView.builder(
-                                                padding: EdgeInsets.zero,
-                                                itemCount: options.length,
-                                                itemBuilder: (BuildContext context, int index) {
-                                                  final String option = options.elementAt(index);
-                                                  return InkWell(
-                                                    onTap: () {
-                                                      onSelected(option);
-                                                    },
-                                                    child: Builder(
-                                                      builder: (BuildContext context) {
-                                                        final bool highlight = AutocompleteHighlightedOption.of(context) == index;
-                                                        if (highlight) {
-                                                          SchedulerBinding.instance.addPostFrameCallback((Duration timeStamp) {
-                                                            Scrollable.ensureVisible(context, alignment: 0.5);
-                                                          }, debugLabel: 'AutocompleteOptions.ensureVisible');
-                                                        }
-                                                        return Container(
-                                                          color: highlight ? Theme.of(context).focusColor : null,
-                                                          padding: const EdgeInsets.all(16.0),
-                                                          child: Text(option),
-                                                        );
-                                                      },
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ) : const SizedBox(),
-
-
-                                    if (resProvider.productTypeIndex == 1 && digitalProductController.selectedPublishingHouse!.isNotEmpty)
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeMedium),
-                                      child: SizedBox(height: (resProvider.productTypeIndex == 1 && digitalProductController.selectedPublishingHouse!.isNotEmpty) ? 40 : 0,
-                                        child: (digitalProductController.selectedPublishingHouse!.isNotEmpty) ?
-
-                                        ListView.builder(
-                                          itemCount: digitalProductController.selectedPublishingHouse!.length,
-                                          scrollDirection: Axis.horizontal,
-                                          itemBuilder: (context, index) {
-                                            return Padding(
-                                              padding: const EdgeInsets.all(Dimensions.paddingSizeVeryTiny),
-                                              child: Container(
-                                                padding: const EdgeInsets.symmetric(horizontal : Dimensions.paddingSizeMedium),
-                                                margin: const EdgeInsets.only(right: Dimensions.paddingSizeSmall),
-                                                decoration: BoxDecoration(color: Theme.of(context).primaryColor.withValues(alpha:.20),
-                                                  borderRadius: BorderRadius.circular(Dimensions.paddingSizeDefault),
-                                                ),
-                                                child: Row(children: [
-                                                  Consumer<SplashController>(builder: (ctx, colorP,child){
-                                                    return Text(digitalProductController.selectedPublishingHouse![index],
-                                                      style: robotoRegular.copyWith(color: ColorHelper.blendColors(Colors.white, Theme.of(context).textTheme.bodyLarge!.color!, 0.7)),);
-                                                  }),
-                                                  const SizedBox(width: Dimensions.paddingSizeSmall),
-                                                  InkWell(
-                                                    splashColor: Colors.transparent,
-                                                    onTap: (){digitalProductController.removePublishingHouse(index);},
-                                                    child: Icon(Icons.close, size: 15, color: ColorHelper.blendColors(Colors.white, Theme.of(context).textTheme.bodyLarge!.color!, 0.7)),
-                                                  ),
-                                                ]),
-                                              ),
-                                            );
-                                          },
-                                        ):const SizedBox(),
-                                      ),
-                                    ),
-                                    //End Author Publishing
-
-                                    const SizedBox(height: Dimensions.paddingSizeSmall),
-
-                                    resProvider.productTypeIndex == 1 ?
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeMedium),
-                                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                        DropdownDecoratorWidget(
-                                          title: 'delivery_type',
-                                          child: DropdownButton<String>(
-                                            icon: const Icon(Icons.keyboard_arrow_down_outlined),
-                                            borderRadius: const BorderRadius.all(Radius.circular(Dimensions.paddingEye)),
-                                            value: digitalProductController.digitalProductTypeIndex == 0 ? 'ready_after_sell' : 'ready_product',
-                                            items: deliveryTypeList.map((String value) {
-                                              return DropdownMenuItem<String>(
-                                                  value: value,
-                                                  child: Text(getTranslated(value, context)!, style: robotoMedium)
-                                              );
-                                            }).toList(),
-                                            onChanged: (value) {
-                                              digitalProductController.setDigitalProductTypeIndex(value == 'ready_after_sell' ? 0 : 1, true);
-                                            },
-                                            isExpanded: true,
-                                            underline: const SizedBox(),
-                                          ),
-                                        ),
-                                      ]),
-                                    ) : const SizedBox(),
-                                  ],
-                                );
-                              }
-                            ),
-
-                            const SizedBox(height: 15),
-
-
-                          ],
-                        ),
-
-
-                      ]),
+                const SizedBox(height: Dimensions.paddingSizeDefault),
+                Expanded(
+                  child: ListView.separated(
+                    padding: const EdgeInsets.fromLTRB(
+                      Dimensions.paddingSizeLarge,
+                      0,
+                      Dimensions.paddingSizeLarge,
+                      Dimensions.paddingSizeLarge,
                     ),
-                  )),
+                    itemCount: units.length,
+                    separatorBuilder: (_, __) =>
+                        const SizedBox(height: Dimensions.paddingSizeSmall),
+                    itemBuilder: (context, index) {
+                      final String value = units[index];
+                      final bool isSelected = resProvider.unitValue == value;
 
-                  SizedBox(height: optionHeight),
-
-                  Container(
-                    padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
-                    decoration: BoxDecoration(
-                      color: (keyboardHeight > 0 &&  (_publishingFocus.hasFocus || _authorFocus.hasFocus)) ? Colors.transparent  : Theme.of(context).cardColor,
-                      boxShadow:  (keyboardHeight > 0 &&  (_publishingFocus.hasFocus || _authorFocus.hasFocus)) ? null : [BoxShadow(color: Colors.grey[Provider.of<ThemeController>(context).darkTheme ? 800 : 200]!,
-                          spreadRadius: 0.5, blurRadius: 0.3)],
-                    ),
-                    child: (keyboardHeight > 0 &&  (_publishingFocus.hasFocus || _authorFocus.hasFocus)) ? const SizedBox() : Consumer<AddProductController>(
-                        builder: (context,resProvider, _) {
-                          return!resProvider.isLoading? SizedBox(height: 50,
-                            child: Consumer<CategoryController>(
-                              builder: (context, categoryController, _) {
-                                return InkWell(
-                                  onTap: categoryController.categoryList == null ? null : (){
-                                    final productController = Provider.of<ProductController>(context,listen: false);
-                                    final categoryController = Provider.of<CategoryController>(context,listen: false);
-
-                                  final int arabicIndex = _getArabicLanguageIndex();
-resProvider.syncArabicContentToAllLanguages(arabicIndex);
-
-bool haveBlankTitle = false;
-bool haveBlankDes = false;
-for(TextEditingController title in resProvider.titleControllerList){
-  if(title.text.isEmpty){
-    haveBlankTitle = true;
-    break;
-  }
-}
-for(TextEditingController des in resProvider.descriptionControllerList){
-  if(des.text.isEmpty){
-    haveBlankDes = true;
-    break;
-  }
-}
-
-                                    if(haveBlankTitle){
-                                      showCustomSnackBarWidget(getTranslated('please_input_all_title',context),context, sanckBarType: SnackBarType.warning);
-                                    }else if(haveBlankDes){
-                                      showCustomSnackBarWidget(getTranslated('please_input_all_des',context),context,  sanckBarType: SnackBarType.warning);
-                                    }
-                                    // else if ((resProvider.productTypeIndex == 1 &&resProvider.digitalProductTypeIndex == 1 &&
-                                    //     resProvider.selectedFileForImport == null) && widget.product == null ) {
-                                    //   showCustomSnackBarWidget(getTranslated('please_choose_digital_product',context),context,  sanckBarType: SnackBarType.warning);
-                                    // }
-                                    else if (categoryController.categoryIndex == 0 || categoryController.categoryIndex == -1) {
-                                      showCustomSnackBarWidget(getTranslated('select_a_category',context),context,  sanckBarType: SnackBarType.warning);
-                                    }
-                                    //Brand optional
-                                    // else if (productController.brandIndex == 0 && Provider.of<SplashController>(context, listen: false).configModel!.brandSetting == "1" && resProvider.productTypeIndex != 1) {
-                                    //   showCustomSnackBarWidget(getTranslated('select_a_brand',context),context,  sanckBarType: SnackBarType.warning);
-                                    // }
-                                    else if ((resProvider.unitValue == 'select_unit' || resProvider.unitValue == null) &&  resProvider.productTypeIndex == 0) {
-                                      showCustomSnackBarWidget(getTranslated('select_a_unit',context),context,  sanckBarType: SnackBarType.warning);
-                                    }
-                                    else if (resProvider.productCode.text == '' || resProvider.productCode.text.isEmpty) {
-                                      showCustomSnackBarWidget(getTranslated('product_code_is_required',context),context,  sanckBarType: SnackBarType.warning);
-                                    }
-                                    else if (resProvider.productCode.text.length < 6 || resProvider.productCode.text == '000000') {
-                                      showCustomSnackBarWidget(getTranslated('product_code_minimum_6_digit',context),context,  sanckBarType: SnackBarType.warning);
-                                    }
-                                    else{
-                                      for(TextEditingController textEditingController in resProvider.titleControllerList) {
-                                        titleList.add(textEditingController.text.trim());
-                                      }
-                                      // if(resProvider.productTypeIndex == 1 &&resProvider.digitalProductTypeIndex == 1 &&
-                                      //     resProvider.selectedFileForImport != null ) {
-                                      //   resProvider.uploadDigitalProduct(Provider.of<AuthController>(context,listen: false).getUserToken());
-                                      // }
-                                      resProvider.setSelectedPageIndex(1, isUpdate: true);
-                                      Navigator.push(context, MaterialPageRoute(builder: (_) => AddProductNextScreen(
-                                          categoryId: categoryController.categoryList![categoryController.categoryIndex!-1].id.toString(),
-                                          subCategoryId: categoryController.subCategoryIndex != 0? categoryController.subCategoryList![categoryController.subCategoryIndex!-1].id.toString(): "-1",
-                                          subSubCategoryId:(categoryController.subSubCategoryIndex != 0 && categoryController.subSubCategoryIndex! != -1) ? categoryController.subSubCategoryList![categoryController.subSubCategoryIndex!-1].id.toString():"-1",
-                                          brandId: Provider.of<SplashController>(Get.context!, listen: false).configModel!.brandSetting == "1" && resProvider.productTypeIndex != 1 ? brandIds[productController.brandIndex!].toString() : null,
-                                          unit: unitValue,
-                                          product: widget.product, addProduct: widget.addProduct)));
-                                    }},
-
-
-                                  child: Container(width: MediaQuery.of(context).size.width, height: 40,
-                                    decoration: BoxDecoration(
-                                      color: categoryController.categoryList == null ? Theme.of(context).hintColor : Theme.of(context).primaryColor,
-                                      borderRadius: BorderRadius.circular(Dimensions.paddingSizeExtraSmall),
-                                    ),
-                                    child: Center(child: Text(getTranslated('next',context)!, style: const TextStyle(
-                                        color: Colors.white,fontWeight: FontWeight.w600,
-                                        fontSize: Dimensions.fontSizeLarge),)),
-                                  ),
-                                );
-                              }
-                            ),
-                          ): const SizedBox();
-                        }
-                    ),
-                  )
-                ],
-              );
-            }
-          ):const SizedBox();
-        },
-      ),
-     );
-  }
-Future<void> _showUnitSelectorBottomSheet(AddProductController resProvider) async {
-  final List<String> units =
-      Provider.of<SplashController>(context, listen: false).configModel!.unit ?? [];
-
-  await showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    builder: (context) {
-      return SafeArea(
-        child: Container(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * .72,
-          ),
-          decoration: BoxDecoration(
-            color: Theme.of(context).scaffoldBackgroundColor,
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(24),
-            ),
-          ),
-          child: Column(
-            children: [
-              const SizedBox(height: Dimensions.paddingSizeSmall),
-              Container(
-                width: 44,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).hintColor.withValues(alpha: .35),
-                  borderRadius: BorderRadius.circular(100),
-                ),
-              ),
-              const SizedBox(height: Dimensions.paddingSizeDefault),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Dimensions.paddingSizeLarge,
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        getTranslated('select_unit', context) ?? 'اختيار الوحدة',
-                        style: robotoBold.copyWith(
-                          fontSize: Dimensions.fontSizeLarge,
-                          color: Theme.of(context).textTheme.bodyLarge?.color,
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () => Navigator.pop(context),
-                      borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                      child: Container(
-                        padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor.withValues(alpha: .08),
-                          borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                        ),
-                        child: Icon(
-                          Icons.close_rounded,
-                          size: 20,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: Dimensions.paddingSizeDefault),
-
-              Expanded(
-                child: ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(
-                    Dimensions.paddingSizeLarge,
-                    0,
-                    Dimensions.paddingSizeLarge,
-                    Dimensions.paddingSizeLarge,
-                  ),
-                  itemCount: units.length,
-                  separatorBuilder: (_, __) =>
-                      const SizedBox(height: Dimensions.paddingSizeSmall),
-                  itemBuilder: (context, index) {
-                    final String value = units[index];
-                    final bool isSelected = resProvider.unitValue == value;
-
-                    return InkWell(
-                      onTap: () {
-                        unitValue = value;
-                        resProvider.setValueForUnit(value);
-                        setState(() {});
-                        Navigator.pop(context);
-                      },
-                      borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 180),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: Dimensions.paddingSizeDefault,
-                          vertical: Dimensions.paddingSizeDefault,
-                        ),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? Theme.of(context).primaryColor.withValues(alpha: .10)
-                              : Theme.of(context).cardColor,
-                          borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                          border: Border.all(
-                            color: isSelected
-                                ? Theme.of(context).primaryColor
-                                : Theme.of(context).primaryColor.withValues(alpha: .10),
-                            width: isSelected ? 1.2 : .8,
+                      return InkWell(
+                        onTap: () {
+                          unitValue = value;
+                          resProvider.setValueForUnit(value);
+                          setState(() {});
+                          Navigator.pop(context);
+                        },
+                        borderRadius:
+                            BorderRadius.circular(Dimensions.radiusDefault),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 180),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: Dimensions.paddingSizeDefault,
+                            vertical: Dimensions.paddingSizeDefault,
                           ),
-                          boxShadow: isSelected
-                              ? [
-                                  BoxShadow(
-                                    color: Theme.of(context).primaryColor.withValues(alpha: .08),
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ]
-                              : [],
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                value,
-                                style: robotoMedium.copyWith(
-                                  fontSize: Dimensions.fontSizeDefault,
-                                  color: isSelected
-                                      ? Theme.of(context).primaryColor
-                                      : Theme.of(context).textTheme.bodyLarge?.color,
-                                ),
-                              ),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? Theme.of(context)
+                                    .primaryColor
+                                    .withValues(alpha: .10)
+                                : Theme.of(context).cardColor,
+                            borderRadius:
+                                BorderRadius.circular(Dimensions.radiusDefault),
+                            border: Border.all(
+                              color: isSelected
+                                  ? Theme.of(context).primaryColor
+                                  : Theme.of(context)
+                                      .primaryColor
+                                      .withValues(alpha: .10),
+                              width: isSelected ? 1.2 : .8,
                             ),
-                            if (isSelected)
-                              Container(
-                                height: 26,
-                                width: 26,
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(
-                                  Icons.check_rounded,
-                                  color: Colors.white,
-                                  size: 16,
+                            boxShadow: isSelected
+                                ? [
+                                    BoxShadow(
+                                      color: Theme.of(context)
+                                          .primaryColor
+                                          .withValues(alpha: .08),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ]
+                                : [],
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  value,
+                                  style: robotoMedium.copyWith(
+                                    fontSize: Dimensions.fontSizeDefault,
+                                    color: isSelected
+                                        ? Theme.of(context).primaryColor
+                                        : Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge
+                                            ?.color,
+                                  ),
                                 ),
                               ),
-                          ],
+                              if (isSelected)
+                                Container(
+                                  height: 26,
+                                  width: 26,
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).primaryColor,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    Icons.check_rounded,
+                                    color: Colors.white,
+                                    size: 16,
+                                  ),
+                                ),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
+
   String _generateSKU() {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     final random = Random();
@@ -951,8 +1760,10 @@ Future<void> _showUnitSelectorBottomSheet(AddProductController resProvider) asyn
     return sku;
   }
 
-    int _getArabicLanguageIndex() {
-    final languageList = Provider.of<SplashController>(context, listen: false).configModel!.languageList!;
+  int _getArabicLanguageIndex() {
+    final languageList = Provider.of<SplashController>(context, listen: false)
+        .configModel!
+        .languageList!;
     final int arabicIndex = languageList.indexWhere(
       (language) => (language.code ?? '').toLowerCase() == 'ar',
     );
@@ -967,7 +1778,6 @@ Future<void> _showUnitSelectorBottomSheet(AddProductController resProvider) asyn
       ),
     ];
   }
-  
 
   List<Widget> _generateTabPage(AddProductController resProvider) {
     final int arabicIndex = _getArabicLanguageIndex();
@@ -985,19 +1795,18 @@ Future<void> _showUnitSelectorBottomSheet(AddProductController resProvider) asyn
       if (value.isEmpty) {
         optionHeight = 0;
       } else {
-        final int items = list.where((item) => item.toLowerCase().contains(value.toLowerCase())).length;
+        final int items = list
+            .where((item) => item.toLowerCase().contains(value.toLowerCase()))
+            .length;
         optionHeight = items * 10;
 
-        if(optionHeight > 300) {
+        if (optionHeight > 300) {
           optionHeight = 300;
         }
-
       }
     });
   }
-
 }
-
 
 extension StringExtension on String {
   String capitalize() {

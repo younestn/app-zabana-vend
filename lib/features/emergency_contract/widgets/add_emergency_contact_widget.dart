@@ -17,14 +17,19 @@ import '../../../main.dart';
 class AddEmergencyContactWidget extends StatefulWidget {
   final ContactList? contactList;
   final int? index;
-  const AddEmergencyContactWidget({super.key,  this.index, this.contactList});
+  const AddEmergencyContactWidget({super.key, this.index, this.contactList});
 
   @override
-  State<AddEmergencyContactWidget> createState() => _AddEmergencyContactWidgetState();
+  State<AddEmergencyContactWidget> createState() =>
+      _AddEmergencyContactWidgetState();
 }
 
 class _AddEmergencyContactWidgetState extends State<AddEmergencyContactWidget> {
-  String? _countryDialCode = Provider.of<SplashController>(Get.context!, listen: false).configModel?.countryCode ?? '';
+  String? _countryDialCode =
+      Provider.of<SplashController>(Get.context!, listen: false)
+              .configModel
+              ?.countryCode ??
+          '';
   TextEditingController contactNameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   FocusNode nameFocus = FocusNode();
@@ -32,10 +37,12 @@ class _AddEmergencyContactWidgetState extends State<AddEmergencyContactWidget> {
 
   @override
   void initState() {
-    if(widget.contactList != null){
-      String countryCode = CountryCodeHelper.getCountryCode(widget.contactList!.phone!)!;
+    if (widget.contactList != null) {
+      String countryCode =
+          CountryCodeHelper.getCountryCode(widget.contactList!.phone!)!;
       _countryDialCode = countryCode;
-      String phoneNumberOnly = CountryCodeHelper.extractPhoneNumber(countryCode, widget.contactList!.phone!);
+      String phoneNumberOnly = CountryCodeHelper.extractPhoneNumber(
+          countryCode, widget.contactList!.phone!);
       contactNameController.text = widget.contactList!.name!;
       phoneController.text = phoneNumberOnly;
     }
@@ -44,20 +51,24 @@ class _AddEmergencyContactWidgetState extends State<AddEmergencyContactWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(insetPadding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
+    return Dialog(
+        insetPadding: const EdgeInsets.symmetric(
+            horizontal: Dimensions.paddingSizeDefault),
         surfaceTintColor: Theme.of(context).cardColor,
         child: Consumer<EmergencyContactController>(
-          builder: (context, emergencyContactProvider, _) {
-            return Padding(
-              padding: const EdgeInsets.only(top: Dimensions.paddingSizeDefault),
-              child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-
+            builder: (context, emergencyContactProvider, _) {
+          return Padding(
+            padding: const EdgeInsets.only(top: Dimensions.paddingSizeDefault),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
                 Container(
-                    margin: const EdgeInsets.only(left: Dimensions.paddingSizeLarge, right: Dimensions.paddingSizeLarge,
-                    bottom: Dimensions.paddingSizeSmall),
+                    margin: const EdgeInsets.only(
+                        left: Dimensions.paddingSizeLarge,
+                        right: Dimensions.paddingSizeLarge,
+                        bottom: Dimensions.paddingSizeSmall),
                     child: CustomTextFieldWidget(
                       border: true,
                       hintText: getTranslated('contact_name', context),
@@ -68,24 +79,31 @@ class _AddEmergencyContactWidgetState extends State<AddEmergencyContactWidget> {
                       textInputAction: TextInputAction.next,
                     )),
                 const SizedBox(height: Dimensions.paddingSizeSmall),
-
-                Container(margin: const EdgeInsets.only(left: Dimensions.paddingSizeLarge, right: Dimensions.paddingSizeLarge,
-                  bottom: Dimensions.paddingSizeSmall),
+                Container(
+                  margin: const EdgeInsets.only(
+                      left: Dimensions.paddingSizeLarge,
+                      right: Dimensions.paddingSizeLarge,
+                      bottom: Dimensions.paddingSizeSmall),
                   child: Row(
                     children: [
                       CodePickerWidget(
                         onChanged: (CountryCode countryCode) {
                           _countryDialCode = countryCode.dialCode;
-                          emergencyContactProvider.setCountryDialCode(_countryDialCode);
+                          emergencyContactProvider
+                              .setCountryDialCode(_countryDialCode);
                         },
-                        initialSelection: emergencyContactProvider.countryDialCode,
+                        initialSelection:
+                            emergencyContactProvider.countryDialCode,
                         favorite: [emergencyContactProvider.countryDialCode!],
                         showDropDownButton: true,
                         padding: EdgeInsets.zero,
                         showFlagMain: true,
-                        textStyle: TextStyle(color: Theme.of(context).textTheme.displayLarge!.color),
+                        textStyle: TextStyle(
+                            color: Theme.of(context)
+                                .textTheme
+                                .displayLarge!
+                                .color),
                       ),
-
                       Expanded(
                         child: CustomTextFieldWidget(
                           isPhoneNumber: true,
@@ -97,33 +115,46 @@ class _AddEmergencyContactWidgetState extends State<AddEmergencyContactWidget> {
                           textInputAction: TextInputAction.next,
                         ),
                       )
-
                     ],
                   ),
                 ),
                 const SizedBox(height: Dimensions.paddingSizeSmall),
                 Padding(
-                  padding: const EdgeInsets.all(Dimensions.paddingSizeExtraLarge),
-                  child: emergencyContactProvider.isLoading? const CircularProgressIndicator():
-                  CustomButtonWidget(btnTxt: widget.contactList != null?  getTranslated('update', context) : getTranslated('add', context),
-                  onTap: (){
-                    int? id = widget.contactList?.id;
-                    String name = contactNameController.text.trim();
-                    String phone = phoneController.text.trim();
-                    String phoneNumberWithCountryCode = _countryDialCode! + phone;
-                    if(name.isEmpty){
-                      showCustomSnackBarWidget(getTranslated('contact_name_is_required', context), context, isToaster: true);
-                    }
-                    else if(phone.isEmpty){
-                      showCustomSnackBarWidget(getTranslated('phone_is_required', context), context);
-                    }else{
-                      emergencyContactProvider.addNewEmergencyContact(context, name, phoneNumberWithCountryCode, id, isUpdate: widget.contactList != null);
-                    }
-                  },),
+                  padding:
+                      const EdgeInsets.all(Dimensions.paddingSizeExtraLarge),
+                  child: emergencyContactProvider.isLoading
+                      ? const CircularProgressIndicator()
+                      : CustomButtonWidget(
+                          btnTxt: widget.contactList != null
+                              ? getTranslated('update', context)
+                              : getTranslated('add', context),
+                          onTap: () {
+                            int? id = widget.contactList?.id;
+                            String name = contactNameController.text.trim();
+                            String phone = phoneController.text.trim();
+                            String phoneNumberWithCountryCode =
+                                _countryDialCode! + phone;
+                            if (name.isEmpty) {
+                              showCustomSnackBarWidget(
+                                  getTranslated(
+                                      'contact_name_is_required', context),
+                                  context,
+                                  isToaster: true);
+                            } else if (phone.isEmpty) {
+                              showCustomSnackBarWidget(
+                                  getTranslated('phone_is_required', context),
+                                  context);
+                            } else {
+                              emergencyContactProvider.addNewEmergencyContact(
+                                  context, name, phoneNumberWithCountryCode, id,
+                                  isUpdate: widget.contactList != null);
+                            }
+                          },
+                        ),
                 )
-              ],),
-            );
-          }
-        ));
+              ],
+            ),
+          );
+        }));
   }
 }

@@ -7,10 +7,10 @@ class NotificationItemModel {
 
   NotificationItemModel(
       {this.totalSize,
-        this.limit,
-        this.offset,
-        this.newNotificationItem,
-        this.notification});
+      this.limit,
+      this.offset,
+      this.newNotificationItem,
+      this.notification});
 
   NotificationItemModel.fromJson(Map<String, dynamic> json) {
     totalSize = json['total_size'];
@@ -24,7 +24,6 @@ class NotificationItemModel {
       });
     }
   }
-
 }
 
 class NotificationItem {
@@ -37,11 +36,11 @@ class NotificationItem {
 
   NotificationItem(
       {this.id,
-        this.title,
-        this.description,
-        this.image,
-        this.createdAt,
-        this.notificationSeenStatus});
+      this.title,
+      this.description,
+      this.image,
+      this.createdAt,
+      this.notificationSeenStatus});
 
   NotificationItem.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -51,5 +50,4 @@ class NotificationItem {
     createdAt = json['created_at'];
     notificationSeenStatus = json['notification_seen_status'];
   }
-
 }

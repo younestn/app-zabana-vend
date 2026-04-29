@@ -50,7 +50,8 @@ class NoestSettingsModel {
     data['connected_since'] = connectedSince;
     data['is_connected'] = isConnected;
     if (deliveryMethods != null) {
-      data['delivery_methods'] = deliveryMethods!.map((v) => v.toJson()).toList();
+      data['delivery_methods'] =
+          deliveryMethods!.map((v) => v.toJson()).toList();
     }
     return data;
   }

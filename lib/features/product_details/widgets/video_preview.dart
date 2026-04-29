@@ -36,14 +36,13 @@ class _VideoPreviewState extends State<VideoPreview> {
     super.dispose();
   }
 
-
   void _toggleFullScreen(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => FullScreenVideoPlayer(controller: _controller)),
+      MaterialPageRoute(
+          builder: (context) => FullScreenVideoPlayer(controller: _controller)),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -52,58 +51,70 @@ class _VideoPreviewState extends State<VideoPreview> {
       width: MediaQuery.of(context).size.height * 0.9,
       padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
       decoration: BoxDecoration(
-          color: Theme.of(context).hintColor.withValues(alpha:0.50),
-          borderRadius: BorderRadius.circular(Dimensions.radiusDefault)
-      ),
+          color: Theme.of(context).hintColor.withValues(alpha: 0.50),
+          borderRadius: BorderRadius.circular(Dimensions.radiusDefault)),
       child: Column(
         children: [
           Row(
             children: [
               Expanded(
                 child: Text(widget.fileName,
-                    style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge), maxLines: 1, overflow: TextOverflow.ellipsis),
+                    style: robotoMedium.copyWith(
+                        fontSize: Dimensions.fontSizeLarge),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis),
               ),
               const SizedBox(width: Dimensions.paddingSizeSmall),
-
               SizedBox(
-                  height: 20, width: 20,
+                  height: 20,
+                  width: 20,
                   child: IconButton(
                       padding: EdgeInsets.zero,
-                      onPressed: ()=> Navigator.of(context, rootNavigator: true).pop(),
-                      icon: Icon(Icons.close, color: Theme.of(context).hintColor, size: 20,)
-                  )
-              ),
+                      onPressed: () =>
+                          Navigator.of(context, rootNavigator: true).pop(),
+                      icon: Icon(
+                        Icons.close,
+                        color: Theme.of(context).hintColor,
+                        size: 20,
+                      ))),
             ],
           ),
           const SizedBox(height: Dimensions.paddingSizeDefault),
-
           Expanded(
             child: Stack(
               children: [
                 VideoPlayer(_controller),
-                Positioned(top: 0, bottom: 0, left: 0, right: 0,
+                Positioned(
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
                     child: IconButton(
                       onPressed: () {
                         debugPrint("RAtio===>${_controller.value.aspectRatio}");
                         setState(() {
-                          _controller.value.isPlaying ? _controller.pause() : _controller.play();
+                          _controller.value.isPlaying
+                              ? _controller.pause()
+                              : _controller.play();
                         });
                       },
-                      icon: Icon( _controller.value.isPlaying ? Icons.pause_sharp : Icons.play_arrow, color: Theme.of(context).primaryColor),
-                    )
-                ),
-
+                      icon: Icon(
+                          _controller.value.isPlaying
+                              ? Icons.pause_sharp
+                              : Icons.play_arrow,
+                          color: Theme.of(context).primaryColor),
+                    )),
                 Positioned(
-                    bottom: 5, right: 5,
+                    bottom: 5,
+                    right: 5,
                     child: IconButton(
                       onPressed: () => _toggleFullScreen(context),
-                      icon: Icon( Icons.fullscreen, color: Theme.of(context).primaryColor),
-                    )
-                ),
-
+                      icon: Icon(Icons.fullscreen,
+                          color: Theme.of(context).primaryColor),
+                    )),
                 Positioned(
                   bottom: 10,
-                  child:SizedBox(
+                  child: SizedBox(
                     width: MediaQuery.of(context).size.height * 0.7,
                     child: VideoProgressIndicator(
                       _controller,
@@ -116,20 +127,14 @@ class _VideoPreviewState extends State<VideoPreview> {
                     ),
                   ),
                 ),
-
               ],
             ),
           )
-
-
-
         ],
       ),
     );
   }
 }
-
-
 
 class FullScreenVideoPlayer extends StatelessWidget {
   final VideoPlayerController controller;
@@ -146,13 +151,12 @@ class FullScreenVideoPlayer extends StatelessWidget {
           child: VideoPlayer(controller),
         ),
       ),
-
-      floatingActionButton: FloatingActionButton (
+      floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).cardColor,
         onPressed: () => Navigator.pop(context),
-        child: Icon(Icons.fullscreen_exit, color: Theme.of(context).primaryColor),
+        child:
+            Icon(Icons.fullscreen_exit, color: Theme.of(context).primaryColor),
       ),
-
     );
   }
 }

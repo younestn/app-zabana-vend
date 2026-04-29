@@ -1,14 +1,13 @@
-
 import 'package:sixvalley_vendor_app/features/refund/domain/repositories/refund_repository_interface.dart';
 import 'package:sixvalley_vendor_app/features/refund/domain/services/refund_service_interface.dart';
 
-class RefundService implements RefundServiceInterface{
+class RefundService implements RefundServiceInterface {
   final RefundRepositoryInterface refundRepoInterface;
   RefundService({required this.refundRepoInterface});
 
   @override
   Future getRefundList() {
-   return refundRepoInterface.getList();
+    return refundRepoInterface.getList();
   }
 
   @override
@@ -30,5 +29,4 @@ class RefundService implements RefundServiceInterface{
   Future getSingleRefundModel(int? refundId) {
     return refundRepoInterface.getSingleRefundModel(refundId);
   }
-
 }

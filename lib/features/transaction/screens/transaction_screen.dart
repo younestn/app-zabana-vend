@@ -19,19 +19,17 @@ class TransactionScreen extends StatefulWidget {
 }
 
 class _TransactionScreenState extends State<TransactionScreen> {
-
-
-  void _loadData(BuildContext context){
-    Provider.of<TransactionController>(context, listen: false).getTransactionList(context, 'all','','');
-    Provider.of<TransactionController>(context, listen: false).initMonthTypeList();
+  void _loadData(BuildContext context) {
+    Provider.of<TransactionController>(context, listen: false)
+        .getTransactionList(context, 'all', '', '');
+    Provider.of<TransactionController>(context, listen: false)
+        .initMonthTypeList();
     Provider.of<TransactionController>(context, listen: false).initYearList();
   }
 
   double filterHeight = 45;
 
-
   TextEditingController searchController = TextEditingController();
-
 
   @override
   void initState() {
@@ -43,15 +41,19 @@ class _TransactionScreenState extends State<TransactionScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: Navigator.canPop(context),
-      onPopInvokedWithResult: (didPop, result) async{
-        Provider.of<TransactionController>(context, listen: false).getTransactionList(context, 'all','','');
+      onPopInvokedWithResult: (didPop, result) async {
+        Provider.of<TransactionController>(context, listen: false)
+            .getTransactionList(context, 'all', '', '');
       },
       child: Scaffold(
-        appBar: CustomAppBarWidget(title: getTranslated('transactions', context), isAction: true),
+        appBar: CustomAppBarWidget(
+            title: getTranslated('transactions', context), isAction: true),
         body: Consumer<TransactionController>(
-          builder: (context, transactionProvider, child) {
-
-            return Column(children: [SizedBox(height: 65,
+            builder: (context, transactionProvider, child) {
+          return Column(
+            children: [
+              SizedBox(
+                  height: 65,
                   child: ListView(
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
@@ -62,18 +64,22 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       TransactionTypeButton(text: 'denied', index: 3),
                     ],
                   )),
-
-                Expanded(child: transactionProvider.transactionList != null ? transactionProvider.transactionList!.isNotEmpty ?
-
-                 ListView.builder(
-                     itemCount: transactionProvider.transactionList!.length,
-                    itemBuilder: (context, index) => TransactionWidget(transactionModel: transactionProvider.transactionList![index]),
-                 ) : const NoDataScreen() : const TransactionShimmerWidget(),
-                ),
-              ],
-            );
-          }
-        ),
+              Expanded(
+                child: transactionProvider.transactionList != null
+                    ? transactionProvider.transactionList!.isNotEmpty
+                        ? ListView.builder(
+                            itemCount:
+                                transactionProvider.transactionList!.length,
+                            itemBuilder: (context, index) => TransactionWidget(
+                                transactionModel: transactionProvider
+                                    .transactionList![index]),
+                          )
+                        : const NoDataScreen()
+                    : const TransactionShimmerWidget(),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }
@@ -82,36 +88,64 @@ class _TransactionScreenState extends State<TransactionScreen> {
 class TransactionTypeButton extends StatelessWidget {
   final String text;
   final int index;
-  const TransactionTypeButton({super.key, required this.text, required this.index,});
+  const TransactionTypeButton({
+    super.key,
+    required this.text,
+    required this.index,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall, vertical: Dimensions.paddingSizeMedium),
+        padding: const EdgeInsets.symmetric(
+            horizontal: Dimensions.paddingSizeExtraSmall,
+            vertical: Dimensions.paddingSizeMedium),
         child: InkWell(
-          onTap: (){
-            Provider.of<TransactionController>(context, listen: false).setIndex(context, index);
+          onTap: () {
+            Provider.of<TransactionController>(context, listen: false)
+                .setIndex(context, index);
           },
-          child: Consumer<TransactionController>(builder: (context, transactionProvider, child) {
-            return Container(
-              height: 45,
-              padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge,),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: transactionProvider.transactionTypeIndex == index ? Theme.of(context).primaryColor : Provider.of<ThemeController>(context).darkTheme ?
-                ColorHelper.blendColors(Colors.white, Theme.of(context).highlightColor, 0.9) :
-                Theme.of(context).colorScheme.secondaryContainer,
-                borderRadius: BorderRadius.circular(Dimensions.paddingSizeLarge),
-              ),
-              child: Text(getTranslated(text, context)!, style: transactionProvider.transactionTypeIndex == index
-                  ? titilliumBold.copyWith(color: transactionProvider.transactionTypeIndex == index
-                  ? Theme.of(context).colorScheme.secondaryContainer : Theme.of(context).textTheme.bodyLarge?.color):
-              robotoRegular.copyWith(color: transactionProvider.transactionTypeIndex == index
-                  ? Theme.of(context).colorScheme.secondaryContainer : Theme.of(context).textTheme.bodyLarge?.color)),
-            );
-          },
+          child: Consumer<TransactionController>(
+            builder: (context, transactionProvider, child) {
+              return Container(
+                height: 45,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Dimensions.paddingSizeLarge,
+                ),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: transactionProvider.transactionTypeIndex == index
+                      ? Theme.of(context).primaryColor
+                      : Provider.of<ThemeController>(context).darkTheme
+                          ? ColorHelper.blendColors(Colors.white,
+                              Theme.of(context).highlightColor, 0.9)
+                          : Theme.of(context).colorScheme.secondaryContainer,
+                  borderRadius:
+                      BorderRadius.circular(Dimensions.paddingSizeLarge),
+                ),
+                child: Text(getTranslated(text, context)!,
+                    style: transactionProvider.transactionTypeIndex == index
+                        ? titilliumBold.copyWith(
+                            color: transactionProvider.transactionTypeIndex ==
+                                    index
+                                ? Theme.of(context)
+                                    .colorScheme
+                                    .secondaryContainer
+                                : Theme.of(context).textTheme.bodyLarge?.color)
+                        : robotoRegular.copyWith(
+                            color: transactionProvider.transactionTypeIndex ==
+                                    index
+                                ? Theme.of(context)
+                                    .colorScheme
+                                    .secondaryContainer
+                                : Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.color)),
+              );
+            },
           ),
         ),
       ),

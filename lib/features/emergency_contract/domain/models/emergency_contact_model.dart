@@ -32,12 +32,12 @@ class ContactList {
 
   ContactList(
       {this.id,
-        this.userId,
-        this.name,
-        this.phone,
-        this.status,
-        this.createdAt,
-        this.updatedAt});
+      this.userId,
+      this.name,
+      this.phone,
+      this.status,
+      this.createdAt,
+      this.updatedAt});
 
   ContactList.fromJson(Map<String, dynamic> json) {
     id = json['id'];

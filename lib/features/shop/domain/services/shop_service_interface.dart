@@ -1,5 +1,3 @@
-
-
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
@@ -7,14 +5,22 @@ import 'package:sixvalley_vendor_app/features/shop/domain/models/shop_model.dart
 import 'package:sixvalley_vendor_app/features/shop/domain/models/vacation_model.dart';
 import 'package:sixvalley_vendor_app/features/shop/domain/models/withdrawal_method_model.dart';
 
-abstract class ShopServiceInterface{
+abstract class ShopServiceInterface {
   Future<dynamic> getShop();
-  Future<dynamic> updateShop(ShopModel userInfoModel,  File? file, XFile? shopBanner, XFile? secondaryBanner, XFile? offerBanner,
-      {String? minimumOrderAmount, String? freeDeliveryStatus, String? freeDeliveryOverAmount, String? taxIdentificationNumber, String? tinExpireDate, String? stockLimit, XFile? tinCertificate});
+  Future<dynamic> updateShop(ShopModel userInfoModel, File? file,
+      XFile? shopBanner, XFile? secondaryBanner, XFile? offerBanner,
+      {String? minimumOrderAmount,
+      String? freeDeliveryStatus,
+      String? freeDeliveryOverAmount,
+      String? taxIdentificationNumber,
+      String? tinExpireDate,
+      String? stockLimit,
+      XFile? tinCertificate});
   Future<dynamic> vacation(VacationModel vacationModel);
   Future<dynamic> temporaryClose(int status);
   Future<dynamic> getPaymentWithdrawalMethodList();
-  Future<dynamic> addPaymentInfo(WithdrawAddModel withdrawAddModel,bool isUpdate);
+  Future<dynamic> addPaymentInfo(
+      WithdrawAddModel withdrawAddModel, bool isUpdate);
   Future<dynamic> getPaymentInfoList(int? offset);
   Future<dynamic> updateConfigStatus(bool status, int id);
   Future<dynamic> deletePaymentMethod(int id);

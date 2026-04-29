@@ -6,7 +6,8 @@ class TopDeliveryManModel {
   String? offset;
   List<DeliveryMan>? deliveryMan;
 
-  TopDeliveryManModel({this.totalSize, this.limit, this.offset, this.deliveryMan});
+  TopDeliveryManModel(
+      {this.totalSize, this.limit, this.offset, this.deliveryMan});
 
   TopDeliveryManModel.fromJson(Map<String, dynamic> json) {
     totalSize = json['total_size'];
@@ -53,23 +54,22 @@ class DeliveryMan {
 
   DeliveryMan(
       {this.id,
-        this.fName,
-        this.lName,
-        this.address,
-        this.countryCode,
-        this.phone,
-        this.email,
-        this.identityNumber,
-        this.identityType,
-        this.identityImage,
-        this.identityImageFullUrl,
-        this.image,
-        this.imageFullUrl,
-        this.isOnline,
-        this.rating,
-        this.orders,
-        this.deliveredOrderCount
-      });
+      this.fName,
+      this.lName,
+      this.address,
+      this.countryCode,
+      this.phone,
+      this.email,
+      this.identityNumber,
+      this.identityType,
+      this.identityImage,
+      this.identityImageFullUrl,
+      this.image,
+      this.imageFullUrl,
+      this.isOnline,
+      this.rating,
+      this.orders,
+      this.deliveredOrderCount});
 
   DeliveryMan.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -81,7 +81,7 @@ class DeliveryMan {
     email = json['email'];
     identityNumber = json['identity_number'];
     identityType = json['identity_type'];
-    if(json['identity_image'] != null  && json['identity_image'] is List){
+    if (json['identity_image'] != null && json['identity_image'] is List) {
       // identityImage = jsonDecode(json['identity_image']);
     }
     if (json['identity_images_full_url'] != null) {
@@ -89,7 +89,7 @@ class DeliveryMan {
       json['identity_images_full_url'].forEach((v) {
         identityImageFullUrl!.add(ImageFullUrl.fromJson(v));
       });
-    }else {
+    } else {
       identityImageFullUrl = [];
     }
     image = json['image'];
@@ -108,8 +108,8 @@ class DeliveryMan {
       });
     }
     imageFullUrl = json['image_full_url'] != null
-      ? ImageFullUrl.fromJson(json['image_full_url'])
-      : null;
+        ? ImageFullUrl.fromJson(json['image_full_url'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {

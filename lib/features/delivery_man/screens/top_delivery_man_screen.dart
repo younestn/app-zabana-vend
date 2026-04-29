@@ -11,10 +11,13 @@ class TopDeliveryMAnScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarWidget(title: getTranslated('top_delivery_man_list', context),isBackButtonExist: true),
+        appBar: CustomAppBarWidget(
+            title: getTranslated('top_delivery_man_list', context),
+            isBackButtonExist: true),
         body: RefreshIndicator(
-          onRefresh: ()async{
-            Provider.of<DeliveryManController>(context, listen: false).getTopDeliveryManList(context);
+          onRefresh: () async {
+            Provider.of<DeliveryManController>(context, listen: false)
+                .getTopDeliveryManList(context);
           },
           child: const SingleChildScrollView(
             child: TopDeliveryManViewWidget(),

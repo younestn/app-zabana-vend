@@ -11,7 +11,6 @@ class Dimensions {
   static const double fontSizeWithdrawableAmount = 30.0;
   static const double fontSizeHeaderLarge = 48.0;
 
-
   static const double radiusSmall = 5.0;
   static const double paddingSizeVeryTiny = 2.0;
   static const double paddingSizeOrder = 4.0;
@@ -28,8 +27,6 @@ class Dimensions {
   static const double paddingSizeButton = 40.0;
   static const double paddingSizeBottomSpace = 80.0;
   static const double bottomSpace = 160.0;
-
-
 
   static const double iconSizeDefault = 18.0;
   static const double iconSizeExtraSmall = 10.0;

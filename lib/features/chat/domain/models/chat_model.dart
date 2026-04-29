@@ -51,47 +51,49 @@ class Chat {
   String? attachment;
   int? unseenMessageCount;
 
-  Chat(
-      {this.id,
-        this.userId,
-        this.deliveryManId,
-        this.message,
-        this.sentByCustomer,
-        this.sentByDeliveryMan,
-        this.seenBySeller,
-        this.createdAt,
-        this.updatedAt,
-        this.deliveryMan,
-        this.customer,
-        this.attachment,
-        this.unseenMessageCount,
-      });
+  Chat({
+    this.id,
+    this.userId,
+    this.deliveryManId,
+    this.message,
+    this.sentByCustomer,
+    this.sentByDeliveryMan,
+    this.seenBySeller,
+    this.createdAt,
+    this.updatedAt,
+    this.deliveryMan,
+    this.customer,
+    this.attachment,
+    this.unseenMessageCount,
+  });
 
   Chat.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-userId = json['user_id'];
+    userId = json['user_id'];
 
-if (json['delivery_man_id'] != null) {
-  deliveryManId = int.tryParse(json['delivery_man_id'].toString());
-}
+    if (json['delivery_man_id'] != null) {
+      deliveryManId = int.tryParse(json['delivery_man_id'].toString());
+    }
 
-if (json['admin_id'] != null) {
-  adminId = int.tryParse(json['admin_id'].toString());
-}
+    if (json['admin_id'] != null) {
+      adminId = int.tryParse(json['admin_id'].toString());
+    }
 
-message = json['message'];
-sentByCustomer = json['sent_by_customer'] ?? false;
-sentByDeliveryMan = json['sent_by_delivery_man'] ?? false;
-sentByAdmin = json['sent_by_admin'] ?? false;
-sentBySeller = json['sent_by_seller'] ?? false;
-seenBySeller = json['seen_by_seller'];
-createdAt = json['created_at'];
-updatedAt = json['updated_at'];
-deliveryMan = json['delivery_man'] != null ? DeliveryMan.fromJson(json['delivery_man']) : null;
-customer = json['customer'] != null ? Customer.fromJson(json['customer']) : null;
-admin = json['admin'] != null ? Customer.fromJson(json['admin']) : null;
-attachment = json['attachment'];
-
+    message = json['message'];
+    sentByCustomer = json['sent_by_customer'] ?? false;
+    sentByDeliveryMan = json['sent_by_delivery_man'] ?? false;
+    sentByAdmin = json['sent_by_admin'] ?? false;
+    sentBySeller = json['sent_by_seller'] ?? false;
+    seenBySeller = json['seen_by_seller'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    deliveryMan = json['delivery_man'] != null
+        ? DeliveryMan.fromJson(json['delivery_man'])
+        : null;
+    customer =
+        json['customer'] != null ? Customer.fromJson(json['customer']) : null;
+    admin = json['admin'] != null ? Customer.fromJson(json['admin']) : null;
+    attachment = json['attachment'];
 
     unseenMessageCount = json['unseen_message_count'];
   }
@@ -101,13 +103,13 @@ attachment = json['attachment'];
     data['id'] = id;
     data['user_id'] = userId;
     data['delivery_man_id'] = deliveryManId;
-data['admin_id'] = adminId;
-data['message'] = message;
-data['sent_by_customer'] = sentByCustomer;
-data['sent_by_delivery_man'] = sentByDeliveryMan;
-data['sent_by_admin'] = sentByAdmin;
-data['sent_by_seller'] = sentBySeller;
-data['seen_by_seller'] = seenBySeller;
+    data['admin_id'] = adminId;
+    data['message'] = message;
+    data['sent_by_customer'] = sentByCustomer;
+    data['sent_by_delivery_man'] = sentByDeliveryMan;
+    data['sent_by_admin'] = sentByAdmin;
+    data['sent_by_seller'] = sentBySeller;
+    data['seen_by_seller'] = seenBySeller;
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
     if (deliveryMan != null) {
@@ -116,7 +118,6 @@ data['seen_by_seller'] = seenBySeller;
     if (customer != null) {
       data['customer'] = customer!.toJson();
     }
-
 
     data['unseen_message_count'] = unseenMessageCount;
 
@@ -133,16 +134,14 @@ class DeliveryMan {
   String? image;
   ImageFullUrl? imageFullUrl;
 
-
   DeliveryMan(
       {this.id,
-        this.fName,
-        this.lName,
-        this.phone,
-        this.email,
-        this.image,
-        this.imageFullUrl
-      });
+      this.fName,
+      this.lName,
+      this.phone,
+      this.email,
+      this.image,
+      this.imageFullUrl});
 
   DeliveryMan.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -152,8 +151,8 @@ class DeliveryMan {
     email = json['email'];
     image = json['image'];
     imageFullUrl = json['image_full_url'] != null
-      ? ImageFullUrl.fromJson(json['image_full_url'])
-      : null;
+        ? ImageFullUrl.fromJson(json['image_full_url'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -177,16 +176,15 @@ class Customer {
   ImageFullUrl? imageFullUrl;
   String? email;
 
-
-  Customer(
-      {this.id,
-        this.fName,
-        this.lName,
-        this.phone,
-        this.image,
-        this.imageFullUrl,
-        this.email,
-        });
+  Customer({
+    this.id,
+    this.fName,
+    this.lName,
+    this.phone,
+    this.image,
+    this.imageFullUrl,
+    this.email,
+  });
 
   Customer.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -195,8 +193,8 @@ class Customer {
     phone = json['phone'];
     image = json['image'];
     imageFullUrl = json['image_full_url'] != null
-      ? ImageFullUrl.fromJson(json['image_full_url'])
-      : null;
+        ? ImageFullUrl.fromJson(json['image_full_url'])
+        : null;
     email = json['email'];
   }
 

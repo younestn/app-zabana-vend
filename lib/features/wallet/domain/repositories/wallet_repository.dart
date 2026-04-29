@@ -6,7 +6,7 @@ import 'package:sixvalley_vendor_app/data/model/response/base/api_response.dart'
 import 'package:sixvalley_vendor_app/features/wallet/domain/repositories/wallet_repository_interface.dart';
 import 'package:sixvalley_vendor_app/utill/app_constants.dart';
 
-class WalletRepository implements WalletRepositoryInterface{
+class WalletRepository implements WalletRepositoryInterface {
   final DioClient dioClient;
   WalletRepository({required this.dioClient});
 
@@ -21,14 +21,13 @@ class WalletRepository implements WalletRepositoryInterface{
   }
 
   @override
-  Future<ApiResponse> withdrawBalance(List <String?> typeKey, List<String> typeValue, int? id, String balance) async {
+  Future<ApiResponse> withdrawBalance(List<String?> typeKey,
+      List<String> typeValue, int? id, String balance) async {
     try {
       Map<String?, String> fields = {};
 
-      for(var i = 0; i < typeKey.length; i++){
-        fields.addAll(<String?, String>{
-          typeKey[i] : typeValue[i]
-        });
+      for (var i = 0; i < typeKey.length; i++) {
+        fields.addAll(<String?, String>{typeKey[i]: typeValue[i]});
       }
       fields.addAll(<String, String>{
         'amount': balance,
@@ -38,7 +37,8 @@ class WalletRepository implements WalletRepositoryInterface{
         print('--here is type key =$id');
       }
 
-      Response response = await dioClient.post(AppConstants.balanceWithdraw, data: fields);
+      Response response =
+          await dioClient.post(AppConstants.balanceWithdraw, data: fields);
 
       return ApiResponse.withSuccess(response);
     } catch (e) {
@@ -51,7 +51,7 @@ class WalletRepository implements WalletRepositoryInterface{
     try {
       Map<String?, String> fields = {};
       fields.addAll(<String, String>{
-        '_method' : 'delete',
+        '_method': 'delete',
         'amount': balance,
         'id': id.toString()
       });
@@ -59,7 +59,8 @@ class WalletRepository implements WalletRepositoryInterface{
         print('--here is type key =$id');
       }
 
-      Response response = await dioClient.post(AppConstants.cancelBalanceRequest, data: fields);
+      Response response =
+          await dioClient.post(AppConstants.cancelBalanceRequest, data: fields);
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -105,6 +106,4 @@ class WalletRepository implements WalletRepositoryInterface{
     // TODO: implement update
     throw UnimplementedError();
   }
-
-
 }

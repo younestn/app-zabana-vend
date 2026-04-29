@@ -18,17 +18,24 @@ class InvoiceDialogWidget extends StatelessWidget {
   final double? total;
   final ScreenshotController screenshotController;
 
-  const InvoiceDialogWidget({super.key,
+  const InvoiceDialogWidget({
+    super.key,
     required this.shopModel,
     required this.orderId,
     required this.invoice,
     required this.discountProduct,
-    required this.total, required this.screenshotController, this.couponDiscountProduct, this.tax, this.extraDiscountAmount,
+    required this.total,
+    required this.screenshotController,
+    this.couponDiscountProduct,
+    this.tax,
+    this.extraDiscountAmount,
   });
 
   @override
   Widget build(BuildContext context) {
-    double fontSize = View.of(context).physicalSize.width > 1000 ? Dimensions.fontSizeExtraSmall : Dimensions.paddingSizeSmall;
+    double fontSize = View.of(context).physicalSize.width > 1000
+        ? Dimensions.fontSizeExtraSmall
+        : Dimensions.paddingSizeSmall;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
       child: Column(
@@ -37,14 +44,16 @@ class InvoiceDialogWidget extends StatelessWidget {
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-              boxShadow: const [BoxShadow(color: Colors.black12, spreadRadius: 0, blurRadius: 5)],
+              boxShadow: const [
+                BoxShadow(color: Colors.black12, spreadRadius: 0, blurRadius: 5)
+              ],
             ),
-            width: MediaQuery.of(context).size.width - ((View.of(context).physicalSize.width - 700) * 0.4),
+            width: MediaQuery.of(context).size.width -
+                ((View.of(context).physicalSize.width - 700) * 0.4),
             padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
             child: Screenshot(
               controller: screenshotController,
               child: Column(
-
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Center(
@@ -67,16 +76,16 @@ class InvoiceDialogWidget extends StatelessWidget {
                         flex: 6,
                         child: Text(
                           '${getTranslated('invoice', context)!.toUpperCase()}#$orderId',
-                          style: robotoRegular.copyWith(fontSize: fontSize, decoration: TextDecoration.underline),
+                          style: robotoRegular.copyWith(
+                              fontSize: fontSize,
+                              decoration: TextDecoration.underline),
                         ),
                       ),
                       Expanded(
                         flex: 6,
-                        child: Text(
-                            getTranslated('payment_method', context)!,
+                        child: Text(getTranslated('payment_method', context)!,
                             textAlign: TextAlign.right,
-                            style: robotoRegular.copyWith(fontSize: fontSize)
-                        ),
+                            style: robotoRegular.copyWith(fontSize: fontSize)),
                       ),
                     ],
                   ),
@@ -85,36 +94,32 @@ class InvoiceDialogWidget extends StatelessWidget {
                       Expanded(
                         flex: 6,
                         child: Text(
-                            DateConverter.dateTimeStringToMonthAndTime(invoice!.createdAt!),
-                            style: robotoRegular.copyWith(fontSize: fontSize)
-                        ),
+                            DateConverter.dateTimeStringToMonthAndTime(
+                                invoice!.createdAt!),
+                            style: robotoRegular.copyWith(fontSize: fontSize)),
                       ),
                       Expanded(
                         flex: 6,
-                        child: Text(
-                            'Cash',
+                        child: Text('Cash',
                             textAlign: TextAlign.right,
-                            style: robotoRegular.copyWith(fontSize: fontSize)
-                        ),
+                            style: robotoRegular.copyWith(fontSize: fontSize)),
                       ),
                     ],
                   ),
-                  Divider(color: Theme.of(context).textTheme.bodyLarge!.color, thickness: 1),
+                  Divider(
+                      color: Theme.of(context).textTheme.bodyLarge!.color,
+                      thickness: 1),
                   Row(
                     children: [
                       Expanded(
                         flex: 2,
-                        child: Text(
-                            getTranslated('sl', context)!.toUpperCase(),
-                            style: robotoRegular.copyWith(fontSize: fontSize)
-                        ),
+                        child: Text(getTranslated('sl', context)!.toUpperCase(),
+                            style: robotoRegular.copyWith(fontSize: fontSize)),
                       ),
                       Expanded(
                         flex: 6,
-                        child: Text(
-                            getTranslated('product_info', context)!,
-                            style: robotoRegular.copyWith(fontSize: fontSize)
-                        ),
+                        child: Text(getTranslated('product_info', context)!,
+                            style: robotoRegular.copyWith(fontSize: fontSize)),
                       ),
                       Expanded(
                         flex: 1,
@@ -134,7 +139,9 @@ class InvoiceDialogWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Divider(color: Theme.of(context).textTheme.bodyLarge!.color, thickness: 1),
+                  Divider(
+                      color: Theme.of(context).textTheme.bodyLarge!.color,
+                      thickness: 1),
                   Column(
                     children: invoice!.details!.map((detail) {
                       return Row(
@@ -143,15 +150,14 @@ class InvoiceDialogWidget extends StatelessWidget {
                             flex: 1,
                             child: Text(
                                 '${invoice!.details!.indexOf(detail) + 1}',
-                                style: robotoRegular.copyWith(fontSize: fontSize)
-                            ),
+                                style:
+                                    robotoRegular.copyWith(fontSize: fontSize)),
                           ),
                           Expanded(
                             flex: 7,
-                            child: Text(
-                                '${detail.productDetails!.name}',
-                                style: robotoRegular.copyWith(fontSize: fontSize)
-                            ),
+                            child: Text('${detail.productDetails!.name}',
+                                style:
+                                    robotoRegular.copyWith(fontSize: fontSize)),
                           ),
                           Expanded(
                             flex: 1,
@@ -173,7 +179,9 @@ class InvoiceDialogWidget extends StatelessWidget {
                       );
                     }).toList(),
                   ),
-                  Divider(color: Theme.of(context).textTheme.bodyLarge!.color, thickness: 1),
+                  Divider(
+                      color: Theme.of(context).textTheme.bodyLarge!.color,
+                      thickness: 1),
                   Row(
                     children: [
                       Expanded(
@@ -197,10 +205,8 @@ class InvoiceDialogWidget extends StatelessWidget {
                     children: [
                       Expanded(
                         flex: 14,
-                        child: Text(
-                            getTranslated('product_discount', context)!,
-                            style: robotoRegular.copyWith(fontSize: fontSize)
-                        ),
+                        child: Text(getTranslated('product_discount', context)!,
+                            style: robotoRegular.copyWith(fontSize: fontSize)),
                       ),
                       Expanded(
                         flex: 4,
@@ -216,12 +222,9 @@ class InvoiceDialogWidget extends StatelessWidget {
                     children: [
                       Expanded(
                         flex: 14,
-                        child: Text(
-                            getTranslated('coupon_discount', context)!,
-                            style: robotoRegular.copyWith(fontSize: fontSize)
-                        ),
+                        child: Text(getTranslated('coupon_discount', context)!,
+                            style: robotoRegular.copyWith(fontSize: fontSize)),
                       ),
-
                       Expanded(
                         flex: 4,
                         child: Text(
@@ -236,11 +239,9 @@ class InvoiceDialogWidget extends StatelessWidget {
                     children: [
                       Expanded(
                         flex: 14,
-                        child: Text(
-                          'extra',
+                        child: Text('extra',
                             // getTranslated('extra_discount', context)!,
-                            style: robotoRegular.copyWith(fontSize: fontSize)
-                        ),
+                            style: robotoRegular.copyWith(fontSize: fontSize)),
                       ),
                       Expanded(
                         flex: 4,
@@ -256,10 +257,8 @@ class InvoiceDialogWidget extends StatelessWidget {
                     children: [
                       Expanded(
                         flex: 14,
-                        child: Text(
-                            getTranslated('tax', context)!,
-                            style: robotoRegular.copyWith(fontSize: fontSize)
-                        ),
+                        child: Text(getTranslated('tax', context)!,
+                            style: robotoRegular.copyWith(fontSize: fontSize)),
                       ),
                       Expanded(
                         flex: 4,
@@ -271,15 +270,15 @@ class InvoiceDialogWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Divider(color: Theme.of(context).textTheme.bodyLarge!.color, thickness: 1),
+                  Divider(
+                      color: Theme.of(context).textTheme.bodyLarge!.color,
+                      thickness: 1),
                   Row(
                     children: [
                       Expanded(
                         flex: 14,
-                        child: Text(
-                            getTranslated('total', context)!,
-                            style: robotoRegular.copyWith(fontSize: fontSize)
-                        ),
+                        child: Text(getTranslated('total', context)!,
+                            style: robotoRegular.copyWith(fontSize: fontSize)),
                       ),
                       Expanded(
                         flex: 4,
@@ -310,7 +309,9 @@ class InvoiceDialogWidget extends StatelessWidget {
                   //   ],
                   // ),
                   const SizedBox(height: 10),
-                  Divider(color: Theme.of(context).textTheme.bodyLarge!.color, thickness: 1),
+                  Divider(
+                      color: Theme.of(context).textTheme.bodyLarge!.color,
+                      thickness: 1),
                   Center(
                     child: Text(
                       getTranslated('thank_you', context)!,

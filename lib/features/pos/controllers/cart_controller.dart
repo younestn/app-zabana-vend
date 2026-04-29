@@ -18,10 +18,9 @@ import 'package:sixvalley_vendor_app/main.dart';
 import 'package:sixvalley_vendor_app/features/order/controllers/order_controller.dart';
 import 'package:sixvalley_vendor_app/features/pos/screens/invoice_screen.dart';
 
-class CartController extends ChangeNotifier{
+class CartController extends ChangeNotifier {
   final CartServiceInterface cartServiceInterface;
   CartController({required this.cartServiceInterface});
-
 
   List<CartModel> _cartList = [];
   List<CartModel> get cartList => _cartList;
@@ -55,27 +54,30 @@ class CartController extends ChangeNotifier{
   bool _isUpdatePaidAmount = true;
   bool get updatePaidAmount => _isUpdatePaidAmount;
 
-  final TextEditingController _collectedCashController = TextEditingController();
+  final TextEditingController _collectedCashController =
+      TextEditingController();
   TextEditingController get collectedCashController => _collectedCashController;
 
-  final TextEditingController _customerWalletController = TextEditingController();
-  TextEditingController get customerWalletController => _customerWalletController;
+  final TextEditingController _customerWalletController =
+      TextEditingController();
+  TextEditingController get customerWalletController =>
+      _customerWalletController;
 
-  final TextEditingController _extraDiscountController = TextEditingController();
+  final TextEditingController _extraDiscountController =
+      TextEditingController();
   TextEditingController get extraDiscountController => _extraDiscountController;
 
-  double _returnToCustomerAmount = 0 ;
+  double _returnToCustomerAmount = 0;
   double get returnToCustomerAmount => _returnToCustomerAmount;
 
   double? _couponCodeAmount = 0;
-  double? get couponCodeAmount =>_couponCodeAmount;
+  double? get couponCodeAmount => _couponCodeAmount;
 
   double _extraDiscountAmount = 0;
-  double get extraDiscountAmount =>_extraDiscountAmount;
+  double get extraDiscountAmount => _extraDiscountAmount;
 
   int _discountTypeIndex = 0;
   int get discountTypeIndex => _discountTypeIndex;
-
 
   String? _selectedDiscountType = '';
   String? get selectedDiscountType => _selectedDiscountType;
@@ -90,85 +92,91 @@ class CartController extends ChangeNotifier{
   List<int?> get customerIds => _customerIds;
 
   List<CartModel>? _existInCartList;
-  List<CartModel>? get existInCartList =>_existInCartList;
+  List<CartModel>? get existInCartList => _existInCartList;
 
-  final TextEditingController _searchCustomerController = TextEditingController();
-  TextEditingController get searchCustomerController => _searchCustomerController;
-
+  final TextEditingController _searchCustomerController =
+      TextEditingController();
+  TextEditingController get searchCustomerController =>
+      _searchCustomerController;
 
   double _customerBalance = 0.0;
-  double get customerBalance=> _customerBalance;
+  double get customerBalance => _customerBalance;
   int cartIndex = 0;
-
-
-
 
   int _paymentTypeIndex = 0;
   int get paymentTypeIndex => _paymentTypeIndex;
   void setPaymentTypeIndex(int index, bool notify) {
     _paymentTypeIndex = index;
-    if(notify) {
+    if (notify) {
       notifyListeners();
     }
   }
-
-
 
   void applyCouponCodeAndExtraDiscount(BuildContext context, double payable) {
     _extraDiscountAmount = 0;
     String extraDiscount = _extraDiscountController.text.trim();
     _extraDiscountAmount = double.parse(extraDiscount);
 
-    double extraDiscountPercent = double.parse(PriceConverter.discountCalculationWithOutSymbol(context, amount, _extraDiscountAmount, _selectedDiscountType));
+    double extraDiscountPercent = double.parse(
+        PriceConverter.discountCalculationWithOutSymbol(
+            context, amount, _extraDiscountAmount, _selectedDiscountType));
 
-    if(_selectedDiscountType == 'percent' ?
-    extraDiscountPercent > double.tryParse(PriceConverter.convertPriceWithoutSymbol(Get.context!, payable))! :
-    _extraDiscountAmount >  double.tryParse(PriceConverter.convertPriceWithoutSymbol(Get.context!, payable))!
-    ) {
-      showCustomSnackBarWidget(getTranslated('discount_cant_greater_than_order_amount', Get.context!), Get.context!, sanckBarType: SnackBarType.warning, isToaster: true, );
-    }else{
+    if (_selectedDiscountType == 'percent'
+        ? extraDiscountPercent >
+            double.tryParse(PriceConverter.convertPriceWithoutSymbol(
+                Get.context!, payable))!
+        : _extraDiscountAmount >
+            double.tryParse(PriceConverter.convertPriceWithoutSymbol(
+                Get.context!, payable))!) {
+      showCustomSnackBarWidget(
+        getTranslated('discount_cant_greater_than_order_amount', Get.context!),
+        Get.context!,
+        sanckBarType: SnackBarType.warning,
+        isToaster: true,
+      );
+    } else {
       _currentCartModel?.extraDiscount = _extraDiscountAmount;
-      showCustomSnackBarWidget(getTranslated('extra_discount_added_successfully', Get.context!), Get.context!, isToaster: true, isError: false);
+      showCustomSnackBarWidget(
+          getTranslated('extra_discount_added_successfully', Get.context!),
+          Get.context!,
+          isToaster: true,
+          isError: false);
     }
     notifyListeners();
   }
 
-  void addToCart(BuildContext context, CartModel cartModel, {bool decreaseQuantity= false, bool updateToCart = false}) {
+  void addToCart(BuildContext context, CartModel cartModel,
+      {bool decreaseQuantity = false, bool updateToCart = false}) {
     _amount = 0;
 
-    if(_currentCartModel != null) {
+    if (_currentCartModel != null) {
       _currentCartModel?.couponAmount = 0;
       _currentCartModel?.extraDiscount = 0;
       _extraDiscountController.text = '';
       _extraDiscountAmount = 0;
     }
 
-
-
-
     bool exists = _currentCartModel!.cart!.any((cart) {
-
       return cart.product!.id == cartModel.product!.id &&
-          ((cartModel.varientKey == null && cart.variant == cartModel.variant) ||
-              (cartModel.varientKey != null && cart.varientKey == cartModel.varientKey));
+          ((cartModel.varientKey == null &&
+                  cart.variant == cartModel.variant) ||
+              (cartModel.varientKey != null &&
+                  cart.varientKey == cartModel.varientKey));
     });
 
-
-    if(exists && updateToCart) {
+    if (exists && updateToCart) {
       updateCart(context, cartModel);
     } else if (exists) {
       isExistInCart(context, cartModel, decreaseQuantity: decreaseQuantity);
     } else {
       _currentCartModel!.cart!.add(cartModel);
       calculateTotalAmount();
-      showCustomSnackBarWidget(getTranslated('added_cart_successfully', context),context ,isToaster: true, isError: false);
+      showCustomSnackBarWidget(
+          getTranslated('added_cart_successfully', context), context,
+          isToaster: true, isError: false);
     }
     notifyListeners();
-
   }
-
-
-
 
   void calculateHoldOrderPrice() {
     calculateTotalAmount();
@@ -178,13 +186,14 @@ class CartController extends ChangeNotifier{
 
   void calculateTotalAmount() {
     _amount = 0;
-    if(_currentCartModel?.cart != null && _currentCartModel!.cart!.isNotEmpty) {
-      for(int i = 0; i< _currentCartModel!.cart!.length; i++) {
+    if (_currentCartModel?.cart != null &&
+        _currentCartModel!.cart!.isNotEmpty) {
+      for (int i = 0; i < _currentCartModel!.cart!.length; i++) {
         int? quantity = _currentCartModel!.cart![i].quantity!;
-        double unitPrice =  0;
+        double unitPrice = 0;
         double includeTax = 0;
 
-        if(_currentCartModel!.cart![i].variation != null) {
+        if (_currentCartModel!.cart![i].variation != null) {
           unitPrice = _currentCartModel?.cart?[i].variation?.price ?? 0;
         } else if (_currentCartModel?.cart?[i].varientKey != null) {
           unitPrice = _currentCartModel?.cart?[i].digitalVariationPrice ?? 0;
@@ -193,7 +202,8 @@ class CartController extends ChangeNotifier{
         }
 
         if (_currentCartModel?.cart?[i].product?.taxModel == "include") {
-          includeTax = calculateIncludedTax(unitPrice * quantity, _currentCartModel?.cart?[i].product?.tax ?? 0);
+          includeTax = calculateIncludedTax(unitPrice * quantity,
+              _currentCartModel?.cart?[i].product?.tax ?? 0);
         }
 
         _amount += (unitPrice * quantity) - includeTax;
@@ -201,55 +211,63 @@ class CartController extends ChangeNotifier{
     }
   }
 
-
-
-
   double calculateIncludedTax(double totalPrice, double taxRate) {
     return (totalPrice * taxRate) / 100;
   }
 
-
-
-  void setQuantity(BuildContext context, bool isIncrement, int? index, {bool showToaster = false}) {
-    if(_customerCartList.isNotEmpty){
+  void setQuantity(BuildContext context, bool isIncrement, int? index,
+      {bool showToaster = false}) {
+    if (_customerCartList.isNotEmpty) {
       _currentCartModel?.couponAmount = 0;
       _currentCartModel?.extraDiscount = 0;
       _extraDiscountController.text = '';
       _extraDiscountAmount = 0;
     }
     if (isIncrement) {
-      if(_currentCartModel!.cart![index!].product!.currentStock! > _currentCartModel!.cart![index].quantity! && _currentCartModel!.cart![index].product!.productType == 'physical')
-      {
+      if (_currentCartModel!.cart![index!].product!.currentStock! >
+              _currentCartModel!.cart![index].quantity! &&
+          _currentCartModel!.cart![index].product!.productType == 'physical') {
         _amount = 0;
-        _currentCartModel!.cart![index].quantity = _currentCartModel!.cart![index].quantity! + 1;
+        _currentCartModel!.cart![index].quantity =
+            _currentCartModel!.cart![index].quantity! + 1;
 
         calculateTotalAmount();
-        if(showToaster){
-          showCustomSnackBarWidget(getTranslated('quantity_updated', context), context, isToaster: true, isError: false);
+        if (showToaster) {
+          showCustomSnackBarWidget(
+              getTranslated('quantity_updated', context), context,
+              isToaster: true, isError: false);
         }
-
-      }else if(_currentCartModel!.cart![index].product!.productType == 'digital')
-      {
+      } else if (_currentCartModel!.cart![index].product!.productType ==
+          'digital') {
         _amount = 0;
-        _currentCartModel!.cart![index].quantity = _currentCartModel!.cart![index].quantity! + 1;
+        _currentCartModel!.cart![index].quantity =
+            _currentCartModel!.cart![index].quantity! + 1;
 
-        if(showToaster){
-          showCustomSnackBarWidget(getTranslated('quantity_updated', context), context, isToaster: true, isError: false);
+        if (showToaster) {
+          showCustomSnackBarWidget(
+              getTranslated('quantity_updated', context), context,
+              isToaster: true, isError: false);
         }
 
         calculateTotalAmount();
-      }else{
-        showCustomSnackBarWidget(getTranslated('stock_out', context), context, isToaster: true);
+      } else {
+        showCustomSnackBarWidget(getTranslated('stock_out', context), context,
+            isToaster: true);
       }
     } else {
       _amount = 0;
-      if(_currentCartModel!.cart![index!].quantity! > 1){
-        showCustomSnackBarWidget(getTranslated('quantity_updated', context), context, isToaster: true, isError: false);
-        _currentCartModel!.cart![index].quantity = _currentCartModel!.cart![index].quantity! - 1;
+      if (_currentCartModel!.cart![index!].quantity! > 1) {
+        showCustomSnackBarWidget(
+            getTranslated('quantity_updated', context), context,
+            isToaster: true, isError: false);
+        _currentCartModel!.cart![index].quantity =
+            _currentCartModel!.cart![index].quantity! - 1;
 
         calculateTotalAmount();
-      }else{
-        showCustomSnackBarWidget(getTranslated('minimum_quantity_1', context), context, isToaster: true);
+      } else {
+        showCustomSnackBarWidget(
+            getTranslated('minimum_quantity_1', context), context,
+            isToaster: true);
 
         calculateTotalAmount();
       }
@@ -264,13 +282,14 @@ class CartController extends ChangeNotifier{
     double cartItemPrice = calculateBaseAmount(cartItem, quantity);
 
     if (cartItem.product!.taxModel == "include") {
-      final includedTax = calculateIncludedTax(cartItemPrice, cartItem.product!.tax!);
+      final includedTax =
+          calculateIncludedTax(cartItemPrice, cartItem.product!.tax!);
       cartItemPrice -= includedTax;
     }
 
     _amount -= cartItemPrice;
 
-    if(_currentCartModel != null) {
+    if (_currentCartModel != null) {
       _currentCartModel!.couponAmount = 0;
       _currentCartModel!.extraDiscount = 0;
       _extraDiscountController.text = '';
@@ -292,45 +311,64 @@ class CartController extends ChangeNotifier{
   }
 
   void removeAllCartList() {
-    _cartList =[];
+    _cartList = [];
     _customerWalletController.clear();
     _extraDiscountAmount = 0;
     _amount = 0;
     _collectedCashController.clear();
-    _customerCartList =[];
+    _customerCartList = [];
     _customerIds = [];
     searchCustomerController.text = 'Walk-In Customer';
 
-    Provider.of<CustomerController>(Get.context!, listen: false).setCustomerInfo(0,  'Walk-In Customer', '', true, 0);
+    Provider.of<CustomerController>(Get.context!, listen: false)
+        .setCustomerInfo(0, 'Walk-In Customer', '', true, 0);
     notifyListeners();
   }
 
-
-
-  void updateCart(BuildContext context,CartModel cartModel) {
+  void updateCart(BuildContext context, CartModel cartModel) {
     String variantKey = getVariantKey(cartModel);
 
-    for(int index = 0; index < (_currentCartModel?.cart?.length ?? 0); index++) {
-      if(_currentCartModel?.cart![index].product!.id == cartModel.product!.id && (variantKey != '' ? variantKey == getVariantKey(_currentCartModel!.cart![index]) : true)) {
+    for (int index = 0;
+        index < (_currentCartModel?.cart?.length ?? 0);
+        index++) {
+      if (_currentCartModel?.cart![index].product!.id ==
+              cartModel.product!.id &&
+          (variantKey != ''
+              ? variantKey == getVariantKey(_currentCartModel!.cart![index])
+              : true)) {
         _currentCartModel!.cart![index] = cartModel;
       }
     }
   }
 
-
-  bool isExistInCart(BuildContext context,CartModel cartModel, {bool decreaseQuantity= false}) {
+  bool isExistInCart(BuildContext context, CartModel cartModel,
+      {bool decreaseQuantity = false}) {
     cartIndex = 0;
 
     String variantKey = getVariantKey(cartModel);
 
-    for(int index = 0; index < (_currentCartModel?.cart?.length ?? 0); index++) {
-      if(_currentCartModel?.cart![index].product!.id == cartModel.product!.id && (variantKey != '' ? variantKey == getVariantKey(_currentCartModel!.cart![index]) : true)) {
-        if(decreaseQuantity){
+    for (int index = 0;
+        index < (_currentCartModel?.cart?.length ?? 0);
+        index++) {
+      if (_currentCartModel?.cart![index].product!.id ==
+              cartModel.product!.id &&
+          (variantKey != ''
+              ? variantKey == getVariantKey(_currentCartModel!.cart![index])
+              : true)) {
+        if (decreaseQuantity) {
           setQuantity(context, false, index);
-          showCustomSnackBarWidget('1 ${getTranslated('item', context)} ${getTranslated('remove_from_cart_successfully', context)}',context, isToaster: true, isError: false);
-        }else{
+          showCustomSnackBarWidget(
+              '1 ${getTranslated('item', context)} ${getTranslated('remove_from_cart_successfully', context)}',
+              context,
+              isToaster: true,
+              isError: false);
+        } else {
           setQuantity(context, true, index);
-          showCustomSnackBarWidget('${getTranslated('added_cart_successfully', context)} ${ _currentCartModel?.cart![index].quantity} ${getTranslated('items', context)}',context, isToaster: true, isError: false);
+          showCustomSnackBarWidget(
+              '${getTranslated('added_cart_successfully', context)} ${_currentCartModel?.cart![index].quantity} ${getTranslated('items', context)}',
+              context,
+              isToaster: true,
+              isError: false);
         }
       }
     }
@@ -348,47 +386,56 @@ class CartController extends ChangeNotifier{
     return variantKey;
   }
 
-
-  void setExtraDiscountAmount(double? extraDiscountAmount, {bool isUpdate = true}) {
+  void setExtraDiscountAmount(double? extraDiscountAmount,
+      {bool isUpdate = true}) {
     _currentCartModel?.extraDiscount = extraDiscountAmount;
     _extraDiscountAmount = extraDiscountAmount ?? 0;
-    if(isUpdate) {
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
-  void setCouponCodeAndAmount(double? couponAmount, String? couponCode, {bool isUpdate = true}) {
+  void setCouponCodeAndAmount(double? couponAmount, String? couponCode,
+      {bool isUpdate = true}) {
     _couponCodeAmount = couponAmount;
     _currentCartModel?.couponAmount = couponAmount;
     _currentCartModel?.couponCode = couponCode;
-    if(isUpdate) {
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
-
-  void clearCardForCancel(){
+  void clearCardForCancel() {
     _couponCodeAmount = 0;
     _extraDiscountAmount = 0;
   }
 
-  Future<ApiResponse> placeOrder(BuildContext context, PlaceOrderBody placeOrderBody) async {
+  Future<ApiResponse> placeOrder(
+      BuildContext context, PlaceOrderBody placeOrderBody) async {
     _isLoading = true;
     notifyListeners();
 
-    ApiResponse response = await cartServiceInterface.placeOrder(placeOrderBody);
+    ApiResponse response =
+        await cartServiceInterface.placeOrder(placeOrderBody);
 
-    if(response.response?.statusCode == 200 && response.response?.data['checkProductTypeForWalkingCustomer'] == true) {
-      showCustomSnackBarWidget(response.response?.data['message'], Get.context!, isToaster: true, isError: false, sanckBarType: SnackBarType.error);
+    if (response.response?.statusCode == 200 &&
+        response.response?.data['checkProductTypeForWalkingCustomer'] == true) {
+      showCustomSnackBarWidget(response.response?.data['message'], Get.context!,
+          isToaster: true, isError: false, sanckBarType: SnackBarType.error);
       _isLoading = false;
-    } else if(response.response!.statusCode == 200){
+    } else if (response.response!.statusCode == 200) {
       _isLoading = false;
       _couponCodeAmount = 0;
       _productDiscount = 0;
       _customerBalance = 0;
       _customerWalletController.clear();
-      Provider.of<OrderController>(Get.context!, listen: false).getOrderList(Get.context!, 1,'all');
-      showCustomSnackBarWidget(getTranslated('order_placed_successfully', Get.context!), Get.context!, isToaster: true, isError: false);
+      Provider.of<OrderController>(Get.context!, listen: false)
+          .getOrderList(Get.context!, 1, 'all');
+      showCustomSnackBarWidget(
+          getTranslated('order_placed_successfully', Get.context!),
+          Get.context!,
+          isToaster: true,
+          isError: false);
       _extraDiscountAmount = 0;
       _extraDiscountController.text = '';
       _extraDiscountAmount = 0;
@@ -399,23 +446,26 @@ class CartController extends ChangeNotifier{
       saveCardData();
 
       _isUpdatePaidAmount = true;
-      Provider.of<CustomerController>(Get.context!, listen: false).setCustomerInfo( 0,  'Walk-In Customer', '', true, 0);
+      Provider.of<CustomerController>(Get.context!, listen: false)
+          .setCustomerInfo(0, 'Walk-In Customer', '', true, 0);
       searchCustomerController.text = 'Walk-In Customer';
-      if(_customerIds.isNotEmpty) {
+      if (_customerIds.isNotEmpty) {
         _amount = 0;
-
       }
-      Navigator.push(Get.context!, MaterialPageRoute(builder: (_)=> InVoiceScreen(orderId: response.response!.data['order_id'])));
-
-    }else{
-      ApiChecker.checkApi( response);
+      Navigator.push(
+          Get.context!,
+          MaterialPageRoute(
+              builder: (_) =>
+                  InVoiceScreen(orderId: response.response!.data['order_id'])));
+    } else {
+      ApiChecker.checkApi(response);
     }
     notifyListeners();
     return response;
   }
 
-
-  void setCurrentCartCustomerInfo(int? id, String? name, String? phone, double? customerBalance, bool notify) {
+  void setCurrentCartCustomerInfo(int? id, String? name, String? phone,
+      double? customerBalance, bool notify) {
     _currentCartModel?.userId = id;
     _currentCartModel?.customerName = name;
     _currentCartModel?.phoneNumber = phone;
@@ -423,7 +473,7 @@ class CartController extends ChangeNotifier{
 
     _paymentTypeIndex = 0;
 
-    if(notify) {
+    if (notify) {
       notifyListeners();
     }
   }
@@ -431,7 +481,9 @@ class CartController extends ChangeNotifier{
   void addToHoldUserList() {
     TemporaryCartListModel userCart = _currentCartModel!;
 
-    if(userCart.userIndex != null && userCart.userIndex != 0 && isUserExists(userCart.userId!)) {
+    if (userCart.userIndex != null &&
+        userCart.userIndex != 0 &&
+        isUserExists(userCart.userId!)) {
       updateHoldUser(userCart);
     } else if (userCart.userId == 0) {
       int randomNumber = Random().nextInt(10000);
@@ -452,7 +504,7 @@ class CartController extends ChangeNotifier{
   }
 
   void updateHoldUser(TemporaryCartListModel userCart) {
-    if(isUserExists(userCart.userId!)) {
+    if (isUserExists(userCart.userId!)) {
       int index = getCartIndexByUserId(userCart.userId!);
       _customerCartList[index] = userCart;
       resetUserCard();
@@ -467,8 +519,15 @@ class CartController extends ChangeNotifier{
     resetUserCard();
     saveCardData();
 
-
-    Provider.of<CustomerController>(Get.context!, listen: false).setCustomerInfo( (tempCart.customerName?.contains('walk.ing') ?? false) ? 0 : tempCart.userId, tempCart.customerName, tempCart.phoneNumber, true, 0);
+    Provider.of<CustomerController>(Get.context!, listen: false)
+        .setCustomerInfo(
+            (tempCart.customerName?.contains('walk.ing') ?? false)
+                ? 0
+                : tempCart.userId,
+            tempCart.customerName,
+            tempCart.phoneNumber,
+            true,
+            0);
     _currentCartModel = tempCart;
 
     notifyListeners();
@@ -480,13 +539,9 @@ class CartController extends ChangeNotifier{
     notifyListeners();
   }
 
-  void resetUserCard () {
-     _currentCartModel = TemporaryCartListModel(
-      userId: 0,
-      customerName: 'Walk-In Customer',
-      phoneNumber: '',
-      cart: []
-    );
+  void resetUserCard() {
+    _currentCartModel = TemporaryCartListModel(
+        userId: 0, customerName: 'Walk-In Customer', phoneNumber: '', cart: []);
 
     notifyListeners();
   }
@@ -499,7 +554,6 @@ class CartController extends ChangeNotifier{
     }
     return false;
   }
-
 
   TemporaryCartListModel getCartByUserId(int userId) {
     for (int i = 0; i < _customerCartList.length; i++) {
@@ -519,90 +573,88 @@ class CartController extends ChangeNotifier{
     throw Exception("Cart not found for user ID: $userId");
   }
 
-
   void saveCardData() async {
     cartServiceInterface.addToCartList(_customerCartList);
   }
 
   void getCartData() {
-    List<TemporaryCartListModel> localCartList = cartServiceInterface.getCartList();
+    List<TemporaryCartListModel> localCartList =
+        cartServiceInterface.getCartList();
 
-    if(localCartList.isNotEmpty) {
+    if (localCartList.isNotEmpty) {
       _customerCartList = cartServiceInterface.getCartList();
     }
   }
 
-
-  Future<void> addNewCustomer(BuildContext context,CustomerBody customerBody) async {
+  Future<void> addNewCustomer(
+      BuildContext context, CustomerBody customerBody) async {
     _isLoading = true;
     notifyListeners();
 
-    ApiResponse response = await cartServiceInterface.addNewCustomer(customerBody);
+    ApiResponse response =
+        await cartServiceInterface.addNewCustomer(customerBody);
 
-    if(response.error == 'The email has already been taken.' || response.error == 'The phone has already been taken.') {
-      showCustomSnackBarWidget(response.error, Get.context!, isError: true, sanckBarType: SnackBarType.warning);
+    if (response.error == 'The email has already been taken.' ||
+        response.error == 'The phone has already been taken.') {
+      showCustomSnackBarWidget(response.error, Get.context!,
+          isError: true, sanckBarType: SnackBarType.warning);
       _isLoading = false;
       notifyListeners();
-    } else if(response.response!.statusCode == 200) {
+    } else if (response.response!.statusCode == 200) {
       /// ToDo: get form cosutomer controller
-     //  getCustomerList("all");
+      //  getCustomerList("all");
       _isLoading = false;
       Navigator.pop(Get.context!);
       Map map = response.response!.data;
       String? message = map['message'];
       showCustomSnackBarWidget(message, Get.context!, isError: false);
-    }
-    else {
-      _isLoading = false;
-      ApiChecker.checkApi( response);
-    }
-    notifyListeners();
-  }
-
-
-  Future<void> getInvoiceData(int? orderId) async {
-    _isLoading = true;
-    ApiResponse response = await cartServiceInterface.getInvoiceData(orderId);
-    if(response.response != null && response.response!.statusCode == 200) {
-      _discountOnProduct = 0;
-      _totalTaxAmount = 0;
-      _invoice = InvoiceModel.fromJson(response.response!.data);
-      for(int i=0; i< _invoice!.details!.length; i++ ){
-        _discountOnProduct += invoice!.details![i].discount!;
-        if(invoice!.details![i].productDetails!.taxModel == "exclude"){
-          _totalTaxAmount += invoice!.details![i].tax!;
-        }
-      }
-      _isLoading = false;
-    }else {
+    } else {
       _isLoading = false;
       ApiChecker.checkApi(response);
     }
     notifyListeners();
   }
 
+  Future<void> getInvoiceData(int? orderId) async {
+    _isLoading = true;
+    ApiResponse response = await cartServiceInterface.getInvoiceData(orderId);
+    if (response.response != null && response.response!.statusCode == 200) {
+      _discountOnProduct = 0;
+      _totalTaxAmount = 0;
+      _invoice = InvoiceModel.fromJson(response.response!.data);
+      for (int i = 0; i < _invoice!.details!.length; i++) {
+        _discountOnProduct += invoice!.details![i].discount!;
+        if (invoice!.details![i].productDetails!.taxModel == "exclude") {
+          _totalTaxAmount += invoice!.details![i].tax!;
+        }
+      }
+      _isLoading = false;
+    } else {
+      _isLoading = false;
+      ApiChecker.checkApi(response);
+    }
+    notifyListeners();
+  }
 
-  String? getBluetoothMacAddress() => cartServiceInterface.getBluetoothAddress();
+  String? getBluetoothMacAddress() =>
+      cartServiceInterface.getBluetoothAddress();
 
-  void setBluetoothMacAddress(String? address) => cartServiceInterface.setBluetoothAddress(address);
-
+  void setBluetoothMacAddress(String? address) =>
+      cartServiceInterface.setBluetoothAddress(address);
 
   void setPaidAmountles(bool value, {bool isUpdate = true}) {
     _isPaidAmountLess = value;
-    if(isUpdate){
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
   void setUpdatePaidAmount(bool value, {bool isUpdate = true}) {
     _isUpdatePaidAmount = value;
-    if(isUpdate){
+    if (isUpdate) {
       notifyListeners();
     }
   }
-
-
-
 
   double calculateProductPrice(CartModel cartModel) {
     Product? product = cartModel.product;
@@ -611,31 +663,30 @@ class CartController extends ChangeNotifier{
     double? unitPrice = product?.unitPrice;
     double productDiscount = 0;
 
-    if (product?.clearanceSale != null && product?.clearanceSale?.isActive == 1) {
+    if (product?.clearanceSale != null &&
+        product?.clearanceSale?.isActive == 1) {
       productDiscount = product!.clearanceSale?.discountType == 'flat'
-        ? (product.clearanceSale?.discountAmount ?? 0) * cartModel.quantity!
-        : ((product.clearanceSale?.discountAmount ?? 0) / 100) *
-        (variation?.price ?? digitalVPrice ?? unitPrice!) *
-        cartModel.quantity!;
+          ? (product.clearanceSale?.discountAmount ?? 0) * cartModel.quantity!
+          : ((product.clearanceSale?.discountAmount ?? 0) / 100) *
+              (variation?.price ?? digitalVPrice ?? unitPrice!) *
+              cartModel.quantity!;
     } else {
       productDiscount = product?.discountType == 'flat'
-        ? product!.discount! * cartModel.quantity!
-        : (product!.discount! / 100) *
-        (variation?.price ?? digitalVPrice ?? unitPrice!) *
-        cartModel.quantity!;
+          ? product!.discount! * cartModel.quantity!
+          : (product!.discount! / 100) *
+              (variation?.price ?? digitalVPrice ?? unitPrice!) *
+              cartModel.quantity!;
     }
 
-
-    double productPrice = (variation?.price ?? digitalVPrice ?? unitPrice!) * cartModel.quantity!;
+    double productPrice =
+        (variation?.price ?? digitalVPrice ?? unitPrice!) * cartModel.quantity!;
     return productPrice - productDiscount;
   }
-
 
   bool containsNumberExceptZero(String input) {
     final regex = RegExp(r'[1-9]');
     return regex.hasMatch(input);
   }
-
 
   double calculateInvoiceProductPrice(Details cartItem) {
     double productPrice = 0.0;
@@ -649,22 +700,30 @@ class CartController extends ChangeNotifier{
     var discount = productDetails?.discount;
     var taxModel = productDetails?.taxModel;
 
-
-
     // Check for variant and product type
-    if (variant != null && variant.isNotEmpty && productDetails?.productType == 'physical') {
-
-      Variation? variantMatch = productDetails?.variation?.where((v) => v.type == variant).isNotEmpty == true
-          ? productDetails!.variation!.firstWhere((v) => v.type == variant) : null;
+    if (variant != null &&
+        variant.isNotEmpty &&
+        productDetails?.productType == 'physical') {
+      Variation? variantMatch = productDetails?.variation
+                  ?.where((v) => v.type == variant)
+                  .isNotEmpty ==
+              true
+          ? productDetails!.variation!.firstWhere((v) => v.type == variant)
+          : null;
 
       if (variantMatch != null) {
         productPrice = variantMatch.price ?? 0;
       }
-
-    } else if (variant != null && variant.isNotEmpty && productDetails?.productType == 'digital') {
-
-      DigitalVariation? digitalVariation = productDetails?.digitalVariation?.where((v) => v.variantKey == variant).isNotEmpty == true
-        ? productDetails!.digitalVariation!.firstWhere((v) => v.variantKey == variant) : null;
+    } else if (variant != null &&
+        variant.isNotEmpty &&
+        productDetails?.productType == 'digital') {
+      DigitalVariation? digitalVariation = productDetails?.digitalVariation
+                  ?.where((v) => v.variantKey == variant)
+                  .isNotEmpty ==
+              true
+          ? productDetails!.digitalVariation!
+              .firstWhere((v) => v.variantKey == variant)
+          : null;
 
       if (digitalVariation != null) {
         productPrice = digitalVariation.price ?? 0;
@@ -675,11 +734,16 @@ class CartController extends ChangeNotifier{
     }
 
     // Calculate discount
-    if (productDetails?.clearanceSale != null && productDetails?.clearanceSale?.isActive == 1) {
+    if (productDetails?.clearanceSale != null &&
+        productDetails?.clearanceSale?.isActive == 1) {
       if (productDetails?.clearanceSale?.discountType == 'flat') {
-        productDiscount = (productDetails!.clearanceSale!.discountAmount! * qty!);
+        productDiscount =
+            (productDetails!.clearanceSale!.discountAmount! * qty!);
       } else {
-        productDiscount = ((productDetails!.clearanceSale!.discountAmount! / 100) * productPrice * qty!);
+        productDiscount =
+            ((productDetails!.clearanceSale!.discountAmount! / 100) *
+                productPrice *
+                qty!);
       }
     } else {
       // Apply regular discount based on the type
@@ -694,7 +758,8 @@ class CartController extends ChangeNotifier{
     double priceAfterDiscount = (productPrice * qty) - productDiscount;
 
     if (taxModel == 'include') {
-      includeTax = calculateIncludedTax(productPrice, productDetails!.tax!) * qty; // Tax is already included
+      includeTax = calculateIncludedTax(productPrice, productDetails!.tax!) *
+          qty; // Tax is already included
     } else {
       // If tax is not included, apply tax
       // finalPrice = priceAfterDiscount + (productDetails['tax'] / 100) * priceAfterDiscount;
@@ -705,11 +770,9 @@ class CartController extends ChangeNotifier{
     return priceAfterDiscount - includeTax;
   }
 
-
-
-  void initTempCartData({bool isUpdate = true}){
+  void initTempCartData({bool isUpdate = true}) {
     _currentCartModel = getInitialTempCartData();
-    if(isUpdate) {
+    if (isUpdate) {
       notifyListeners();
     }
   }
@@ -717,7 +780,8 @@ class CartController extends ChangeNotifier{
   TemporaryCartListModel getInitialTempCartData() {
     searchCustomerController.text = 'Walk-In Customer';
 
-    Provider.of<CustomerController>(Get.context!, listen: false).setCustomerInfo(0, 'Walk-In Customer', null, false, 0);
+    Provider.of<CustomerController>(Get.context!, listen: false)
+        .setCustomerInfo(0, 'Walk-In Customer', null, false, 0);
     _customerBalance = 0;
 
     return TemporaryCartListModel(
@@ -732,6 +796,4 @@ class CartController extends ChangeNotifier{
   void emptyCustomerTextField() {
     _searchCustomerController.text = '';
   }
-
-
 }

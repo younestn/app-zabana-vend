@@ -9,10 +9,10 @@ class DeliveryManReviewModel {
 
   DeliveryManReviewModel(
       {this.totalSize,
-        this.limit,
-        this.offset,
-        this.averageRating,
-        this.reviews});
+      this.limit,
+      this.offset,
+      this.averageRating,
+      this.reviews});
 
   DeliveryManReviewModel.fromJson(Map<String, dynamic> json) {
     totalSize = json['total_size'];
@@ -56,18 +56,17 @@ class DeliveryManReview {
 
   DeliveryManReview(
       {this.id,
-        this.productId,
-        this.customerId,
-        this.deliveryManId,
-        this.orderId,
-        this.comment,
-        this.rating,
-        this.status,
-        this.isSaved,
-        this.createdAt,
-        this.updatedAt,
-        this.customer
-      });
+      this.productId,
+      this.customerId,
+      this.deliveryManId,
+      this.orderId,
+      this.comment,
+      this.rating,
+      this.status,
+      this.isSaved,
+      this.createdAt,
+      this.updatedAt,
+      this.customer});
 
   DeliveryManReview.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -76,13 +75,13 @@ class DeliveryManReview {
     deliveryManId = json['delivery_man_id'];
     orderId = json['order_id'];
     comment = json['comment'];
-    if(json['rating'] != null){
-      try{
+    if (json['rating'] != null) {
+      try {
         rating = json['rating'].toDouble();
-      }catch(e){
+      } catch (e) {
         rating = double.parse(json['rating'].toString());
       }
-    }else{
+    } else {
       rating = 0;
     }
 
@@ -90,9 +89,8 @@ class DeliveryManReview {
     isSaved = json['is_saved'] ? 1 : 0;
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    customer = json['customer'] != null
-        ? Customer.fromJson(json['customer'])
-        : null;
+    customer =
+        json['customer'] != null ? Customer.fromJson(json['customer']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -116,28 +114,25 @@ class DeliveryManReview {
 }
 
 class Customer {
-
   String? fName;
   String? lName;
   String? image;
   ImageFullUrl? imageFullUrl;
 
-
-  Customer(
-      {
-        this.fName,
-        this.lName,
-        this.image,
-        this.imageFullUrl,
-       });
+  Customer({
+    this.fName,
+    this.lName,
+    this.image,
+    this.imageFullUrl,
+  });
 
   Customer.fromJson(Map<String, dynamic> json) {
     fName = json['f_name'];
     lName = json['l_name'];
     image = json['image'];
     imageFullUrl = json['image_full_url'] != null
-      ? ImageFullUrl.fromJson(json['image_full_url'])
-      : null;
+        ? ImageFullUrl.fromJson(json['image_full_url'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {

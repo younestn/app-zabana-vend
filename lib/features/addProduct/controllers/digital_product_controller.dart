@@ -45,22 +45,22 @@ class DigitalProductController extends ChangeNotifier {
   List<List<String>> editVariantKeys = [];
   List<List<bool>> _isDigitalVariationLoading = [];
 
-
   List<String> get selectedDigitalVariation => _selectedDigitalVariation;
-  List<List<String>> get digitalVariationExtantion => _digitalVariationExtension;
+  List<List<String>> get digitalVariationExtantion =>
+      _digitalVariationExtension;
   List<List<FileUploadModel>> get variationFileList => _variationFileList;
   List<List<bool>> get isDigitalVariationLoading => _isDigitalVariationLoading;
 
-  File? selectedDigitalProductFile ;
-  File? get selectedFileForImport =>selectedDigitalProductFile;
+  File? selectedDigitalProductFile;
+  File? get selectedFileForImport => selectedDigitalProductFile;
 
   String? _digitalProductFileName;
-  String?  get digitalProductFileName =>_digitalProductFileName;
+  String? get digitalProductFileName => _digitalProductFileName;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  XFile ? _digitalProductPreview;
+  XFile? _digitalProductPreview;
   XFile? get digitalProductPreview => _digitalProductPreview;
 
   bool _isPreviewLoading = false;
@@ -68,10 +68,9 @@ class DigitalProductController extends ChangeNotifier {
 
   bool isPreviewNull = true;
 
-
   void setDigitalProductTypeIndex(int index, bool notify) {
     _digitalProductTypeIndex = index;
-    if(notify) {
+    if (notify) {
       notifyListeners();
     }
   }
@@ -80,7 +79,8 @@ class DigitalProductController extends ChangeNotifier {
     ApiResponse response = await addProductServiceInterface.getDigitalAuthor();
     if (response.response!.statusCode == 200) {
       _authorsList = [];
-      response.response!.data.forEach((brand) => _authorsList.add(AuthorModel.fromJson(brand)));
+      response.response!.data
+          .forEach((brand) => _authorsList.add(AuthorModel.fromJson(brand)));
       debugPrint("===AuthorList===>>${_authorsList.length}");
     } else {
       ApiChecker.checkApi(response);
@@ -88,21 +88,21 @@ class DigitalProductController extends ChangeNotifier {
     notifyListeners();
   }
 
-
   Future<void> getPublishingHouse() async {
-    ApiResponse response = await addProductServiceInterface.getPublishingHouse();
+    ApiResponse response =
+        await addProductServiceInterface.getPublishingHouse();
     if (response.response?.statusCode == 200) {
       _publishingHouseList = [];
-      response.response!.data.forEach((brand) => _publishingHouseList.add(AuthorModel.fromJson(brand)));
+      response.response!.data.forEach(
+          (brand) => _publishingHouseList.add(AuthorModel.fromJson(brand)));
     } else {
       ApiChecker.checkApi(response);
     }
     notifyListeners();
   }
 
-
   void addAuthor(String authorName) {
-    if(!_selectedAuthors.contains(authorName)) {
+    if (!_selectedAuthors.contains(authorName)) {
       _selectedAuthors.add(authorName);
     }
     notifyListeners();
@@ -114,7 +114,7 @@ class DigitalProductController extends ChangeNotifier {
   }
 
   void addPublishingHouse(String publishingHouse) {
-    if(!_selectedPublishingHouse.contains(publishingHouse)) {
+    if (!_selectedPublishingHouse.contains(publishingHouse)) {
       _selectedPublishingHouse.add(publishingHouse);
     }
     notifyListeners();
@@ -125,21 +125,19 @@ class DigitalProductController extends ChangeNotifier {
     notifyListeners();
   }
 
-
-
   void setAuthorPublishingData(Product product) {
     _selectedPublishingHouse = [];
     _selectedAuthors = [];
 
-    if(product.publishingHouse != null){
-      _selectedPublishingHouse.addAll(product.publishingHouse! as Iterable<String>);
+    if (product.publishingHouse != null) {
+      _selectedPublishingHouse
+          .addAll(product.publishingHouse! as Iterable<String>);
     }
 
-    if(product.authors != null){
+    if (product.authors != null) {
       _selectedAuthors.addAll(product.authors! as Iterable<String>);
     }
   }
-
 
   void emptyDigitalProductData() {
     selectedDigitalProductFile = null;
@@ -155,8 +153,6 @@ class DigitalProductController extends ChangeNotifier {
     _selectedAuthors = [];
   }
 
-
-
   void initDigitalProductVariation(EditProductModel editProduct) {
     _selectedDigitalVariation = [];
     _digitalVariationExtension = [];
@@ -165,43 +161,50 @@ class DigitalProductController extends ChangeNotifier {
     _variationFileList = [];
     _isDigitalVariationLoading = [];
 
-    if(editProduct.digitalProductFileTypes != null) {
-      for(int i=0; i< editProduct.digitalProductFileTypes!.length; i++) {
+    if (editProduct.digitalProductFileTypes != null) {
+      for (int i = 0; i < editProduct.digitalProductFileTypes!.length; i++) {
         _digitalVariationExtension.add([]);
         extentionControllerList.add(TextEditingController());
         editVariantKeys.add([]);
         _variationFileList.add([]);
         _isDigitalVariationLoading.add([]);
-        _selectedDigitalVariation.add(ProductHelper.capitalizeFirstLetter(editProduct.digitalProductFileTypes![i]));
+        _selectedDigitalVariation.add(ProductHelper.capitalizeFirstLetter(
+            editProduct.digitalProductFileTypes![i]));
       }
     }
 
-    if(editProduct.digitalProductExtensions != null){
+    if (editProduct.digitalProductExtensions != null) {
       editProduct.digitalProductExtensions!.forEach((key, value) {
-        for(int i=0; i<_selectedDigitalVariation.length; i++){
-          if(key.toLowerCase() == _selectedDigitalVariation[i].toLowerCase()){
+        for (int i = 0; i < _selectedDigitalVariation.length; i++) {
+          if (key.toLowerCase() == _selectedDigitalVariation[i].toLowerCase()) {
             _digitalVariationExtension[i].addAll(value);
           }
         }
       });
     }
 
-
-    for (int i=0; i<_selectedDigitalVariation.length; i++) {
-      for(int index = 0; index < _digitalVariationExtension[i].length; index++) {
-        String ext = ProductHelper.removeSpacesAndLowercase(_digitalVariationExtension[i][index]);
-        editVariantKeys[i].add('${_selectedDigitalVariation[i].toLowerCase()}-$ext');
+    for (int i = 0; i < _selectedDigitalVariation.length; i++) {
+      for (int index = 0;
+          index < _digitalVariationExtension[i].length;
+          index++) {
+        String ext = ProductHelper.removeSpacesAndLowercase(
+            _digitalVariationExtension[i][index]);
+        editVariantKeys[i]
+            .add('${_selectedDigitalVariation[i].toLowerCase()}-$ext');
       }
     }
 
-    for (int i=0; i<_selectedDigitalVariation.length; i++) {
-      for(int index = 0; index < editVariantKeys[i].length; index++) {
-        for(int j=0; j < editProduct.digitalVariation!.length;  j++) {
-          if(editVariantKeys[i][index] == editProduct.digitalVariation![j].variantKey){
+    for (int i = 0; i < _selectedDigitalVariation.length; i++) {
+      for (int index = 0; index < editVariantKeys[i].length; index++) {
+        for (int j = 0; j < editProduct.digitalVariation!.length; j++) {
+          if (editVariantKeys[i][index] ==
+              editProduct.digitalVariation![j].variantKey) {
             _variationFileList[i].add(
               FileUploadModel(
-                priceController: TextEditingController(text: editProduct.digitalVariation![j].price.toString()),
-                skuController: TextEditingController(text: editProduct.digitalVariation![j].sku.toString()),
+                priceController: TextEditingController(
+                    text: editProduct.digitalVariation![j].price.toString()),
+                skuController: TextEditingController(
+                    text: editProduct.digitalVariation![j].sku.toString()),
                 file: null,
                 fileName: editProduct.digitalVariation![j].file?.toString(),
               ),
@@ -213,9 +216,8 @@ class DigitalProductController extends ChangeNotifier {
     }
   }
 
-
-  DigitalVariationModel  getDigitalVariationModel() {
-    DigitalVariationModel  digitalvariationModel = DigitalVariationModel();
+  DigitalVariationModel getDigitalVariationModel() {
+    DigitalVariationModel digitalvariationModel = DigitalVariationModel();
     digitalvariationModel.variationType = [];
     digitalvariationModel.digitalVariantKey = [];
     digitalvariationModel.digitalVariantFiles = {};
@@ -226,49 +228,44 @@ class DigitalProductController extends ChangeNotifier {
     digitalvariationModel.authors = [];
     digitalvariationModel.publishingHouse = [];
 
-    digitalvariationModel.variationType = ProductHelper.processList(_selectedDigitalVariation);
+    digitalvariationModel.variationType =
+        ProductHelper.processList(_selectedDigitalVariation);
 
     digitalvariationModel.variationKeys?.addAll(_digitalVariationExtension);
 
-    for (int i=0; i<digitalvariationModel.variationType!.length; i++) {
-      for(int index = 0; index < _digitalVariationExtension[i].length; index++) {
-        String ext = ProductHelper.removeSpacesAndLowercase(_digitalVariationExtension[i][index]);
-        digitalvariationModel.digitalVariantKey?.add('${digitalvariationModel.variationType![i]}_$ext');
+    for (int i = 0; i < digitalvariationModel.variationType!.length; i++) {
+      for (int index = 0;
+          index < _digitalVariationExtension[i].length;
+          index++) {
+        String ext = ProductHelper.removeSpacesAndLowercase(
+            _digitalVariationExtension[i][index]);
+        digitalvariationModel.digitalVariantKey
+            ?.add('${digitalvariationModel.variationType![i]}_$ext');
       }
     }
 
-
     int count = -1;
-    for (int i=0; i<digitalvariationModel.variationType!.length; i++) {
-      for(int index = 0; index < _variationFileList[i].length; index++) {
+    for (int i = 0; i < digitalvariationModel.variationType!.length; i++) {
+      for (int index = 0; index < _variationFileList[i].length; index++) {
         count++;
         String key = digitalvariationModel.digitalVariantKey![count];
-        digitalvariationModel.digitalVariantFiles?.addAll(
-            <String,dynamic>{
-              key : _variationFileList[i][index].file
-            }
-        );
-        if(i==1 && index ==0){
+        digitalvariationModel.digitalVariantFiles
+            ?.addAll(<String, dynamic>{key: _variationFileList[i][index].file});
+        if (i == 1 && index == 0) {
           debugPrint("=======>>${digitalvariationModel.digitalVariantFiles}");
         }
 
-        digitalvariationModel.digitalVariantSku?.addAll(
-            <String,dynamic>{
-              key : _variationFileList[i][index].skuController!.text
-            }
-        );
+        digitalvariationModel.digitalVariantSku?.addAll(<String, dynamic>{
+          key: _variationFileList[i][index].skuController!.text
+        });
 
-        digitalvariationModel.digitalVariantPrice?.addAll(
-            <String,dynamic>{
-              key : _variationFileList[i][index].priceController!.text
-            }
-        );
+        digitalvariationModel.digitalVariantPrice?.addAll(<String, dynamic>{
+          key: _variationFileList[i][index].priceController!.text
+        });
 
-        digitalvariationModel.digitalVariantKeyMap?.addAll(
-            <String,dynamic>{
-              key : ProductHelper.replaceUnderscoreWithHyphen(key),
-            }
-        );
+        digitalvariationModel.digitalVariantKeyMap?.addAll(<String, dynamic>{
+          key: ProductHelper.replaceUnderscoreWithHyphen(key),
+        });
       }
     }
 
@@ -279,17 +276,23 @@ class DigitalProductController extends ChangeNotifier {
     return digitalvariationModel;
   }
 
-  Future<void> deleteDigitalVariationFile(int productId, int index, int subIndex) async {
+  Future<void> deleteDigitalVariationFile(
+      int productId, int index, int subIndex) async {
     _isDigitalVariationLoading[index][subIndex] = true;
     notifyListeners();
 
     String vKey = editVariantKeys[index][subIndex];
 
-    ApiResponse apiResponse = await addProductServiceInterface.deleteDigitalVariationFile(productId, vKey);
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    ApiResponse apiResponse = await addProductServiceInterface
+        .deleteDigitalVariationFile(productId, vKey);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       _variationFileList[index][subIndex].fileName = null;
       _isLoading = false;
-      showCustomSnackBarWidget(getTranslated('digital_product_deleted_successfully', Get.context!), Get.context!, sanckBarType: SnackBarType.success);
+      showCustomSnackBarWidget(
+          getTranslated('digital_product_deleted_successfully', Get.context!),
+          Get.context!,
+          sanckBarType: SnackBarType.success);
     } else {
       _isLoading = false;
       ApiChecker.checkApi(apiResponse);
@@ -317,44 +320,60 @@ class DigitalProductController extends ChangeNotifier {
     notifyListeners();
   }
 
-
-  void addExtension(int index, String text){
+  void addExtension(int index, String text) {
     _digitalVariationExtension[index].add(text);
     extentionControllerList[index].text = '';
-    _variationFileList[index].add(
-        FileUploadModel(
-          priceController: TextEditingController(),
-          skuController: TextEditingController(text: ProductHelper.generateSKU()),
-          file: null,
-        )
-    );
+    _variationFileList[index].add(FileUploadModel(
+      priceController: TextEditingController(),
+      skuController: TextEditingController(text: ProductHelper.generateSKU()),
+      file: null,
+    ));
     _isDigitalVariationLoading[index].add(false);
     notifyListeners();
   }
 
-
-  void removeExtension(int index, int subIndex){
+  void removeExtension(int index, int subIndex) {
     _digitalVariationExtension[index].removeAt(subIndex);
     _variationFileList[index].removeAt(subIndex);
     _isDigitalVariationLoading[index].removeAt(subIndex);
     notifyListeners();
   }
 
-
-  void pickFileForDigitalProduct (int index, int subIndex) async{
-
+  void pickFileForDigitalProduct(int index, int subIndex) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       withReadStream: true,
       withData: true,
-      allowedExtensions: ['pdf', 'zip', 'jpg', 'png', "jpeg", "gif",  "mp4", "avi", "mov", "mkv", "webm", "mpeg", "mpg", "3gp", "m4v", "mp3", "wav", "aac", "wma", "amr"],
+      allowedExtensions: [
+        'pdf',
+        'zip',
+        'jpg',
+        'png',
+        "jpeg",
+        "gif",
+        "mp4",
+        "avi",
+        "mov",
+        "mkv",
+        "webm",
+        "mpeg",
+        "mpg",
+        "3gp",
+        "m4v",
+        "mp3",
+        "wav",
+        "aac",
+        "wma",
+        "amr"
+      ],
     );
 
-    if(result != null){
+    if (result != null) {
       Uint8List? imageBytes = result.files.first.bytes;
-      File? file = await File(result.files.first.path!).writeAsBytes(imageBytes!);
+      File? file =
+          await File(result.files.first.path!).writeAsBytes(imageBytes!);
 
-      XFile xFile =  XFile(file.path);
+      XFile xFile = XFile(file.path);
 
       _variationFileList[index][subIndex].file = xFile;
       PlatformFile? fileNamed = result.files.first;
@@ -364,7 +383,7 @@ class DigitalProductController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeFileForDigitalProduct (int index, int subIndex) async{
+  void removeFileForDigitalProduct(int index, int subIndex) async {
     _variationFileList[index][subIndex].file = null;
     _variationFileList[index][subIndex].fileName = null;
     notifyListeners();
@@ -379,36 +398,57 @@ class DigitalProductController extends ChangeNotifier {
     return false;
   }
 
-
-  void pickFileDigitalProductPreview () async {
+  void pickFileDigitalProductPreview() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       withReadStream: true,
       withData: true,
-      allowedExtensions: ['pdf', 'zip', 'jpg', 'png', "jpeg", "gif",  "mp4", "avi", "mov", "mkv", "webm", "mpeg", "mpg", "3gp", "m4v", "mp3", "wav", "aac", "wma", "amr"],
+      allowedExtensions: [
+        'pdf',
+        'zip',
+        'jpg',
+        'png',
+        "jpeg",
+        "gif",
+        "mp4",
+        "avi",
+        "mov",
+        "mkv",
+        "webm",
+        "mpeg",
+        "mpg",
+        "3gp",
+        "m4v",
+        "mp3",
+        "wav",
+        "aac",
+        "wma",
+        "amr"
+      ],
     );
 
-    if(result != null){
+    if (result != null) {
       Uint8List? imageBytes = result.files.first.bytes;
-      File? file = await File(result.files.first.path!).writeAsBytes(imageBytes!);
+      File? file =
+          await File(result.files.first.path!).writeAsBytes(imageBytes!);
 
-      XFile xFile =  XFile(file.path);
+      XFile xFile = XFile(file.path);
 
       _digitalProductPreview = xFile;
     }
     notifyListeners();
   }
 
-
-  Future<void>  deleteDigitalPreviewFile(int? id) async {
-
-    if(_digitalProductPreview != null) {
+  Future<void> deleteDigitalPreviewFile(int? id) async {
+    if (_digitalProductPreview != null) {
       _digitalProductPreview = null;
-    }else if (id != null) {
+    } else if (id != null) {
       _isPreviewLoading = true;
       notifyListeners();
-      ApiResponse apiResponse = await addProductServiceInterface.deleteProductPreview(id);
-      if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      ApiResponse apiResponse =
+          await addProductServiceInterface.deleteProductPreview(id);
+      if (apiResponse.response != null &&
+          apiResponse.response!.statusCode == 200) {
         isPreviewNull = true;
         _isPreviewLoading = false;
       } else {
@@ -423,8 +463,7 @@ class DigitalProductController extends ChangeNotifier {
     isPreviewNull = isNull;
   }
 
-
-  void setSelectedFileName(File? fileName){
+  void setSelectedFileName(File? fileName) {
     selectedDigitalProductFile = fileName;
     if (kDebugMode) {
       debugPrint('Here is your file ===>$selectedDigitalProductFile');
@@ -435,9 +474,10 @@ class DigitalProductController extends ChangeNotifier {
   Future<ApiResponse> uploadDigitalProduct(String token) async {
     _isLoading = true;
     notifyListeners();
-    ApiResponse response = await addProductServiceInterface.uploadDigitalProduct(selectedDigitalProductFile, token);
+    ApiResponse response = await addProductServiceInterface
+        .uploadDigitalProduct(selectedDigitalProductFile, token);
 
-    if(response.response!.statusCode == 200) {
+    if (response.response!.statusCode == 200) {
       if (kDebugMode) {
         debugPrint('digital product uploaded');
       }
@@ -445,19 +485,14 @@ class DigitalProductController extends ChangeNotifier {
       Map map = jsonDecode(response.response!.data);
       _digitalProductFileName = map["digital_file_ready_name"];
       if (kDebugMode) {
-        debugPrint('-----digital product uploaded---->$_digitalProductFileName');
+        debugPrint(
+            '-----digital product uploaded---->$_digitalProductFileName');
       }
-
-    }else {
+    } else {
       _isLoading = false;
     }
     _isLoading = false;
     notifyListeners();
     return response;
   }
-
-
-
-
-
 }

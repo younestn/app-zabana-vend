@@ -16,8 +16,6 @@ import 'package:sixvalley_vendor_app/features/order/screens/order_screen.dart';
 import 'package:sixvalley_vendor_app/features/review/widgets/review_filter_bottom_sheet_widget.dart';
 import 'package:sixvalley_vendor_app/features/review/widgets/review_widget.dart';
 
-
-
 class ProductReviewScreen extends StatefulWidget {
   const ProductReviewScreen({super.key});
 
@@ -26,72 +24,99 @@ class ProductReviewScreen extends StatefulWidget {
 }
 
 class _ProductReviewScreenState extends State<ProductReviewScreen> {
-
   @override
   void initState() {
     Provider.of<CustomerController>(context, listen: false).getCustomerList('');
-    Provider.of<ProductController>(context, listen: false).getSellerProductList(Provider.of<ProfileController>(context, listen: false).
-    userInfoModel!.id.toString(), 1, 'en','', reload: true);
+    Provider.of<ProductController>(context, listen: false).getSellerProductList(
+        Provider.of<ProfileController>(context, listen: false)
+            .userInfoModel!
+            .id
+            .toString(),
+        1,
+        'en',
+        '',
+        reload: true);
     super.initState();
   }
+
   TextEditingController searchController = TextEditingController();
   ScrollController scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
-    Provider.of<ProductReviewController>(context, listen: false).getReviewList( context);
+    Provider.of<ProductReviewController>(context, listen: false)
+        .getReviewList(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: CustomAppBarWidget(title: getTranslated('reviews', context),),
+      appBar: CustomAppBarWidget(
+        title: getTranslated('reviews', context),
+      ),
       body: Consumer<ProductReviewController>(
         builder: (context, reviewProvider, child) {
           List<ReviewModel> reviewList;
           reviewList = reviewProvider.reviewList;
-          return
-          Column(children: [
+          return Column(
+            children: [
               const SizedBox(height: Dimensions.paddingSizeSmall),
-
-              Container(height: 85,
+              Container(
+                height: 85,
                 color: Theme.of(context).canvasColor,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(Dimensions.paddingSizeDefault,
-                    Dimensions.paddingSizeDefault, Dimensions.paddingSizeDefault,
-                    Dimensions.paddingSizeDefault),
+                  padding: const EdgeInsets.fromLTRB(
+                      Dimensions.paddingSizeDefault,
+                      Dimensions.paddingSizeDefault,
+                      Dimensions.paddingSizeDefault,
+                      Dimensions.paddingSizeDefault),
                   child: CustomSearchFieldWidget(
                     controller: searchController,
                     hint: getTranslated('search', context),
                     prefix: Images.iconsSearch,
-                    iconPressed: () => (){},
-                    onSubmit: (text) => (){},
-                    onChanged: (value){
+                    iconPressed: () => () {},
+                    onSubmit: (text) => () {},
+                    onChanged: (value) {
                       reviewProvider.searchReviewList(context, value);
                     },
                     isFilter: true,
-                    filterAction: (){
+                    filterAction: () {
                       showModalBottomSheet(
                           backgroundColor: Colors.transparent,
                           isScrollControlled: true,
-                          context: context, builder: (_) => const ReviewFilterBottomSheetWidget());
+                          context: context,
+                          builder: (_) =>
+                              const ReviewFilterBottomSheetWidget());
                     },
                   ),
                 ),
               ),
-              !reviewProvider.isLoading ? reviewList.isNotEmpty?
-              Expanded(
-                child: ListView.builder(
-                  itemCount: reviewList.length,
-                  padding: const EdgeInsets.all(0),
-                  shrinkWrap: true,
-                  itemBuilder: (BuildContext context, int index) {
-                    return InkWell(
-                        onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (_)=> ReviewReplyScreen(reviewModel: reviewList[index], index: index, productId: reviewList[index].productId,  formProduct: false))),
-                        // Navigator.of(context).push(
-                        //     MaterialPageRoute(builder: (BuildContext context) =>
-                        //     ReviewFullViewScreen(reviewModel: reviewList[index],isDetails: true,index: index,))),
-                        child: ReviewWidget(reviewModel: reviewList[index], index: index,)
-                    );
-                  },
-                ),
-              ): const Expanded(child: NoDataScreen()): const Expanded(child: OrderShimmer()),
+              !reviewProvider.isLoading
+                  ? reviewList.isNotEmpty
+                      ? Expanded(
+                          child: ListView.builder(
+                            itemCount: reviewList.length,
+                            padding: const EdgeInsets.all(0),
+                            shrinkWrap: true,
+                            itemBuilder: (BuildContext context, int index) {
+                              return InkWell(
+                                  onTap: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (_) => ReviewReplyScreen(
+                                              reviewModel: reviewList[index],
+                                              index: index,
+                                              productId:
+                                                  reviewList[index].productId,
+                                              formProduct: false))),
+                                  // Navigator.of(context).push(
+                                  //     MaterialPageRoute(builder: (BuildContext context) =>
+                                  //     ReviewFullViewScreen(reviewModel: reviewList[index],isDetails: true,index: index,))),
+                                  child: ReviewWidget(
+                                    reviewModel: reviewList[index],
+                                    index: index,
+                                  ));
+                            },
+                          ),
+                        )
+                      : const Expanded(child: NoDataScreen())
+                  : const Expanded(child: OrderShimmer()),
             ],
           );
         },

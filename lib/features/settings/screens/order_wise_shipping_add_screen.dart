@@ -13,19 +13,19 @@ import 'package:sixvalley_vendor_app/common/basewidgets/custom_snackbar_widget.d
 import 'package:sixvalley_vendor_app/common/basewidgets/textfeild/custom_text_feild_widget.dart';
 import 'package:sixvalley_vendor_app/features/settings/screens/order_wise_shipping_list_screen.dart';
 
-
 class OrderWiseShippingAddScreen extends StatefulWidget {
   final ShippingModel? shipping;
   const OrderWiseShippingAddScreen({super.key, this.shipping});
   @override
-  OrderWiseShippingAddScreenState createState() => OrderWiseShippingAddScreenState();
+  OrderWiseShippingAddScreenState createState() =>
+      OrderWiseShippingAddScreenState();
 }
 
-class OrderWiseShippingAddScreenState extends State<OrderWiseShippingAddScreen> {
-
-  TextEditingController? _titleController ;
-  TextEditingController? _durationController ;
-  TextEditingController? _costController ;
+class OrderWiseShippingAddScreenState
+    extends State<OrderWiseShippingAddScreen> {
+  TextEditingController? _titleController;
+  TextEditingController? _durationController;
+  TextEditingController? _costController;
 
   final FocusNode _resNameNode = FocusNode();
   final FocusNode _addressNode = FocusNode();
@@ -50,30 +50,39 @@ class OrderWiseShippingAddScreenState extends State<OrderWiseShippingAddScreen> 
     _costController!.dispose();
     super.dispose();
   }
-  void callback(bool route, String error ){
-    if(route){
-      if(widget.shipping==null){
-        showCustomSnackBarWidget(getTranslated('shipping_method_added_successfully', context)!, context, isError: false);
+
+  void callback(bool route, String error) {
+    if (route) {
+      if (widget.shipping == null) {
+        showCustomSnackBarWidget(
+            getTranslated('shipping_method_added_successfully', context)!,
+            context,
+            isError: false);
         Navigator.of(context).pop();
-      }else{
-        showCustomSnackBarWidget(getTranslated('shipping_method_update_successfully', context)!, context, isError: false);
+      } else {
+        showCustomSnackBarWidget(
+            getTranslated('shipping_method_update_successfully', context)!,
+            context,
+            isError: false);
         Navigator.of(context).pop();
       }
 
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const OrderWiseShippingScreen()));
-
-    }else{
-      showCustomSnackBarWidget(error,context,  sanckBarType: SnackBarType.warning);
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const OrderWiseShippingScreen()));
+    } else {
+      showCustomSnackBarWidget(error, context,
+          sanckBarType: SnackBarType.warning);
     }
-
-}
+  }
 
   @override
   Widget build(BuildContext context) {
-    if(widget.shipping!=null) {
+    if (widget.shipping != null) {
       _titleController!.text = widget.shipping!.title!;
       _durationController!.text = widget.shipping!.duration!;
-      _costController!.text = PriceConverter.convertAmount(widget.shipping!.cost!, context).toString();
+      _costController!.text =
+          PriceConverter.convertAmount(widget.shipping!.cost!, context)
+              .toString();
     }
     return Dialog(
       child: Padding(
@@ -81,18 +90,23 @@ class OrderWiseShippingAddScreenState extends State<OrderWiseShippingAddScreen> 
         child: Consumer<AuthController>(
           builder: (context, authProvider, child) => Form(
             key: _formKeyLogin,
-            child: ListView(shrinkWrap: true, physics: const BouncingScrollPhysics(), children: [
-
+            child: ListView(
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
+              children: [
                 const SizedBox(height: Dimensions.paddingSizeSmall),
                 Text(getTranslated('shipping_method_title', context)!,
-                    style: titilliumRegular.copyWith(fontSize: Dimensions.fontSizeDefault,
-                      color: Theme.of(context).hintColor,)),
+                    style: titilliumRegular.copyWith(
+                      fontSize: Dimensions.fontSizeDefault,
+                      color: Theme.of(context).hintColor,
+                    )),
 
                 const SizedBox(height: Dimensions.paddingSizeSmall),
 
                 CustomTextFieldWidget(
                   border: true,
-                  hintText: getTranslated('enter_shipping_method_title', context),
+                  hintText:
+                      getTranslated('enter_shipping_method_title', context),
                   focusNode: _resNameNode,
                   nextNode: _addressNode,
                   controller: _titleController,
@@ -102,8 +116,10 @@ class OrderWiseShippingAddScreenState extends State<OrderWiseShippingAddScreen> 
                 const SizedBox(height: Dimensions.paddingSizeLarge),
 
                 Text(getTranslated('duration', context)!,
-                    style: titilliumRegular.copyWith(fontSize: Dimensions.fontSizeDefault,
-                      color: Theme.of(context).hintColor,)),
+                    style: titilliumRegular.copyWith(
+                      fontSize: Dimensions.fontSizeDefault,
+                      color: Theme.of(context).hintColor,
+                    )),
 
                 const SizedBox(height: Dimensions.paddingSizeSmall),
                 CustomTextFieldWidget(
@@ -117,8 +133,10 @@ class OrderWiseShippingAddScreenState extends State<OrderWiseShippingAddScreen> 
 
                 const SizedBox(height: 22),
                 Text(getTranslated('cost', context)!,
-                    style: titilliumRegular.copyWith(fontSize: Dimensions.fontSizeDefault,
-                      color: Theme.of(context).hintColor,)),
+                    style: titilliumRegular.copyWith(
+                      fontSize: Dimensions.fontSizeDefault,
+                      color: Theme.of(context).hintColor,
+                    )),
 
                 const SizedBox(height: Dimensions.paddingSizeSmall),
                 CustomTextFieldWidget(
@@ -134,38 +152,60 @@ class OrderWiseShippingAddScreenState extends State<OrderWiseShippingAddScreen> 
                 // for login button
                 const SizedBox(height: 50),
 
-                Consumer<ShippingController>(builder: (context, shipProvider, child) {
-                  return !shipProvider.isLoading ? CustomButtonWidget(
-                    fontColor: Colors.white,
-                    btnTxt: widget.shipping == null?
-                    getTranslated('save', context):getTranslated('update', context),
-                    onTap: ()  {
-                      String title = _titleController!.text.trim();
-                      String cost = _costController!.text.trim();
-                      String duration = _durationController!.text.trim();
+                Consumer<ShippingController>(
+                    builder: (context, shipProvider, child) {
+                  return !shipProvider.isLoading
+                      ? CustomButtonWidget(
+                          fontColor: Colors.white,
+                          btnTxt: widget.shipping == null
+                              ? getTranslated('save', context)
+                              : getTranslated('update', context),
+                          onTap: () {
+                            String title = _titleController!.text.trim();
+                            String cost = _costController!.text.trim();
+                            String duration = _durationController!.text.trim();
 
-                      if(title.isEmpty){
-                        showCustomSnackBarWidget(getTranslated('enter_title', context),context,  sanckBarType: SnackBarType.warning);
-                      }else if(cost.isEmpty){
-                        showCustomSnackBarWidget(getTranslated('enter_cost', context),context,  sanckBarType: SnackBarType.warning);
-                      }else if(duration.isEmpty){
-                        showCustomSnackBarWidget(getTranslated('enter_duration', context),context,  sanckBarType: SnackBarType.warning);
-                      } else{
-                        shipping!.title = title;
-                        shipping!.cost = PriceConverter.systemCurrencyToDefaultCurrency(double.parse(cost), context);
-                        shipping!.duration = duration;
-                        if (kDebugMode) {
-                          print('-------${shipping!.cost}');
-                        }
-                        if(widget.shipping == null){
-                          Provider.of<ShippingController>(context,listen: false).addShippingMethod(shipping, callback);
-                        }
-                        else if(widget.shipping != null){
-                          Provider.of<ShippingController>(context,listen: false).updateShippingMethod(shipping!.title,shipping!.duration,shipping!.cost,widget.shipping!.id, callback);
-                        }
-                      }
-                    },
-                  ) : const Center(child: CircularProgressIndicator());
+                            if (title.isEmpty) {
+                              showCustomSnackBarWidget(
+                                  getTranslated('enter_title', context),
+                                  context,
+                                  sanckBarType: SnackBarType.warning);
+                            } else if (cost.isEmpty) {
+                              showCustomSnackBarWidget(
+                                  getTranslated('enter_cost', context), context,
+                                  sanckBarType: SnackBarType.warning);
+                            } else if (duration.isEmpty) {
+                              showCustomSnackBarWidget(
+                                  getTranslated('enter_duration', context),
+                                  context,
+                                  sanckBarType: SnackBarType.warning);
+                            } else {
+                              shipping!.title = title;
+                              shipping!.cost = PriceConverter
+                                  .systemCurrencyToDefaultCurrency(
+                                      double.parse(cost), context);
+                              shipping!.duration = duration;
+                              if (kDebugMode) {
+                                print('-------${shipping!.cost}');
+                              }
+                              if (widget.shipping == null) {
+                                Provider.of<ShippingController>(context,
+                                        listen: false)
+                                    .addShippingMethod(shipping, callback);
+                              } else if (widget.shipping != null) {
+                                Provider.of<ShippingController>(context,
+                                        listen: false)
+                                    .updateShippingMethod(
+                                        shipping!.title,
+                                        shipping!.duration,
+                                        shipping!.cost,
+                                        widget.shipping!.id,
+                                        callback);
+                              }
+                            }
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator());
                 }),
               ],
             ),

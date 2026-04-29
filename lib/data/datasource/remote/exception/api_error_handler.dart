@@ -5,7 +5,6 @@ import 'package:sixvalley_vendor_app/data/model/response/base/error_response.dar
 import 'package:sixvalley_vendor_app/features/auth/controllers/auth_controller.dart';
 import 'package:sixvalley_vendor_app/main.dart';
 
-
 class ApiErrorHandler {
   static dynamic getMessage(dynamic error) {
     dynamic errorDescription = "";
@@ -23,37 +22,39 @@ class ApiErrorHandler {
               errorDescription = "Send timeout";
               break;
             case DioExceptionType.receiveTimeout:
-              errorDescription = "Receive timeout in connection with API server";
+              errorDescription =
+                  "Receive timeout in connection with API server";
               break;
             case DioExceptionType.badResponse:
               switch (error.response!.statusCode) {
-              case 403:
-                if (kDebugMode) {
-                  print("===403===>>${error.response!.data}");
-                }
-                  if(error.response!.data.containsKey('key')){
+                case 403:
+                  if (kDebugMode) {
+                    print("===403===>>${error.response!.data}");
+                  }
+                  if (error.response!.data.containsKey('key')) {
                     errorDescription = error.response!.data['key'];
-                  }else if(error.response!.data['errors'] != null){
-                    ErrorResponse errorResponse = ErrorResponse.fromJson(error.response?.data);
+                  } else if (error.response!.data['errors'] != null) {
+                    ErrorResponse errorResponse =
+                        ErrorResponse.fromJson(error.response?.data);
                     errorDescription = errorResponse.errors?[0].message;
-                  }else{
+                  } else {
                     errorDescription = error.response!.data['message'];
                   }
                   break;
                 case 401:
-
                   if (kDebugMode) {
                     print("==401==>>401");
-                    print("====>>${Provider.of<AuthController>(Get.context!,listen: false).isUnAuthorize}");
+                    print(
+                        "====>>${Provider.of<AuthController>(Get.context!, listen: false).isUnAuthorize}");
                   }
 
-
-                  if(error.response!.data.containsKey('loginStatus')) {
+                  if (error.response!.data.containsKey('loginStatus')) {
                     errorDescription = error.response!.data['loginStatus'];
-                  } else if(error.response!.data['errors'] != null){
-                    ErrorResponse errorResponse = ErrorResponse.fromJson(error.response?.data);
+                  } else if (error.response!.data['errors'] != null) {
+                    ErrorResponse errorResponse =
+                        ErrorResponse.fromJson(error.response?.data);
                     errorDescription = errorResponse.errors?[0].message;
-                  } else{
+                  } else {
                     errorDescription = error.response!.data['message'];
                   }
 
@@ -69,10 +70,11 @@ class ApiErrorHandler {
                     print("==Responce=405=>>${error.response!.data}");
                   }
                 case 404:
-                  if(error.response!.data['errors'] != null){
-                    ErrorResponse errorResponse = ErrorResponse.fromJson(error.response?.data);
+                  if (error.response!.data['errors'] != null) {
+                    ErrorResponse errorResponse =
+                        ErrorResponse.fromJson(error.response?.data);
                     errorDescription = errorResponse.errors?[0].message;
-                  }else{
+                  } else {
                     errorDescription = error.response!.data['message'];
                   }
                   break;
@@ -81,28 +83,32 @@ class ApiErrorHandler {
                     print("==Responce=500=>>${error.response!.data}");
                   }
                 case 503:
-                  if(error.response!.data['message'] != null){
+                  if (error.response!.data['message'] != null) {
                     errorDescription = error.response!.data['message'];
                   }
                 case 429:
-                //errorDescription = error.response!.statusMessage;
+                  //errorDescription = error.response!.statusMessage;
                   break;
                 default:
-                  ErrorResponse errorResponse = ErrorResponse.fromJson(error.response!.data);
-                  if (errorResponse.errors != null && errorResponse.errors!.isNotEmpty) {
+                  ErrorResponse errorResponse =
+                      ErrorResponse.fromJson(error.response!.data);
+                  if (errorResponse.errors != null &&
+                      errorResponse.errors!.isNotEmpty) {
                     errorDescription = errorResponse;
-                  } else {errorDescription = "Failed to load data - status code: ${error.response!.statusCode}";
+                  } else {
+                    errorDescription =
+                        "Failed to load data - status code: ${error.response!.statusCode}";
                   }
               }
               break;
             case DioExceptionType.badCertificate:
-            // TODO: Handle this case.
+              // TODO: Handle this case.
               break;
             case DioExceptionType.connectionError:
-            // TODO: Handle this case.
+              // TODO: Handle this case.
               break;
             case DioExceptionType.unknown:
-            // TODO: Handle this case.
+              // TODO: Handle this case.
               break;
           }
         } else {

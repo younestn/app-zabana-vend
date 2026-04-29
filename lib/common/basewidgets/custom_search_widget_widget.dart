@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CustomSerachWidget extends StatefulWidget {
-
   final double width;
   final TextEditingController textController;
   final Icon? suffixIcon;
@@ -21,14 +20,11 @@ class CustomSerachWidget extends StatefulWidget {
 
   const CustomSerachWidget({
     super.key,
-
     required this.width,
-
     required this.textController,
     this.suffixIcon,
     this.prefixIcon,
     this.helpText = "Search...",
-
     this.color = Colors.white,
     required this.onSuffixTap,
     this.animationDurationInMilli = 375,
@@ -71,7 +67,8 @@ class CustomSerachWidgetState extends State<CustomSerachWidget>
   Widget build(BuildContext context) {
     return Container(
       height: 100.0,
-      alignment: widget.rtl ? Alignment.centerRight : const Alignment(-1.0, 0.0),
+      alignment:
+          widget.rtl ? Alignment.centerRight : const Alignment(-1.0, 0.0),
       child: AnimatedContainer(
         duration: Duration(milliseconds: widget.animationDurationInMilli),
         height: 48.0,
@@ -123,13 +120,13 @@ class CustomSerachWidgetState extends State<CustomSerachWidget>
                               toggle = 0;
                             });
                           }
-                        }finally {}
+                        } finally {}
                       },
-
-                      child: widget.suffixIcon ?? const Icon(
-                        Icons.close,
-                        size: 20.0,
-                      ),
+                      child: widget.suffixIcon ??
+                          const Icon(
+                            Icons.close,
+                            size: 20.0,
+                          ),
                     ),
                   ),
                 ),
@@ -140,7 +137,6 @@ class CustomSerachWidgetState extends State<CustomSerachWidget>
               left: (toggle == 0) ? 20.0 : 40.0,
               curve: Curves.easeOut,
               top: 11.0,
-
               child: AnimatedOpacity(
                 opacity: (toggle == 0) ? 0.0 : 1.0,
                 duration: const Duration(milliseconds: 200),
@@ -183,7 +179,6 @@ class CustomSerachWidgetState extends State<CustomSerachWidget>
                 ),
               ),
             ),
-
             Material(
               color: widget.color,
               borderRadius: BorderRadius.circular(30.0),
@@ -191,15 +186,15 @@ class CustomSerachWidgetState extends State<CustomSerachWidget>
                 splashRadius: 19.0,
                 icon: widget.prefixIcon != null
                     ? toggle == 1
-                    ? const Icon(Icons.arrow_back_ios)
-                    : widget.prefixIcon!
+                        ? const Icon(Icons.arrow_back_ios)
+                        : widget.prefixIcon!
                     : Icon(
-                  toggle == 1 ? Icons.arrow_back_ios : Icons.search,
-                  size: 20.0,
-                ),
+                        toggle == 1 ? Icons.arrow_back_ios : Icons.search,
+                        size: 20.0,
+                      ),
                 onPressed: () {
                   setState(
-                        () {
+                    () {
                       if (toggle == 0) {
                         toggle = 1;
                         setState(() {

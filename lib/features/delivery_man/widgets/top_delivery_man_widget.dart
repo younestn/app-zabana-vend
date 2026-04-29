@@ -17,67 +17,123 @@ class TopDeliveryManWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.push(context,
-          MaterialPageRoute(builder: (_) => DeliveryManDetailsScreen(deliveryMan: deliveryMan))),
+      onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (_) =>
+                  DeliveryManDetailsScreen(deliveryMan: deliveryMan))),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(Dimensions.paddingSizeExtraSmall,0,Dimensions.paddingSizeExtraSmall,Dimensions.paddingSizeExtraSmall),
-        child: Column(children: [
-            Container(decoration: BoxDecoration(
+        padding: const EdgeInsets.fromLTRB(Dimensions.paddingSizeExtraSmall, 0,
+            Dimensions.paddingSizeExtraSmall, Dimensions.paddingSizeExtraSmall),
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
                   color: Theme.of(context).cardColor,
-                  borderRadius: BorderRadius.circular(Dimensions.paddingSizeExtraSmall),
-                  boxShadow: [BoxShadow(color: Provider.of<ThemeController>(context, listen: false).darkTheme?Theme.of(context).primaryColor.withValues(alpha:0):
-                  Theme.of(context).primaryColor.withValues(alpha:.125),
-                      blurRadius: 1,spreadRadius: 1,offset: const Offset(0,1))]
-
+                  borderRadius:
+                      BorderRadius.circular(Dimensions.paddingSizeExtraSmall),
+                  boxShadow: [
+                    BoxShadow(
+                        color:
+                            Provider.of<ThemeController>(context, listen: false)
+                                    .darkTheme
+                                ? Theme.of(context)
+                                    .primaryColor
+                                    .withValues(alpha: 0)
+                                : Theme.of(context)
+                                    .primaryColor
+                                    .withValues(alpha: .125),
+                        blurRadius: 1,
+                        spreadRadius: 1,
+                        offset: const Offset(0, 1))
+                  ]),
+              child: Column(
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(top: Dimensions.paddingSizeLarge),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Theme.of(context)
+                              .primaryColor
+                              .withValues(alpha: .10),
+                          borderRadius: BorderRadius.circular(100),
+                          border: Border.all(
+                              color: Theme.of(context)
+                                  .primaryColor
+                                  .withValues(alpha: .1),
+                              width: .5)),
+                      width: Provider.of<LocalizationController>(context,
+                                  listen: false)
+                              .isLtr
+                          ? 75
+                          : 72,
+                      height: Provider.of<LocalizationController>(context,
+                                  listen: false)
+                              .isLtr
+                          ? 75
+                          : 72,
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: CustomImageWidget(
+                            image: '${deliveryMan!.imageFullUrl?.path}',
+                            height: Dimensions.imageSize,
+                            width: Dimensions.imageSize,
+                          )),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: Dimensions.paddingSizeExtraSmall,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: Dimensions.paddingSizeExtraSmall),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: Dimensions.paddingSizeSmall),
+                          child: Text(
+                              '${deliveryMan!.fName!} ${deliveryMan!.lName!}',
+                              textAlign: TextAlign.center,
+                              style: robotoBold.copyWith(
+                                  fontSize: Dimensions.fontSizeDefault),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis),
+                        ),
+                        const SizedBox(height: Dimensions.paddingSeven),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width / 2,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: Dimensions.paddingSizeSmall,
+                        horizontal: Dimensions.paddingSizeSmall),
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor,
+                        borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(
+                                Dimensions.paddingSizeExtraSmall),
+                            bottomRight: Radius.circular(
+                                Dimensions.paddingSizeExtraSmall))),
+                    child: Column(
+                      children: [
+                        Text(
+                          NumberFormat.compact()
+                              .format(deliveryMan?.deliveredOrderCount ?? 0),
+                          style: robotoMedium.copyWith(color: Colors.white),
+                        ),
+                        Text(
+                          '${getTranslated('order_delivered', context)}',
+                          style: robotoRegular.copyWith(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
               ),
-              child: Column(children: [
-                Padding(padding: const EdgeInsets.only(top: Dimensions.paddingSizeLarge),
-                  child: Container(decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor.withValues(alpha:.10),
-                    borderRadius: BorderRadius.circular(100),
-                    border: Border.all(color: Theme.of(context).primaryColor.withValues(alpha:.1), width: .5)),
-                    width: Provider.of<LocalizationController>(context, listen: false).isLtr?  75: 72,
-                    height: Provider.of<LocalizationController>(context, listen: false).isLtr?  75: 72,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: CustomImageWidget(image: '${deliveryMan!.imageFullUrl?.path}',
-                        height: Dimensions.imageSize,width: Dimensions.imageSize,)
-
-                    ),
-                  ),
-                ),
-                const SizedBox(height: Dimensions.paddingSizeExtraSmall,),
-                Padding(padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall),
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
-                      child: Text('${deliveryMan!.fName!} ${deliveryMan!.lName!}',textAlign: TextAlign.center,
-                          style: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault),
-                          maxLines: 1, overflow: TextOverflow.ellipsis),
-                    ),
-                    const SizedBox(height: Dimensions.paddingSeven),
-
-                  ],),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width/2,
-                  padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall, horizontal: Dimensions.paddingSizeSmall),
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(Dimensions.paddingSizeExtraSmall),
-                          bottomRight: Radius.circular(Dimensions.paddingSizeExtraSmall))
-                  ),
-                  child: Column(
-                    children: [
-                      Text(NumberFormat.compact().format(deliveryMan?.deliveredOrderCount ?? 0),
-                        style: robotoMedium.copyWith(color: Colors.white),),
-
-                      Text('${getTranslated('order_delivered', context)}',
-                        style: robotoRegular.copyWith(color: Colors.white),),
-                    ],
-                  ),
-                )
-              ],),
             ),
           ],
         ),

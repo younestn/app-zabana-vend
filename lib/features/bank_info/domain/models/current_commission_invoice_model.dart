@@ -65,9 +65,12 @@ class CurrentCommissionInvoiceModel {
       periodStart: json['period_start'],
       periodEnd: json['period_end'],
       ordersCount: int.tryParse(json['orders_count'].toString()) ?? 0,
-      orderCommissionTotal: double.tryParse(json['order_commission_total'].toString()) ?? 0,
-      manualAdjustmentTotal: double.tryParse(json['manual_adjustment_total'].toString()) ?? 0,
-      totalCommission: double.tryParse(json['total_commission'].toString()) ?? 0,
+      orderCommissionTotal:
+          double.tryParse(json['order_commission_total'].toString()) ?? 0,
+      manualAdjustmentTotal:
+          double.tryParse(json['manual_adjustment_total'].toString()) ?? 0,
+      totalCommission:
+          double.tryParse(json['total_commission'].toString()) ?? 0,
       paymentStatus: json['payment_status'] ?? 'unpaid',
       paidAt: json['paid_at'],
       paymentNote: json['payment_note'],

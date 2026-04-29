@@ -16,19 +16,19 @@ class DeliveryManModel {
 
   DeliveryManModel(
       {this.id,
-        this.sellerId,
-        this.fName,
-        this.lName,
-        this.phone,
-        this.email,
-        this.identityNumber,
-        this.identityType,
-        this.identityImage,
-        this.image,
-        this.isActive,
-        this.createdAt,
-        this.updatedAt,
-        this.fcmToken});
+      this.sellerId,
+      this.fName,
+      this.lName,
+      this.phone,
+      this.email,
+      this.identityNumber,
+      this.identityType,
+      this.identityImage,
+      this.image,
+      this.isActive,
+      this.createdAt,
+      this.updatedAt,
+      this.fcmToken});
 
   DeliveryManModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];

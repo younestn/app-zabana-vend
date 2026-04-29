@@ -7,7 +7,7 @@ import 'package:sixvalley_vendor_app/data/model/response/base/api_response.dart'
 import 'package:sixvalley_vendor_app/features/splash/domain/repositories/splash_repository_interface.dart';
 import 'package:sixvalley_vendor_app/utill/app_constants.dart';
 
-class SplashRepository implements SplashRepositoryInterface{
+class SplashRepository implements SplashRepositoryInterface {
   final DioClient? dioClient;
   final SharedPreferences? sharedPreferences;
   SplashRepository({required this.dioClient, required this.sharedPreferences});
@@ -30,7 +30,7 @@ class SplashRepository implements SplashRepositoryInterface{
     if (!sharedPreferences!.containsKey(AppConstants.searchAddress)) {
       sharedPreferences!.setStringList(AppConstants.searchAddress, []);
     }
-    if(!sharedPreferences!.containsKey(AppConstants.currency)) {
+    if (!sharedPreferences!.containsKey(AppConstants.currency)) {
       sharedPreferences!.setString(AppConstants.currency, '');
     }
   }
@@ -51,15 +51,15 @@ class SplashRepository implements SplashRepositoryInterface{
   }
 
   @override
-  Future<ApiResponse> getShippingTypeList(BuildContext context, String type) async {
+  Future<ApiResponse> getShippingTypeList(
+      BuildContext context, String type) async {
     try {
       List<String> shippingTypeList = [];
-      shippingTypeList = [
-        'order_wise',
-        'product_wise',
-        'category_wise'
-        ];
-      Response response = Response(requestOptions: RequestOptions(path: ''), data: shippingTypeList, statusCode: 200);
+      shippingTypeList = ['order_wise', 'product_wise', 'category_wise'];
+      Response response = Response(
+          requestOptions: RequestOptions(path: ''),
+          data: shippingTypeList,
+          statusCode: 200);
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -69,13 +69,13 @@ class SplashRepository implements SplashRepositoryInterface{
   @override
   Future<ApiResponse> getBusinessPages(String type) async {
     try {
-      final response = await dioClient!.get(AppConstants.businessPagesUri+type);
+      final response =
+          await dioClient!.get(AppConstants.businessPagesUri + type);
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
-
 
   @override
   Future add(value) {
@@ -106,5 +106,4 @@ class SplashRepository implements SplashRepositoryInterface{
     // TODO: implement update
     throw UnimplementedError();
   }
-
 }

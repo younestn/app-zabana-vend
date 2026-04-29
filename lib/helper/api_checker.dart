@@ -9,21 +9,27 @@ import 'package:sixvalley_vendor_app/features/auth/screens/auth_screen.dart';
 
 class ApiChecker {
   static void checkApi(ApiResponse apiResponse) {
-    if(apiResponse.error.toString() == 'unauthorized') {
-      Provider.of<AuthController>(Get.context!,listen: false).clearSharedData();
+    if (apiResponse.error.toString() == 'unauthorized') {
+      Provider.of<AuthController>(Get.context!, listen: false)
+          .clearSharedData();
 
-      if(Provider.of<AuthController>(Get.context!,listen: false).isUnAuthorize == false) {
+      if (Provider.of<AuthController>(Get.context!, listen: false)
+              .isUnAuthorize ==
+          false) {
         debugPrint("==401==>>Inside");
         try {
-          Navigator.of(Get.context!).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const AuthScreen()), (route) => false);
-        } catch( ex) {
+          Navigator.of(Get.context!).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const AuthScreen()),
+              (route) => false);
+        } catch (ex) {
           debugPrint("===RouteException==>>$ex");
         }
       }
-      Provider.of<AuthController>(Get.context!,listen: false).setUnAuthorize(true, update: true);
+      Provider.of<AuthController>(Get.context!, listen: false)
+          .setUnAuthorize(true, update: true);
 
       // Navigator.of(Get.context!).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const AuthScreen()), (route) => false);
-    }else {
+    } else {
       String? errorMessage;
       if (apiResponse.error is String) {
         errorMessage = apiResponse.error.toString();
@@ -33,8 +39,9 @@ class ApiChecker {
       if (kDebugMode) {
         print(errorMessage);
       }
-      if(errorMessage != ''){
-        showCustomSnackBarWidget(errorMessage, Get.context!, sanckBarType: SnackBarType.error);
+      if (errorMessage != '') {
+        showCustomSnackBarWidget(errorMessage, Get.context!,
+            sanckBarType: SnackBarType.error);
       }
     }
   }

@@ -12,11 +12,13 @@ class RefundDetailShimmer extends StatelessWidget {
     final isDark = Provider.of<ThemeController>(context).darkTheme;
 
     // Background color for the pricing container (a bit different from cardColor)
-    final pricingContainerBgColor = Theme.of(context).disabledColor.withValues(alpha: 0.05);
+    final pricingContainerBgColor =
+        Theme.of(context).disabledColor.withValues(alpha: 0.05);
 
     // Shimmer colors inside pricing container (contrast with bg color)
     final baseColor = Theme.of(context).disabledColor.withValues(alpha: 0.2);
-    final highlightColor = Theme.of(context).disabledColor.withValues(alpha: 0.1);
+    final highlightColor =
+        Theme.of(context).disabledColor.withValues(alpha: 0.1);
 
     BoxDecoration boxDecoration = BoxDecoration(
       borderRadius: BorderRadius.circular(10),
@@ -39,28 +41,31 @@ class RefundDetailShimmer extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
                   // RefundWidget shimmer block
                   Shimmer.fromColors(
                     baseColor: baseColor,
                     highlightColor: highlightColor,
                     child: Container(
                       margin: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                      padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                      padding:
+                          const EdgeInsets.all(Dimensions.paddingSizeSmall),
                       decoration: boxDecoration,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: List.generate(4, (index) => Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          child: Container(
-                            height: 15,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: baseColor,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                        )),
+                        children: List.generate(
+                            4,
+                            (index) => Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5),
+                                  child: Container(
+                                    height: 15,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: baseColor,
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                  ),
+                                )),
                       ),
                     ),
                   ),
@@ -70,35 +75,42 @@ class RefundDetailShimmer extends StatelessWidget {
                     highlightColor: highlightColor,
                     child: Container(
                       margin: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                      padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                      padding:
+                          const EdgeInsets.all(Dimensions.paddingSizeSmall),
                       decoration: boxDecoration,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: List.generate(5, (index) => Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          child: Container(
-                            height: 15,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: baseColor,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                        )),
+                        children: List.generate(
+                            5,
+                            (index) => Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5),
+                                  child: Container(
+                                    height: 15,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: baseColor,
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                  ),
+                                )),
                       ),
                     ),
                   ),
 
                   // RefundPricingWidget shimmer with distinct background color
                   Container(
-                    margin: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSize),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: Dimensions.paddingSize),
                     padding: const EdgeInsets.symmetric(
                       horizontal: Dimensions.paddingSizeOrder,
                       vertical: Dimensions.paddingSizeSmall,
                     ),
                     decoration: BoxDecoration(
-                      color: pricingContainerBgColor, // distinct background color here
-                      borderRadius: BorderRadius.circular(Dimensions.paddingSizeExtraSmall),
+                      color:
+                          pricingContainerBgColor, // distinct background color here
+                      borderRadius: BorderRadius.circular(
+                          Dimensions.paddingSizeExtraSmall),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.02),
@@ -111,36 +123,44 @@ class RefundDetailShimmer extends StatelessWidget {
                       baseColor: baseColor,
                       highlightColor: highlightColor,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: Dimensions.paddingSizeSmall),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-
-                            ...List.generate(6, (_) => Padding(
-                              padding: const EdgeInsets.only(bottom: Dimensions.paddingSizeSmall),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    height: 12,
-                                    width: 140,
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).hintColor.withValues(alpha: 0.4),
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                  ),
-                                  const Spacer(),
-
-                                  Container(
-                                    height: 12,
-                                    width: 70,
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).hintColor.withValues(alpha: 0.4),
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )),
+                            ...List.generate(
+                                6,
+                                (_) => Padding(
+                                      padding: const EdgeInsets.only(
+                                          bottom: Dimensions.paddingSizeSmall),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            height: 12,
+                                            width: 140,
+                                            decoration: BoxDecoration(
+                                              color: Theme.of(context)
+                                                  .hintColor
+                                                  .withValues(alpha: 0.4),
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          Container(
+                                            height: 12,
+                                            width: 70,
+                                            decoration: BoxDecoration(
+                                              color: Theme.of(context)
+                                                  .hintColor
+                                                  .withValues(alpha: 0.4),
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )),
 
                             // Divider line
                             Container(
@@ -185,7 +205,8 @@ class RefundDetailShimmer extends StatelessWidget {
                     highlightColor: highlightColor,
                     child: Container(
                       margin: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                      padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                      padding:
+                          const EdgeInsets.all(Dimensions.paddingSizeSmall),
                       decoration: boxDecoration,
                       child: Row(
                         children: [
@@ -201,17 +222,21 @@ class RefundDetailShimmer extends StatelessWidget {
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: List.generate(2, (index) => Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 5),
-                                child: Container(
-                                  height: 10,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: baseColor,
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                ),
-                              )),
+                              children: List.generate(
+                                  2,
+                                  (index) => Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 5),
+                                        child: Container(
+                                          height: 10,
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                            color: baseColor,
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                          ),
+                                        ),
+                                      )),
                             ),
                           )
                         ],
@@ -225,7 +250,8 @@ class RefundDetailShimmer extends StatelessWidget {
                     highlightColor: highlightColor,
                     child: Container(
                       margin: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                      padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                      padding:
+                          const EdgeInsets.all(Dimensions.paddingSizeSmall),
                       decoration: boxDecoration,
                       child: Row(
                         children: [
@@ -241,17 +267,21 @@ class RefundDetailShimmer extends StatelessWidget {
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: List.generate(2, (index) => Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 5),
-                                child: Container(
-                                  height: 10,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: baseColor,
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                ),
-                              )),
+                              children: List.generate(
+                                  2,
+                                  (index) => Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 5),
+                                        child: Container(
+                                          height: 10,
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                            color: baseColor,
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                          ),
+                                        ),
+                                      )),
                             ),
                           )
                         ],
@@ -264,7 +294,6 @@ class RefundDetailShimmer extends StatelessWidget {
               ),
             ),
           ),
-
         ),
 
         // Approve / Reject button shimmer

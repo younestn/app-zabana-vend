@@ -6,37 +6,38 @@ import 'package:sixvalley_vendor_app/utill/app_constants.dart';
 import 'dart:async';
 import 'clearance_sale_repository_interface.dart';
 
-class ClearanceSaleRepository implements ClearanceSaleRepositoryInterface{
+class ClearanceSaleRepository implements ClearanceSaleRepositoryInterface {
   final DioClient? dioClient;
   ClearanceSaleRepository({required this.dioClient});
 
   @override
   Future<ApiResponse> getChatList(String type, int offset) async {
     try {
-      final response = await dioClient!.get('${AppConstants.cartUri}$type?limit=30&offset=$offset');
+      final response = await dioClient!
+          .get('${AppConstants.cartUri}$type?limit=30&offset=$offset');
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
-
 
   @override
   Future<ApiResponse> getClearanceSaleProductList(int offset) async {
     try {
-      final response = await dioClient!.get('${AppConstants.clearanceSaleProductList}?limit=10&offset=$offset');
+      final response = await dioClient!.get(
+          '${AppConstants.clearanceSaleProductList}?limit=10&offset=$offset');
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
-
 
   @override
   Future<ApiResponse> clearanceSaleProductDelete(int? productId) async {
     String productId0 = productId?.toString() ?? '';
     try {
-      final response = await dioClient!.post('${AppConstants.clearanceSaleDeleteProduct}$productId0');
+      final response = await dioClient!
+          .post('${AppConstants.clearanceSaleDeleteProduct}$productId0');
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -49,7 +50,8 @@ class ClearanceSaleRepository implements ClearanceSaleRepositoryInterface{
   @override
   Future<ApiResponse> clearanceSaleProductDeleteAll() async {
     try {
-      final response = await dioClient!.post(AppConstants.clearanceSaleDeleteAllProduct);
+      final response =
+          await dioClient!.post(AppConstants.clearanceSaleDeleteAllProduct);
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -57,22 +59,21 @@ class ClearanceSaleRepository implements ClearanceSaleRepositoryInterface{
   }
 
   @override
-  Future<ApiResponse> clearanceSaleProductStatusUpdate(int productId, int isActive) async {
+  Future<ApiResponse> clearanceSaleProductStatusUpdate(
+      int productId, int isActive) async {
     try {
       final response = await dioClient!.post(
-        AppConstants.clearanceSaleProductStatusUpdate,
-        data: {'product_id' : productId, 'is_active' : isActive  }
-      );
+          AppConstants.clearanceSaleProductStatusUpdate,
+          data: {'product_id': productId, 'is_active': isActive});
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
 
-
-
   @override
-  Future<ApiResponse> getSellerProductList(String sellerId, int offset, String languageCode, String search ) async {
+  Future<ApiResponse> getSellerProductList(
+      String sellerId, int offset, String languageCode, String search) async {
     try {
       final response = await dioClient!.get(
         '${AppConstants.sellerProductUri}$sellerId/all-products?limit=20&&offset=$offset&search=$search&offer_type=clearance_sale',
@@ -84,26 +85,23 @@ class ClearanceSaleRepository implements ClearanceSaleRepositoryInterface{
     }
   }
 
-
   @override
   Future<ApiResponse> getConfigData() async {
     try {
-      final response = await dioClient!.get(AppConstants.clearanceSaleConfigData);
+      final response =
+          await dioClient!.get(AppConstants.clearanceSaleConfigData);
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
-
 
   @override
   Future<ApiResponse> updateConfigStatus(int status) async {
     try {
-      final response = await dioClient!.post(AppConstants.clearanceSaleConfigStatusUpdate,
-      data: {
-        "status" : status
-      }
-      );
+      final response = await dioClient!.post(
+          AppConstants.clearanceSaleConfigStatusUpdate,
+          data: {"status": status});
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -111,11 +109,11 @@ class ClearanceSaleRepository implements ClearanceSaleRepositoryInterface{
   }
 
   @override
-  Future<ApiResponse> updateClearanceSaleConfigData(Map<String,dynamic> data) async {
+  Future<ApiResponse> updateClearanceSaleConfigData(
+      Map<String, dynamic> data) async {
     try {
-      final response = await dioClient!.post(AppConstants.clearanceSaleConfigDataUpdate,
-          data: data
-      );
+      final response = await dioClient!
+          .post(AppConstants.clearanceSaleConfigDataUpdate, data: data);
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -123,22 +121,22 @@ class ClearanceSaleRepository implements ClearanceSaleRepositoryInterface{
   }
 
   @override
-  Future<ApiResponse> clearanceSaleProductAdd(Map<String,dynamic> data) async {
+  Future<ApiResponse> clearanceSaleProductAdd(Map<String, dynamic> data) async {
     try {
-      final response = await dioClient!.post(AppConstants.clearanceSaleProductAdd,
-          data: data
-      );
+      final response = await dioClient!
+          .post(AppConstants.clearanceSaleProductAdd, data: data);
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
 
-
   @override
-  Future<ApiResponse> updateClearanceSaleProductDiscount(Map<String,dynamic> data) async {
+  Future<ApiResponse> updateClearanceSaleProductDiscount(
+      Map<String, dynamic> data) async {
     try {
-      final response = await dioClient!.post(AppConstants.clearanceSaleProductDiscountUpdate, data: data);
+      final response = await dioClient!
+          .post(AppConstants.clearanceSaleProductDiscountUpdate, data: data);
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));

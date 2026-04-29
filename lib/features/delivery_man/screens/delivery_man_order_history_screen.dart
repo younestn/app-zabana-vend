@@ -11,48 +11,54 @@ class DeliveryManOrderListScreen extends StatefulWidget {
   const DeliveryManOrderListScreen({super.key, this.deliveryMan});
 
   @override
-  State<DeliveryManOrderListScreen> createState() => _DeliveryManOrderListScreenState();
+  State<DeliveryManOrderListScreen> createState() =>
+      _DeliveryManOrderListScreenState();
 }
 
-class _DeliveryManOrderListScreenState extends State<DeliveryManOrderListScreen> {
+class _DeliveryManOrderListScreenState
+    extends State<DeliveryManOrderListScreen> {
   ScrollController scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<DeliveryManController>(
-      builder: (context, order, child) {
+    return Consumer<DeliveryManController>(builder: (context, order, child) {
+      if (order.deliveryManDetails == null)
+        return const Center(child: CircularProgressIndicator());
 
-        if(order.deliveryManDetails == null) return const Center(child: CircularProgressIndicator());
-
-        return (order.deliverymanOrderList?.orders?.isNotEmpty ?? false) ?
-        RefreshIndicator(
-          backgroundColor: Theme.of(context).primaryColor,
-          onRefresh: () async {
-            await order.getDeliveryManOrderList(context,1,widget.deliveryMan!.id);
-          },
-          child: SingleChildScrollView(
-            controller: scrollController,
-            child: PaginatedListViewWidget (
-              scrollController: scrollController,
-              totalSize: order.deliverymanOrderList!.totalSize,
-              offset: int.tryParse(order.deliverymanOrderList!.offset!),
-              onPaginate: (int? offset) async {
-                await order.getDeliveryManOrderList(context, offset!, widget.deliveryMan!.id, reload: false);
+      return (order.deliverymanOrderList?.orders?.isNotEmpty ?? false)
+          ? RefreshIndicator(
+              backgroundColor: Theme.of(context).primaryColor,
+              onRefresh: () async {
+                await order.getDeliveryManOrderList(
+                    context, 1, widget.deliveryMan!.id);
               },
-              itemView: ListView.builder (
-                //controller: scrollController,
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: order.deliverymanOrderList!.orders!.length,
-                padding: const EdgeInsets.all(0),
-                itemBuilder: (context, index) {
-                  return DeliveryManOrderHistoryWidget(orderModel: order.deliverymanOrderList!.orders![index]);
-                }
+              child: SingleChildScrollView(
+                controller: scrollController,
+                child: PaginatedListViewWidget(
+                  scrollController: scrollController,
+                  totalSize: order.deliverymanOrderList!.totalSize,
+                  offset: int.tryParse(order.deliverymanOrderList!.offset!),
+                  onPaginate: (int? offset) async {
+                    await order.getDeliveryManOrderList(
+                        context, offset!, widget.deliveryMan!.id,
+                        reload: false);
+                  },
+                  itemView: ListView.builder(
+                      //controller: scrollController,
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: order.deliverymanOrderList!.orders!.length,
+                      padding: const EdgeInsets.all(0),
+                      itemBuilder: (context, index) {
+                        return DeliveryManOrderHistoryWidget(
+                            orderModel:
+                                order.deliverymanOrderList!.orders![index]);
+                      }),
+                ),
               ),
-            ),
-          ),
-        ) : const NoDataScreen(title: 'no_order_found', padding: EdgeInsets.only(top: 100));
-      }
-    );
+            )
+          : const NoDataScreen(
+              title: 'no_order_found', padding: EdgeInsets.only(top: 100));
+    });
   }
 }

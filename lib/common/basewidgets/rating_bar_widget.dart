@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class RatingBarIndicatorWidget extends StatefulWidget {
-  const RatingBarIndicatorWidget({super.key,
+  const RatingBarIndicatorWidget({
+    super.key,
     required this.itemBuilder,
     this.textDirection,
     this.unratedColor,
@@ -12,7 +13,6 @@ class RatingBarIndicatorWidget extends StatefulWidget {
     this.physics = const NeverScrollableScrollPhysics(),
     this.rating = 0.0,
   });
-
 
   final IndexedWidgetBuilder itemBuilder;
   final TextDirection? textDirection;
@@ -25,7 +25,8 @@ class RatingBarIndicatorWidget extends StatefulWidget {
   final double rating;
 
   @override
-  RatingBarIndicatorWidgetState createState() => RatingBarIndicatorWidgetState();
+  RatingBarIndicatorWidgetState createState() =>
+      RatingBarIndicatorWidgetState();
 }
 
 class RatingBarIndicatorWidgetState extends State<RatingBarIndicatorWidget> {
@@ -51,22 +52,22 @@ class RatingBarIndicatorWidgetState extends State<RatingBarIndicatorWidget> {
       physics: widget.physics,
       child: widget.direction == Axis.horizontal
           ? Row(
-        mainAxisSize: MainAxisSize.min,
-        textDirection: textDirection,
-        children: _children,
-      )
+              mainAxisSize: MainAxisSize.min,
+              textDirection: textDirection,
+              children: _children,
+            )
           : Column(
-        mainAxisSize: MainAxisSize.min,
-        textDirection: textDirection,
-        children: _children,
-      ),
+              mainAxisSize: MainAxisSize.min,
+              textDirection: textDirection,
+              children: _children,
+            ),
     );
   }
 
   List<Widget> get _children {
     return List.generate(
       widget.itemCount,
-          (index) {
+      (index) {
         if (widget.textDirection != null) {
           if (widget.textDirection == TextDirection.rtl &&
               Directionality.of(context) != TextDirection.rtl) {
@@ -94,15 +95,15 @@ class RatingBarIndicatorWidgetState extends State<RatingBarIndicatorWidget> {
           children: [
             FittedBox(
               fit: BoxFit.contain,
-              child: index + 1 < _ratingNumber ?
-              widget.itemBuilder(context, index) :
-              ColorFiltered(
-                colorFilter: ColorFilter.mode(
-                  widget.unratedColor ?? Theme.of(context).disabledColor,
-                  BlendMode.srcIn,
-                ),
-                child: widget.itemBuilder(context, index),
-              ),
+              child: index + 1 < _ratingNumber
+                  ? widget.itemBuilder(context, index)
+                  : ColorFiltered(
+                      colorFilter: ColorFilter.mode(
+                        widget.unratedColor ?? Theme.of(context).disabledColor,
+                        BlendMode.srcIn,
+                      ),
+                      child: widget.itemBuilder(context, index),
+                    ),
             ),
             if (index + 1 == _ratingNumber)
               if (_isRTL)
@@ -146,17 +147,17 @@ class _IndicatorClipper extends CustomClipper<Rect> {
   Rect getClip(Size size) {
     return rtlMode
         ? Rect.fromLTRB(
-      size.width - size.width * ratingFraction,
-      0.0,
-      size.width,
-      size.height,
-    )
+            size.width - size.width * ratingFraction,
+            0.0,
+            size.width,
+            size.height,
+          )
         : Rect.fromLTRB(
-      0.0,
-      0.0,
-      size.width * ratingFraction,
-      size.height,
-    );
+            0.0,
+            0.0,
+            size.width * ratingFraction,
+            size.height,
+          );
   }
 
   @override
@@ -171,7 +172,8 @@ class RatingBar extends StatelessWidget {
   final double size;
   final Color? color;
 
-  const RatingBar({super.key, required this.rating, this.size = 18, this.color});
+  const RatingBar(
+      {super.key, required this.rating, this.size = 18, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +184,8 @@ class RatingBar extends StatelessWidget {
 
     for (int i = 1; i <= 5; i++) {
       if (i < realNumber) {
-        starList.add(Icon(Icons.star, color: color ?? Colors.orange, size: size));
+        starList
+            .add(Icon(Icons.star, color: color ?? Colors.orange, size: size));
       } else if (i == realNumber) {
         starList.add(SizedBox(
           height: size,
@@ -190,16 +193,18 @@ class RatingBar extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              Icon(Icons.star, color:color ?? Colors.orange, size: size),
+              Icon(Icons.star, color: color ?? Colors.orange, size: size),
               ClipRect(
                 clipper: _Clipper(part: partNumber),
-                child: Icon(Icons.star_border, color:color ?? Colors.orange, size: size),
+                child: Icon(Icons.star_border,
+                    color: color ?? Colors.orange, size: size),
               )
             ],
           ),
         ));
       } else {
-        starList.add(Icon(Icons.star_border, color: color ?? Colors.orange, size: size));
+        starList.add(
+            Icon(Icons.star_border, color: color ?? Colors.orange, size: size));
       }
     }
 

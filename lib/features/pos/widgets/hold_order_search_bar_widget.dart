@@ -13,11 +13,11 @@ class HoldOrderSearchBarWidget extends StatefulWidget {
   const HoldOrderSearchBarWidget({super.key});
 
   @override
-  State<HoldOrderSearchBarWidget> createState() => _HoldOrderSearchBarWidgetState();
+  State<HoldOrderSearchBarWidget> createState() =>
+      _HoldOrderSearchBarWidgetState();
 }
 
 class _HoldOrderSearchBarWidgetState extends State<HoldOrderSearchBarWidget> {
-
   TextEditingController searchController = TextEditingController();
   FocusNode searchFocusNode = FocusNode();
 
@@ -29,107 +29,101 @@ class _HoldOrderSearchBarWidgetState extends State<HoldOrderSearchBarWidget> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return  Consumer<CartController>(
-      builder: (context, clearanceController, _) {
-        return SizedBox(height: 56,
-          child: Padding(padding: const EdgeInsets.only(bottom: 8.0),
-            child: Autocomplete<TemporaryCartListModel>(
-              fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
-                searchController = controller;
-                searchFocusNode = focusNode;
+    return Consumer<CartController>(builder: (context, clearanceController, _) {
+      return SizedBox(
+        height: 56,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Autocomplete<TemporaryCartListModel>(
+            fieldViewBuilder:
+                (context, controller, focusNode, onEditingComplete) {
+              searchController = controller;
+              searchFocusNode = focusNode;
 
-
-                return Material(child:
-
-                Container(
-                  //  padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Theme.of(context).hintColor),
-                      borderRadius: BorderRadius.circular(Dimensions.radiusDefault)
-                  ),
-                  child: Row(
-                    children: [
-                      const Padding(
-                          padding: EdgeInsets.only(left: Dimensions.paddingSizeSmall),
-                          child: Icon(Icons.search, size: 20)
+              return Material(
+                  child: Container(
+                //  padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Theme.of(context).hintColor),
+                    borderRadius:
+                        BorderRadius.circular(Dimensions.radiusDefault)),
+                child: Row(
+                  children: [
+                    const Padding(
+                        padding:
+                            EdgeInsets.only(left: Dimensions.paddingSizeSmall),
+                        child: Icon(Icons.search, size: 20)),
+                    Expanded(
+                      child: CustomTextFieldWidget(
+                        border: false,
+                        focusBorder: false,
+                        hintText:
+                            getTranslated('search_by_customer_name', context)!,
+                        controller: searchController,
+                        focusNode: searchFocusNode,
+                        textInputAction: TextInputAction.search,
+                        onChanged: (val) {
+                          if (val.isNotEmpty) {
+                          } else {
+                            // clearanceController.emptySearchListAddList();
+                          }
+                        },
                       ),
+                    )
+                  ],
+                ),
+              ));
+            },
+            optionsBuilder: (TextEditingValue textEditingValue) async {
+              if (textEditingValue.text.isEmpty) {
+                return const Iterable<TemporaryCartListModel>.empty();
+              } else {
+                List<TemporaryCartListModel> cartList =
+                    clearanceController.customerCartList;
 
-                      Expanded(
-                        child: CustomTextFieldWidget(
-                          border: false,
-                          focusBorder: false,
-                          hintText: getTranslated('search_by_customer_name', context)!,
-                          controller: searchController,
-                          focusNode: searchFocusNode,
-                          textInputAction: TextInputAction.search,
-                          onChanged: (val) {
-                            if(val.isNotEmpty) {
-                            } else {
-                              // clearanceController.emptySearchListAddList();
-                            }
-                            },
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                );
-              },
+                Iterable<TemporaryCartListModel> matchingProducts =
+                    cartList.where((product) => product.customerName!
+                        .toLowerCase()
+                        .contains(textEditingValue.text.toLowerCase()));
 
-              optionsBuilder: (TextEditingValue textEditingValue) async {
-
-                if (textEditingValue.text.isEmpty) {
-                  return const Iterable<TemporaryCartListModel>.empty();
-                } else {
-                  List<TemporaryCartListModel> cartList = clearanceController.customerCartList;
-
-                  Iterable<TemporaryCartListModel> matchingProducts = cartList.where(
-                     (product) => product.customerName!.toLowerCase().contains(textEditingValue.text.toLowerCase())
-                  );
-
-                  return matchingProducts;
-                }
-              },
-              optionsViewOpenDirection: OptionsViewOpenDirection.down,
-
-              optionsViewBuilder: (context, Function(TemporaryCartListModel) onSelected, options) {
-                return Material(elevation: 0,
+                return matchingProducts;
+              }
+            },
+            optionsViewOpenDirection: OptionsViewOpenDirection.down,
+            optionsViewBuilder: (context,
+                Function(TemporaryCartListModel) onSelected, options) {
+              return Material(
+                  elevation: 0,
                   child: ListView.separated(
-                    padding: EdgeInsets.zero,
-                    itemBuilder: (context, index) {
-                      final cart = options.elementAt(index);
+                      padding: EdgeInsets.zero,
+                      itemBuilder: (context, index) {
+                        final cart = options.elementAt(index);
 
-                      return Padding(
-                        padding: const EdgeInsets.only(right: Dimensions.paddingSizeLarge),
-                        child: HoldOrderItemWidget(customerCard: cart, index: clearanceController.getCartIndexByUserId(cart.userId!), formSearch: true)
-                      );
-                    },
-                    separatorBuilder: (context, index) => const SizedBox(),
-                    itemCount: options.length)
-                );
-              },
-
-
-              onSelected: (selectedString) {
-                if (kDebugMode) {
-                  print(selectedString);
-                }
-              },
-
-            ),
+                        return Padding(
+                            padding: const EdgeInsets.only(
+                                right: Dimensions.paddingSizeLarge),
+                            child: HoldOrderItemWidget(
+                                customerCard: cart,
+                                index: clearanceController
+                                    .getCartIndexByUserId(cart.userId!),
+                                formSearch: true));
+                      },
+                      separatorBuilder: (context, index) => const SizedBox(),
+                      itemCount: options.length));
+            },
+            onSelected: (selectedString) {
+              if (kDebugMode) {
+                print(selectedString);
+              }
+            },
           ),
-        );
-      }
-    );
+        ),
+      );
+    });
   }
 }
-
-
-
-
 
 // Container(
 //   //  padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
@@ -158,5 +152,3 @@ class _HoldOrderSearchBarWidgetState extends State<HoldOrderSearchBarWidget> {
 //     ],
 //   ),
 // );
-
-

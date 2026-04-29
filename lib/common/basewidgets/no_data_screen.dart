@@ -10,7 +10,8 @@ class NoDataScreen extends StatelessWidget {
   final Color? color;
   final String? image;
   final EdgeInsets? padding;
-  const NoDataScreen({super.key, this.title, this.color, this.image, this.padding});
+  const NoDataScreen(
+      {super.key, this.title, this.color, this.image, this.padding});
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +21,18 @@ class NoDataScreen extends StatelessWidget {
         isCenter: padding == null,
         child: Padding(
           padding: padding ?? EdgeInsets.zero,
-          child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-
-            CustomAssetImageWidget(image ??  Images.noOrderFound, width: 100, height: 100),
-            Padding( padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
-              child: Text(title != null ? getTranslated(title, context)!:
-                getTranslated('nothing_found', context)!,
-                style: robotoRegular.copyWith(color: color ?? Theme.of(context).hintColor),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+            CustomAssetImageWidget(image ?? Images.noOrderFound,
+                width: 100, height: 100),
+            Padding(
+              padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
+              child: Text(
+                title != null
+                    ? getTranslated(title, context)!
+                    : getTranslated('nothing_found', context)!,
+                style: robotoRegular.copyWith(
+                    color: color ?? Theme.of(context).hintColor),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -47,4 +53,3 @@ class _CenterWidget extends StatelessWidget {
     return isCenter ? Center(child: child) : child;
   }
 }
-

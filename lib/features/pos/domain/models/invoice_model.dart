@@ -13,32 +13,27 @@ class InvoiceModel {
   List<Details>? details;
 
   InvoiceModel(
-    {
-      this.orderAmount,
+      {this.orderAmount,
       this.paidAmount,
       this.createdAt,
       this.extraDiscount,
       this.extraDiscountType,
       this.paymentMethod,
-      this.details
-    }
-  );
+      this.details});
 
   InvoiceModel.fromJson(Map<String, dynamic> json) {
-
-
-    if(json['order_amount'] != null){
-      try{
+    if (json['order_amount'] != null) {
+      try {
         orderAmount = json['order_amount'].toDouble();
-      }catch(e){
+      } catch (e) {
         orderAmount = double.parse(json['order_amount'].toString());
       }
     }
 
-    if(json['paid_amount'] != null){
-      try{
+    if (json['paid_amount'] != null) {
+      try {
         paidAmount = json['paid_amount'].toDouble();
-      }catch(e) {
+      } catch (e) {
         paidAmount = double.parse(json['paid_amount'].toString());
       }
     }
@@ -46,25 +41,25 @@ class InvoiceModel {
     createdAt = json['created_at'];
     paymentMethod = json['payment_method'];
 
-    if(json['discount_amount'] != null){
-      try{
+    if (json['discount_amount'] != null) {
+      try {
         discountAmount = json['discount_amount'].toDouble();
-      }catch(e){
+      } catch (e) {
         discountAmount = double.parse(json['discount_amount'].toString());
       }
     }
-    if(json['extra_discount'] != null){
-      try{
+    if (json['extra_discount'] != null) {
+      try {
         extraDiscount = json['extra_discount'].toDouble();
-      }catch(e){
+      } catch (e) {
         extraDiscount = double.parse(json['extra_discount'].toString());
       }
     }
 
-    if(json['extra_discount_type'] != null){
-      try{
+    if (json['extra_discount_type'] != null) {
+      try {
         extraDiscountType = json['extra_discount_type'];
-      }catch(e){
+      } catch (e) {
         extraDiscountType = json['extra_discount_type'];
       }
     }
@@ -75,8 +70,6 @@ class InvoiceModel {
         details!.add(Details.fromJson(v));
       });
     }
-
-
   }
 
   Map<String, dynamic> toJson() {
@@ -105,18 +98,16 @@ class Details {
   String? variant;
   String? taxModel;
 
-
   Details(
       {this.id,
-        this.productDetails,
-        this.qty,
-        this.price,
-        this.tax,
-        this.discount,
-        this.discountType,
-        this.variant,
-        this.taxModel
-        });
+      this.productDetails,
+      this.qty,
+      this.price,
+      this.tax,
+      this.discount,
+      this.discountType,
+      this.variant,
+      this.taxModel});
 
   Details.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -124,26 +115,26 @@ class Details {
         ? ProductDetails.fromJson(json['product_details'])
         : null;
     qty = json['qty'];
-    if(json['price'] != null){
-      try{
+    if (json['price'] != null) {
+      try {
         price = json['price'].toDouble();
-      }catch(e){
+      } catch (e) {
         price = double.parse(json['price'].toString());
       }
     }
 
-    if(json['tax'] != null){
-      try{
+    if (json['tax'] != null) {
+      try {
         tax = json['tax'].toDouble();
-      }catch(e){
+      } catch (e) {
         tax = double.parse(json['tax'].toString());
       }
     }
 
-    if(json['discount'] != null){
-      try{
+    if (json['discount'] != null) {
+      try {
         discount = json['discount'].toDouble();
-      }catch(e){
+      } catch (e) {
         discount = double.parse(json['discount'].toString());
       }
     }
@@ -152,7 +143,6 @@ class Details {
     variant = json['variant'];
 
     taxModel = json['tax_model'];
-
   }
 
   Map<String, dynamic> toJson() {
@@ -172,7 +162,6 @@ class Details {
 }
 
 class ProductDetails {
-
   String? name;
   String? taxModel;
   double? discount;
@@ -185,8 +174,7 @@ class ProductDetails {
   double? tax;
 
   ProductDetails(
-    {
-      this.name,
+      {this.name,
       this.taxModel,
       this.discount,
       this.discountType,
@@ -195,20 +183,17 @@ class ProductDetails {
       this.productType,
       this.unitPrice,
       this.clearanceSale,
-      this.tax
-    });
+      this.tax});
 
   ProductDetails.fromJson(Map<String, dynamic> json) {
-
     name = json['name'];
     taxModel = json['tax_model'];
-    discount = json['discount'] != null?
-    json['discount'].toDouble() : 0;
+    discount = json['discount'] != null ? json['discount'].toDouble() : 0;
     discountType = json['discount_type'];
     productType = json['product_type'];
     unitPrice = double.parse(json['unit_price'].toString());
 
-    if (json['variation'] != null && json['category_ids'] is !String) {
+    if (json['variation'] != null && json['category_ids'] is! String) {
       variation = [];
       json['variation'].forEach((v) {
         variation!.add(Variation.fromJson(v));
@@ -222,9 +207,10 @@ class ProductDetails {
       });
     }
 
-    clearanceSale = json['clearance_sale'] != null ? ClearanceSale.fromJson(json['clearance_sale']) : null;
-    tax =  json['tax'] != null ? double.tryParse(json['tax'].toString()) : 0;
-
+    clearanceSale = json['clearance_sale'] != null
+        ? ClearanceSale.fromJson(json['clearance_sale'])
+        : null;
+    tax = json['tax'] != null ? double.tryParse(json['tax'].toString()) : 0;
   }
 
   Map<String, dynamic> toJson() {
@@ -236,4 +222,3 @@ class ProductDetails {
     return data;
   }
 }
-

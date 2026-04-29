@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:math' as math;
@@ -52,20 +51,20 @@ class ScrollingFabAnimated extends StatefulWidget {
 
   const ScrollingFabAnimated(
       {super.key,
-        required this.icon,
-        required this.text,
-        required this.onPress,
-        required this.scrollController,
-        this.elevation = 5.0,
-        this.width = 120.0,
-        this.height = 60.0,
-        this.duration = const Duration(milliseconds: 250),
-        this.curve,
-        this.limitIndicator = 10.0,
-        this.color,
-        this.animateIcon = true,
-        this.inverted = false,
-        this.radius});
+      required this.icon,
+      required this.text,
+      required this.onPress,
+      required this.scrollController,
+      this.elevation = 5.0,
+      this.width = 120.0,
+      this.height = 60.0,
+      this.duration = const Duration(milliseconds: 250),
+      this.curve,
+      this.limitIndicator = 10.0,
+      this.color,
+      this.animateIcon = true,
+      this.inverted = false,
+      this.radius});
 
   @override
   ScrollingFabAnimatedState createState() => ScrollingFabAnimatedState();
@@ -121,10 +120,9 @@ class ScrollingFabAnimatedState extends State<ScrollingFabAnimated> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(Dimensions.paddingSizeSmall),
-        boxShadow: ThemeShadow.getShadow(context)
-      ),
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(Dimensions.paddingSizeSmall),
+          boxShadow: ThemeShadow.getShadow(context)),
       child: TweenAnimationBuilder(
         tween: Tween<double>(begin: 0, end: _endTween),
         duration: widget.duration,
@@ -146,22 +144,21 @@ class ScrollingFabAnimatedState extends State<ScrollingFabAnimated> {
                       ? MainAxisAlignment.spaceEvenly
                       : MainAxisAlignment.center,
                   children: [
-
                     ...(isFull
                         ? [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: AnimatedOpacity(
-                            opacity: size > 90 ? 1 : 0,
-                            duration: const Duration(milliseconds: 100),
-                            child: widget.text,
-                          ),
-                        ),
-                      )
-                    ]
+                            Expanded(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                child: AnimatedOpacity(
+                                  opacity: size > 90 ? 1 : 0,
+                                  duration: const Duration(milliseconds: 100),
+                                  child: widget.text,
+                                ),
+                              ),
+                            )
+                          ]
                         : []),
-
                     Container(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: Transform.rotate(

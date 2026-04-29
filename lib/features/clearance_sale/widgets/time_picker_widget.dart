@@ -9,15 +9,17 @@ class TimePickerWidget extends StatefulWidget {
   final String title;
   final String? time;
   final Function(String?) onTimeChanged;
-  const TimePickerWidget({super.key, required this.title, required this.time, required this.onTimeChanged});
+  const TimePickerWidget(
+      {super.key,
+      required this.title,
+      required this.time,
+      required this.onTimeChanged});
 
   @override
   State<TimePickerWidget> createState() => _TimePickerWidgetState();
 }
 
-
 class _TimePickerWidgetState extends State<TimePickerWidget> {
-
   String formatTimeOfDay(TimeOfDay time) {
     final DateTime dateTime = DateTime(0, 1, 1, time.hour, time.minute);
 
@@ -39,7 +41,7 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
 
         TimeOfDay? time = await showCustomTimePicker();
 
-        if(time != null) {
+        if (time != null) {
           widget.onTimeChanged(formatTimeOfDay(time));
         }
       },
@@ -52,16 +54,18 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
           // border: Border.all(color: Theme.of(context).textTheme.bodySmall!.color!.withValues(alpha:0.2))
         ),
         child: Row(children: [
-
           Text(
-            widget.time != null ? widget.time!: getTranslated('pick_time', context)!, style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color),
+            widget.time != null
+                ? widget.time!
+                : getTranslated('pick_time', context)!,
+            style: robotoRegular.copyWith(
+                color: Theme.of(context).textTheme.bodyLarge?.color),
             maxLines: 1,
           ),
-
-          const SizedBox(width: Dimensions.paddingSizeSmall,),
-
+          const SizedBox(
+            width: Dimensions.paddingSizeSmall,
+          ),
           const Icon(Icons.access_time, size: 20),
-
         ]),
       ),
     );

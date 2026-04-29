@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -11,15 +10,15 @@ import 'package:sixvalley_vendor_app/features/review/domain/models/ratting_model
 import 'package:sixvalley_vendor_app/features/review/domain/models/review_model.dart';
 import 'package:sixvalley_vendor_app/features/review/domain/services/review_service_interface.dart';
 import 'package:sixvalley_vendor_app/helper/api_checker.dart';
-import 'package:sixvalley_vendor_app/features/review/domain/models/review_model.dart' as rm;
+import 'package:sixvalley_vendor_app/features/review/domain/models/review_model.dart'
+    as rm;
 import 'package:sixvalley_vendor_app/localization/language_constrants.dart';
 import 'package:sixvalley_vendor_app/main.dart';
 import 'package:sixvalley_vendor_app/common/basewidgets/custom_snackbar_widget.dart';
 
-class ProductReviewController extends ChangeNotifier{
+class ProductReviewController extends ChangeNotifier {
   final ReviewServiceInterface reviewServiceInterface;
   ProductReviewController({required this.reviewServiceInterface});
-
 
   List<ReviewModel> _reviewList = [];
   List<ReviewModel> get reviewList => _reviewList;
@@ -27,17 +26,16 @@ class ProductReviewController extends ChangeNotifier{
   int _offset = 1;
   int get offset => _offset;
   final List<bool> _isOn = [];
-  List<bool> get isOn=>_isOn;
+  List<bool> get isOn => _isOn;
   ProductReviewModel? _productReviewModel;
   ProductReviewModel? get productReviewModel => _productReviewModel;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
-  List<rm.ReviewModel> _productReviewList =[];
+  List<rm.ReviewModel> _productReviewList = [];
   List<rm.ReviewModel> get productReviewList => _productReviewList;
 
-
-  List<String> reviewStatusList = ['select_status','active', 'inactive'];
+  List<String> reviewStatusList = ['select_status', 'active', 'inactive'];
   int _reviewStatusIndex = 0;
   int get reviewStatusIndex => _reviewStatusIndex;
   String _reviewStatusName = 'select_status';
@@ -46,10 +44,10 @@ class ProductReviewController extends ChangeNotifier{
   int? _selectedProductId = 0;
   int? get selectedProductId => _selectedProductId;
   String selectedProductName = 'Select Product';
-  TextEditingController  reviewReplyController = TextEditingController();
+  TextEditingController reviewReplyController = TextEditingController();
 
-
-  void setReviewProductIndex(int? index, int? productId, String? productName, bool notify) {
+  void setReviewProductIndex(
+      int? index, int? productId, String? productName, bool notify) {
     _selectedProductId = productId;
     selectedProductName = productName ?? '';
 
@@ -61,14 +59,13 @@ class ProductReviewController extends ChangeNotifier{
     }
   }
 
-
-  void setReviewStatusIndex(int index){
+  void setReviewStatusIndex(int index) {
     _reviewStatusIndex = index;
-    if(_reviewStatusIndex == 0){
+    if (_reviewStatusIndex == 0) {
       _reviewStatusName = reviewStatusList[0];
-    }else if(_reviewStatusIndex == 1){
+    } else if (_reviewStatusIndex == 1) {
       _reviewStatusName = reviewStatusList[1];
-    }else{
+    } else {
       _reviewStatusName = reviewStatusList[2];
     }
     notifyListeners();
@@ -77,98 +74,116 @@ class ProductReviewController extends ChangeNotifier{
   bool _allFieldSelected = true;
   bool get allFieldSelected => _allFieldSelected;
 
-  Future<void> getReviewList(BuildContext context) async{
+  Future<void> getReviewList(BuildContext context) async {
     _isLoading = true;
 
     ApiResponse apiResponse = await reviewServiceInterface.productReviewList();
 
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       _isLoading = false;
       _reviewList = [];
-        RattingModel reviewModel = RattingModel.fromJson(apiResponse.response!.data);
-        _reviewList.addAll(reviewModel.reviews!);
-        for(ReviewModel review in _reviewList){
-          _isOn.add(review.status == 1? true:false);
-        }
-    }else{
+      RattingModel reviewModel =
+          RattingModel.fromJson(apiResponse.response!.data);
+      _reviewList.addAll(reviewModel.reviews!);
+      for (ReviewModel review in _reviewList) {
+        _isOn.add(review.status == 1 ? true : false);
+      }
+    } else {
       _isLoading = false;
       ApiChecker.checkApi(apiResponse);
     }
     notifyListeners();
   }
 
-
-
-
-  Future<void> filterReviewList(BuildContext context, int? productId, int? customerId, ) async{
-    ApiResponse apiResponse = await reviewServiceInterface.filterProductReviewList(productId, customerId,
-        _reviewStatusIndex == 2 ? 0 : _reviewStatusIndex == 0 ? 3 : _reviewStatusIndex  , _startDate != null? dateFormat.format(_startDate!).toString(): null ,
-        _endDate != null ? dateFormat.format(_endDate!).toString(): null);
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+  Future<void> filterReviewList(
+    BuildContext context,
+    int? productId,
+    int? customerId,
+  ) async {
+    ApiResponse apiResponse =
+        await reviewServiceInterface.filterProductReviewList(
+            productId,
+            customerId,
+            _reviewStatusIndex == 2
+                ? 0
+                : _reviewStatusIndex == 0
+                    ? 3
+                    : _reviewStatusIndex,
+            _startDate != null
+                ? dateFormat.format(_startDate!).toString()
+                : null,
+            _endDate != null ? dateFormat.format(_endDate!).toString() : null);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       Navigator.pop(Get.context!);
       _isLoading = false;
       _reviewList = [];
-      RattingModel reviewModel = RattingModel.fromJson(apiResponse.response!.data);
+      RattingModel reviewModel =
+          RattingModel.fromJson(apiResponse.response!.data);
       _reviewList.addAll(reviewModel.reviews!);
-      for(ReviewModel review in _reviewList){
-        _isOn.add(review.status == 1? true:false);
+      for (ReviewModel review in _reviewList) {
+        _isOn.add(review.status == 1 ? true : false);
       }
       if (kDebugMode) {
         print(reviewList);
       }
-
-    }else{
+    } else {
       _isLoading = false;
       ApiChecker.checkApi(apiResponse);
     }
     notifyListeners();
   }
 
-
-  Future<void> searchReviewList(BuildContext context, String search) async{
-    ApiResponse apiResponse = await reviewServiceInterface.searchProductReviewList(search);
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+  Future<void> searchReviewList(BuildContext context, String search) async {
+    ApiResponse apiResponse =
+        await reviewServiceInterface.searchProductReviewList(search);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       _isLoading = false;
       _reviewList = [];
-      RattingModel reviewModel = RattingModel.fromJson(apiResponse.response!.data);
+      RattingModel reviewModel =
+          RattingModel.fromJson(apiResponse.response!.data);
       _reviewList.addAll(reviewModel.reviews!);
-      for(ReviewModel review in _reviewList){
-        _isOn.add(review.status == 1? true:false);
+      for (ReviewModel review in _reviewList) {
+        _isOn.add(review.status == 1 ? true : false);
       }
       if (kDebugMode) {
         print(reviewList);
       }
-
-    }else{
+    } else {
       _isLoading = false;
       ApiChecker.checkApi(apiResponse);
     }
     notifyListeners();
   }
 
-
-
-  void setToggleSwitch(int index){
+  void setToggleSwitch(int index) {
     _isOn[index] = !_isOn[index];
     notifyListeners();
   }
 
-
-  Future<void> reviewStatusOnOff(BuildContext context, int? reviewId, int status, int? index, {bool fromProduct = false}) async{
-    ApiResponse apiResponse = await reviewServiceInterface.reviewStatusOnOff(reviewId,status);
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-      if(fromProduct){
+  Future<void> reviewStatusOnOff(
+      BuildContext context, int? reviewId, int status, int? index,
+      {bool fromProduct = false}) async {
+    ApiResponse apiResponse =
+        await reviewServiceInterface.reviewStatusOnOff(reviewId, status);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      if (fromProduct) {
         _productReviewList[index!].status = status;
-      }else{
+      } else {
         _reviewList[index!].status = status;
       }
-      showCustomSnackBarWidget(getTranslated('review_status_updated_successfully', Get.context!), Get.context!, isError: false);
-    }else{
+      showCustomSnackBarWidget(
+          getTranslated('review_status_updated_successfully', Get.context!),
+          Get.context!,
+          isError: false);
+    } else {
       ApiChecker.checkApi(apiResponse);
     }
     notifyListeners();
   }
-
 
   DateTime? _startDate;
   DateTime? _endDate;
@@ -177,48 +192,48 @@ class ProductReviewController extends ChangeNotifier{
   DateTime? get endDate => _endDate;
   DateFormat get dateFormat => _dateFormat;
 
-  void selectDate(String type, BuildContext context){
+  void selectDate(String type, BuildContext context) {
     showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2022),
       lastDate: DateTime(2030),
     ).then((date) {
-      if (type == 'start'){
+      if (type == 'start') {
         _startDate = date;
-      }else{
+      } else {
         _endDate = date;
       }
-      if(date == null){
-
-      }
+      if (date == null) {}
       notifyListeners();
     });
   }
 
-
-  Future<void> getProductWiseReviewList(BuildContext context,int offset,int? productId, {bool reload = false}) async {
-    if(reload || offset == 1) {
+  Future<void> getProductWiseReviewList(
+      BuildContext context, int offset, int? productId,
+      {bool reload = false}) async {
+    if (reload || offset == 1) {
       _offset = 1;
       _offsetList = [];
       _productReviewList = [];
     }
     _isLoading = true;
-    if(!_offsetList.contains(offset)){
+    if (!_offsetList.contains(offset)) {
       _offsetList.add(offset);
-      ApiResponse apiResponse = await reviewServiceInterface.getProductWiseReviewList(productId, offset);
-      if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-
-        _productReviewModel = ProductReviewModel.fromJson(apiResponse.response!.data);
+      ApiResponse apiResponse = await reviewServiceInterface
+          .getProductWiseReviewList(productId, offset);
+      if (apiResponse.response != null &&
+          apiResponse.response!.statusCode == 200) {
+        _productReviewModel =
+            ProductReviewModel.fromJson(apiResponse.response!.data);
         _productReviewList.addAll(_productReviewModel!.reviews!);
         _isLoading = false;
       } else {
         ApiChecker.checkApi(apiResponse);
       }
       notifyListeners();
-
-    }else{
-      if(_isLoading) {
+    } else {
+      if (_isLoading) {
         _isLoading = false;
       }
     }
@@ -228,22 +243,26 @@ class ProductReviewController extends ChangeNotifier{
     reviewReplyController.text = '';
   }
 
-
-  Future<void> sendReviewReply (BuildContext context, int reviewId, int productId, String replyText, bool formProduct) async{
+  Future<void> sendReviewReply(BuildContext context, int reviewId,
+      int productId, String replyText, bool formProduct) async {
     _isLoading = true;
     notifyListeners();
-    ApiResponse apiResponse = await reviewServiceInterface.sendReviewReply(reviewId, replyText);
+    ApiResponse apiResponse =
+        await reviewServiceInterface.sendReviewReply(reviewId, replyText);
 
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-      if(formProduct){
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      if (formProduct) {
         getProductWiseReviewList(Get.context!, 1, productId);
-      } else{
+      } else {
         getReviewList(Get.context!);
       }
       _isLoading = false;
-      showCustomSnackBarWidget(getTranslated('reply_added_successfully', Get.context!), Get.context!, isError: false);
+      showCustomSnackBarWidget(
+          getTranslated('reply_added_successfully', Get.context!), Get.context!,
+          isError: false);
       Navigator.of(Get.context!).pop();
-    }else{
+    } else {
       _isLoading = false;
       ApiChecker.checkApi(apiResponse);
     }
@@ -252,7 +271,7 @@ class ProductReviewController extends ChangeNotifier{
 
   void setAllFieldSelected(bool value, {bool isUpdate = true}) {
     _allFieldSelected = value;
-    if(isUpdate){
+    if (isUpdate) {
       notifyListeners();
     }
   }
@@ -264,10 +283,10 @@ class ProductReviewController extends ChangeNotifier{
     _selectedProductId = 0;
     _reviewStatusName = 'select_status';
     selectedProductName = 'Select Product';
-    Provider.of<CustomerController>(Get.context!, listen: false).resetCustomerId(isUpdate: true);
-    Provider.of<CartController>(Get.context!, listen: false).emptyCustomerTextField();
+    Provider.of<CustomerController>(Get.context!, listen: false)
+        .resetCustomerId(isUpdate: true);
+    Provider.of<CartController>(Get.context!, listen: false)
+        .emptyCustomerTextField();
     notifyListeners();
   }
-
-
 }

@@ -22,8 +22,7 @@ class WithdrawalMethodModel {
 
   Map<String, dynamic> toJson() {
     return {
-      if (data != null)
-        'data': data!.map((v) => v.toJson()).toList(),
+      if (data != null) 'data': data!.map((v) => v.toJson()).toList(),
       'total_size': totalSize,
       'limit': limit,
       'offset': offset,
@@ -42,12 +41,12 @@ class Data {
 
   Data(
       {this.id,
-        this.methodName,
-        this.methodFields,
-        this.isDefault,
-        this.isActive,
-        this.createdAt,
-        this.updatedAt});
+      this.methodName,
+      this.methodFields,
+      this.isDefault,
+      this.isActive,
+      this.createdAt,
+      this.updatedAt});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -69,8 +68,7 @@ class Data {
     data['id'] = id;
     data['method_name'] = methodName;
     if (methodFields != null) {
-      data['method_fields'] =
-          methodFields!.map((v) => v.toJson()).toList();
+      data['method_fields'] = methodFields!.map((v) => v.toJson()).toList();
     }
     data['is_default'] = isDefault;
     data['is_active'] = isActive;
@@ -89,15 +87,14 @@ class MethodFields {
   String? countryCode;
   DateTime? dateTime;
 
-  MethodFields({
-    this.inputType,
-    this.inputName,
-    this.placeholder,
-    this.isRequired,
-    this.textEditingController,
-    this.countryCode,
-    this.dateTime
-  });
+  MethodFields(
+      {this.inputType,
+      this.inputName,
+      this.placeholder,
+      this.isRequired,
+      this.textEditingController,
+      this.countryCode,
+      this.dateTime});
 
   MethodFields.fromJson(Map<String, dynamic> json) {
     inputType = json['input_type'];
@@ -116,8 +113,6 @@ class MethodFields {
   }
 }
 
-
-
 class WithdrawAddModel {
   int? withdrawMethodId;
   String? methodName;
@@ -126,7 +121,11 @@ class WithdrawAddModel {
   int? id;
 
   WithdrawAddModel(
-    {this.withdrawMethodId, this.methodName, this.isActive, this.methodInfo, this.id});
+      {this.withdrawMethodId,
+      this.methodName,
+      this.isActive,
+      this.methodInfo,
+      this.id});
 
   WithdrawAddModel.fromJson(Map<String, dynamic> json) {
     withdrawMethodId = json['withdraw_method_id'];
@@ -155,9 +154,8 @@ class MethodInfo {
   });
 
   factory MethodInfo.fromJson(Map<String, dynamic> json) => MethodInfo(
-    info: Map.from(json),
-  );
+        info: Map.from(json),
+      );
 
   Map<String, dynamic> toJson() => Map.from(info);
 }
-

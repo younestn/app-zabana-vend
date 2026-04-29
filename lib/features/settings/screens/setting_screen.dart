@@ -19,59 +19,93 @@ class SettingsScreen extends StatelessWidget {
     Provider.of<SplashController>(context, listen: false).setFromSetting(true);
 
     return Scaffold(
-      appBar: CustomAppBarWidget(title: getTranslated('settings', context),),
-      body: ListView(physics: const BouncingScrollPhysics(), children: [
-
+      appBar: CustomAppBarWidget(
+        title: getTranslated('settings', context),
+      ),
+      body: ListView(
+        physics: const BouncingScrollPhysics(),
+        children: [
           const SizedBox(height: Dimensions.paddingSizeExtraSmall),
-
           TitleButton(
             icon: Images.language,
             title: getTranslated('choose_language', context),
-            onTap: ()=> Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ChooseLanguageScreen())),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => const ChooseLanguageScreen())),
           ),
-
-          Provider.of<SplashController>(context, listen: false).configModel!.shippingMethod == 'sellerwise_shipping'?
-          TitleButton(
-            icon: Images.ship,
-            title: '${getTranslated('shipping_setting', context)}',
-            onTap: () => showAnimatedDialogWidget(context, const ChooseShippingDialogWidget()),
-          ):const SizedBox(),
-
+          Provider.of<SplashController>(context, listen: false)
+                      .configModel!
+                      .shippingMethod ==
+                  'sellerwise_shipping'
+              ? TitleButton(
+                  icon: Images.ship,
+                  title: '${getTranslated('shipping_setting', context)}',
+                  onTap: () => showAnimatedDialogWidget(
+                      context, const ChooseShippingDialogWidget()),
+                )
+              : const SizedBox(),
         ],
       ),
     );
   }
-
 }
+
 class TitleButton extends StatelessWidget {
   final String icon;
   final String? title;
   final Function onTap;
-  const TitleButton({super.key, required this.icon, required this.title, required this.onTap});
+  const TitleButton(
+      {super.key,
+      required this.icon,
+      required this.title,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall),
+      padding: const EdgeInsets.symmetric(
+          vertical: Dimensions.paddingSizeExtraSmall),
       child: InkWell(
         onTap: onTap as void Function()?,
         child: Container(
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
-            boxShadow: [BoxShadow(color:Provider.of<ThemeController>(context, listen: false).darkTheme? Theme.of(context).primaryColor.withValues(alpha:0):
-            Colors.grey[Provider.of<ThemeController>(context).darkTheme ? 800 : 200]!,
-                spreadRadius: 0.5, blurRadius: 0.3)],
+            boxShadow: [
+              BoxShadow(
+                  color: Provider.of<ThemeController>(context, listen: false)
+                          .darkTheme
+                      ? Theme.of(context).primaryColor.withValues(alpha: 0)
+                      : Colors.grey[
+                          Provider.of<ThemeController>(context).darkTheme
+                              ? 800
+                              : 200]!,
+                  spreadRadius: 0.5,
+                  blurRadius: 0.3)
+            ],
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical : Dimensions.paddingSizeDefault, horizontal: Dimensions.paddingSizeLarge),
-            child: Row(children: [
-              SizedBox(width:Dimensions.iconSizeLarge, height:Dimensions.iconSizeLarge, child: Image.asset(icon)),
-              const SizedBox(width: Dimensions.paddingSizeSmall,),
-              Text(title!, style: titilliumRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyLarge?.color)),
-              const Spacer(),
-              Icon(Icons.arrow_forward_ios, color: Theme.of(context).primaryColor,size: Dimensions.iconSizeSmall,),
-            ],
-
+            padding: const EdgeInsets.symmetric(
+                vertical: Dimensions.paddingSizeDefault,
+                horizontal: Dimensions.paddingSizeLarge),
+            child: Row(
+              children: [
+                SizedBox(
+                    width: Dimensions.iconSizeLarge,
+                    height: Dimensions.iconSizeLarge,
+                    child: Image.asset(icon)),
+                const SizedBox(
+                  width: Dimensions.paddingSizeSmall,
+                ),
+                Text(title!,
+                    style: titilliumRegular.copyWith(
+                        fontSize: Dimensions.fontSizeLarge,
+                        color: Theme.of(context).textTheme.bodyLarge?.color)),
+                const Spacer(),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: Theme.of(context).primaryColor,
+                  size: Dimensions.iconSizeSmall,
+                ),
+              ],
             ),
           ),
         ),
@@ -79,4 +113,3 @@ class TitleButton extends StatelessWidget {
     );
   }
 }
-

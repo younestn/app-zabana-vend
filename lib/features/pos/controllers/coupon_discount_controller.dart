@@ -9,91 +9,107 @@ import 'package:sixvalley_vendor_app/helper/price_converter.dart';
 import 'package:sixvalley_vendor_app/localization/language_constrants.dart';
 import 'package:sixvalley_vendor_app/main.dart';
 
-
-class CouponDiscountController extends ChangeNotifier{
+class CouponDiscountController extends ChangeNotifier {
   final CartServiceInterface cartServiceInterface;
   CouponDiscountController({required this.cartServiceInterface});
-
 
   final TextEditingController _couponController = TextEditingController();
   TextEditingController get couponController => _couponController;
 
-  final TextEditingController _extraDiscountController = TextEditingController();
+  final TextEditingController _extraDiscountController =
+      TextEditingController();
   TextEditingController get extraDiscountController => _extraDiscountController;
 
   double? _couponCodeAmount = 0;
-  double? get couponCodeAmount =>_couponCodeAmount;
+  double? get couponCodeAmount => _couponCodeAmount;
 
   double _extraDiscountAmount = 0;
-  double get extraDiscountAmount =>_extraDiscountAmount;
+  double get extraDiscountAmount => _extraDiscountAmount;
 
   String? _selectedDiscountType = 'amount';
-  String? get selectedDiscountType =>_selectedDiscountType;
+  String? get selectedDiscountType => _selectedDiscountType;
 
   int _discountTypeIndex = 0;
   int get discountTypeIndex => _discountTypeIndex;
 
-
-
-  Future<void> getCouponDiscount(BuildContext context,String couponCode, int? userId, double orderAmount) async {
-    ApiResponse response = await cartServiceInterface.getCouponDiscount(couponCode, userId, orderAmount);
-    if(response.response!.statusCode == 200) {
+  Future<void> getCouponDiscount(BuildContext context, String couponCode,
+      int? userId, double orderAmount) async {
+    ApiResponse response = await cartServiceInterface.getCouponDiscount(
+        couponCode, userId, orderAmount);
+    if (response.response!.statusCode == 200) {
       _couponController.clear();
       Map map = response.response!.data;
-      _couponCodeAmount =  double.tryParse(map['coupon_discount_amount'].toString());
+      _couponCodeAmount =
+          double.tryParse(map['coupon_discount_amount'].toString());
 
-      Provider.of<CartController>(Get.context!, listen: false).setCouponCodeAndAmount(_couponCodeAmount, couponCode);
+      Provider.of<CartController>(Get.context!, listen: false)
+          .setCouponCodeAndAmount(_couponCodeAmount, couponCode);
 
-      showCustomSnackBarWidget('You got ${_couponCodeAmount.toString()} discount',Get.context!, isToaster: true, isError: false);
-    }else if(response.response!.statusCode == 202){
+      showCustomSnackBarWidget(
+          'You got ${_couponCodeAmount.toString()} discount', Get.context!,
+          isToaster: true, isError: false);
+    } else if (response.response!.statusCode == 202) {
       _couponController.clear();
-      Map  map = response.response!.data;
+      Map map = response.response!.data;
       String? message = map['message'];
-      showCustomSnackBarWidget(message,Get.context!, isToaster: true);
-    }
-    else {
+      showCustomSnackBarWidget(message, Get.context!, isToaster: true);
+    } else {
       _couponController.clear();
-      ApiChecker.checkApi( response);
+      ApiChecker.checkApi(response);
     }
     notifyListeners();
   }
 
-
-  void applyCouponCodeAndExtraDiscount(BuildContext context, double payable){
+  void applyCouponCodeAndExtraDiscount(BuildContext context, double payable) {
     _extraDiscountAmount = 0;
     String extraDiscount = _extraDiscountController.text.trim();
     _extraDiscountAmount = double.parse(extraDiscount);
 
-    double extraDiscountPercent = double.parse(PriceConverter.discountCalculationWithOutSymbol(context, Provider.of<CartController>(context, listen: false).amount, _extraDiscountAmount, _selectedDiscountType));
+    double extraDiscountPercent = double.parse(
+        PriceConverter.discountCalculationWithOutSymbol(
+            context,
+            Provider.of<CartController>(context, listen: false).amount,
+            _extraDiscountAmount,
+            _selectedDiscountType));
 
-    if(_selectedDiscountType == 'percent' ?
-    extraDiscountPercent > double.tryParse(PriceConverter.convertPriceWithoutSymbol(Get.context!, payable))! :
-    _extraDiscountAmount >  double.tryParse(PriceConverter.convertPriceWithoutSymbol(Get.context!, payable))!
-    ) {
-      showCustomSnackBarWidget(getTranslated('discount_cant_greater_than_order_amount', Get.context!), Get.context!, sanckBarType: SnackBarType.warning, isToaster: true, );
+    if (_selectedDiscountType == 'percent'
+        ? extraDiscountPercent >
+            double.tryParse(PriceConverter.convertPriceWithoutSymbol(
+                Get.context!, payable))!
+        : _extraDiscountAmount >
+            double.tryParse(PriceConverter.convertPriceWithoutSymbol(
+                Get.context!, payable))!) {
+      showCustomSnackBarWidget(
+        getTranslated('discount_cant_greater_than_order_amount', Get.context!),
+        Get.context!,
+        sanckBarType: SnackBarType.warning,
+        isToaster: true,
+      );
     } else {
-      Provider.of<CartController>(Get.context!, listen: false).setExtraDiscountAmount(_extraDiscountAmount);
-      showCustomSnackBarWidget(getTranslated('extra_discount_added_successfully', Get.context!), Get.context!, isToaster: true, isError: false);
+      Provider.of<CartController>(Get.context!, listen: false)
+          .setExtraDiscountAmount(_extraDiscountAmount);
+      showCustomSnackBarWidget(
+          getTranslated('extra_discount_added_successfully', Get.context!),
+          Get.context!,
+          isToaster: true,
+          isError: false);
     }
     notifyListeners();
   }
 
-  void setSelectedDiscountType(String? type, {bool isUpdate = true}){
+  void setSelectedDiscountType(String? type, {bool isUpdate = true}) {
     _selectedDiscountType = type;
     _extraDiscountController.text = '';
 
-    if(isUpdate){
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
   void setDiscountTypeIndex(int index, bool notify) {
     _discountTypeIndex = index;
-    if(notify) {
+    if (notify) {
       notifyListeners();
     }
   }
-
-
-
 }

@@ -23,249 +23,434 @@ import 'package:sixvalley_vendor_app/features/addProduct/screens/add_product_scr
 import 'package:sixvalley_vendor_app/features/product_details/screens/product_details_screen.dart';
 import 'package:sixvalley_vendor_app/features/barcode/screens/bar_code_generator_screen.dart';
 
-
-
 class StockOutProductWidget extends StatefulWidget {
   final Product productModel;
-   const StockOutProductWidget({super.key, required this.productModel});
+  const StockOutProductWidget({super.key, required this.productModel});
 
   @override
   State<StockOutProductWidget> createState() => _StockOutProductWidgetState();
 }
 
 class _StockOutProductWidgetState extends State<StockOutProductWidget> {
-  final TextEditingController _stockQuantityController = TextEditingController();
+  final TextEditingController _stockQuantityController =
+      TextEditingController();
   @override
   Widget build(BuildContext context) {
-
     int variationLength = 0;
     variationLength = widget.productModel.variation!.length;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(Dimensions.paddingSizeExtraSmall,
-          0, Dimensions.paddingSizeExtraSmall,Dimensions.paddingSizeSmall,),
+      padding: const EdgeInsets.fromLTRB(
+        Dimensions.paddingSizeExtraSmall,
+        0,
+        Dimensions.paddingSizeExtraSmall,
+        Dimensions.paddingSizeSmall,
+      ),
       child: Slidable(
         key: const ValueKey(0),
-
         startActionPane: ActionPane(
           motion: const ScrollMotion(),
           dragDismissible: false,
           dismissible: DismissiblePane(onDismissed: () {
-            ConfirmationDialogWidget(icon: Images.deleteProduct,
+            ConfirmationDialogWidget(
+                icon: Images.deleteProduct,
                 refund: false,
-                description: getTranslated('are_you_sure_want_to_delete_this_product', context),
+                description: getTranslated(
+                    'are_you_sure_want_to_delete_this_product', context),
                 onYesPressed: () {
-                  Provider.of<ProductController>(context, listen:false).deleteProduct(context ,widget.productModel.id).then((value) {
-                    Provider.of<ProductController>(Get.context!, listen: false).getStockOutProductList(1, 'en');
-                    Provider.of<ProductController>(Get.context!, listen: false).getSellerProductList(Provider.of<ProfileController>(Get.context!, listen: false).
-                    userInfoModel!.id.toString(), 1, 'en','', reload: true);
+                  Provider.of<ProductController>(context, listen: false)
+                      .deleteProduct(context, widget.productModel.id)
+                      .then((value) {
+                    Provider.of<ProductController>(Get.context!, listen: false)
+                        .getStockOutProductList(1, 'en');
+                    Provider.of<ProductController>(Get.context!, listen: false)
+                        .getSellerProductList(
+                            Provider.of<ProfileController>(Get.context!,
+                                    listen: false)
+                                .userInfoModel!
+                                .id
+                                .toString(),
+                            1,
+                            'en',
+                            '',
+                            reload: true);
                   });
-                }
-            );
+                });
           }),
-          children:  [
+          children: [
             SlidableAction(
-              onPressed: (value){
-                showDialog(context: context, builder: (BuildContext context){
-                  return ConfirmationDialogWidget(icon: Images.deleteProduct,
-                      refund: false,
-                      description: getTranslated('are_you_sure_want_to_delete_this_product', context),
-                      onYesPressed: () {
-                        Provider.of<ProductController>(context, listen:false).deleteProduct(context ,widget.productModel.id).then((value) {
-                          Provider.of<ProductController>(Get.context!, listen: false).getStockOutProductList(1, 'en');
-                          Provider.of<ProductController>(Get.context!, listen: false).getSellerProductList(Provider.of<ProfileController>(Get.context!, listen: false).
-                          userInfoModel!.id.toString(), 1, 'en','', reload: true);
-                        });
-                      }
-                  );});
+              onPressed: (value) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return ConfirmationDialogWidget(
+                          icon: Images.deleteProduct,
+                          refund: false,
+                          description: getTranslated(
+                              'are_you_sure_want_to_delete_this_product',
+                              context),
+                          onYesPressed: () {
+                            Provider.of<ProductController>(context,
+                                    listen: false)
+                                .deleteProduct(context, widget.productModel.id)
+                                .then((value) {
+                              Provider.of<ProductController>(Get.context!,
+                                      listen: false)
+                                  .getStockOutProductList(1, 'en');
+                              Provider.of<ProductController>(Get.context!,
+                                      listen: false)
+                                  .getSellerProductList(
+                                      Provider.of<ProfileController>(
+                                              Get.context!,
+                                              listen: false)
+                                          .userInfoModel!
+                                          .id
+                                          .toString(),
+                                      1,
+                                      'en',
+                                      '',
+                                      reload: true);
+                            });
+                          });
+                    });
               },
-              backgroundColor: Theme.of(context).colorScheme.error.withValues(alpha:.05),
+              backgroundColor:
+                  Theme.of(context).colorScheme.error.withValues(alpha: .05),
               foregroundColor: Theme.of(context).colorScheme.error,
               icon: Icons.delete_forever_rounded,
               label: getTranslated('delete', context),
             ),
             SlidableAction(
-              onPressed: (value){
-                Navigator.of(context).push(MaterialPageRoute(builder: (_) => AddProductScreen(product: widget.productModel)));
+              onPressed: (value) {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) =>
+                        AddProductScreen(product: widget.productModel)));
               },
-              backgroundColor: Theme.of(context).primaryColor.withValues(alpha:.05),
+              backgroundColor:
+                  Theme.of(context).primaryColor.withValues(alpha: .05),
               foregroundColor: Theme.of(context).primaryColor,
               icon: Icons.edit,
               label: getTranslated('edit', context),
             ),
           ],
         ),
-
         endActionPane: ActionPane(
           motion: const ScrollMotion(),
           children: [
             SlidableAction(
-              onPressed: (value){
-                showDialog(context: context, builder: (BuildContext context){
-                  return ConfirmationDialogWidget(icon: Images.deleteProduct,
-                      refund: false,
-                      description: getTranslated('are_you_sure_want_to_delete_this_product', context),
-                      onYesPressed: () {
-                        Provider.of<ProductController>(context, listen:false).deleteProduct(context ,widget.productModel.id).then((value) {
-                          Provider.of<ProductController>(Get.context!, listen: false).getStockOutProductList(1, 'en');
-                          Provider.of<ProductController>(Get.context!, listen: false).getSellerProductList(Provider.of<ProfileController>(Get.context!, listen: false).
-                          userInfoModel!.id.toString(), 1, 'en','', reload: true);
-                        });
-                      }
-                  );});
+              onPressed: (value) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return ConfirmationDialogWidget(
+                          icon: Images.deleteProduct,
+                          refund: false,
+                          description: getTranslated(
+                              'are_you_sure_want_to_delete_this_product',
+                              context),
+                          onYesPressed: () {
+                            Provider.of<ProductController>(context,
+                                    listen: false)
+                                .deleteProduct(context, widget.productModel.id)
+                                .then((value) {
+                              Provider.of<ProductController>(Get.context!,
+                                      listen: false)
+                                  .getStockOutProductList(1, 'en');
+                              Provider.of<ProductController>(Get.context!,
+                                      listen: false)
+                                  .getSellerProductList(
+                                      Provider.of<ProfileController>(
+                                              Get.context!,
+                                              listen: false)
+                                          .userInfoModel!
+                                          .id
+                                          .toString(),
+                                      1,
+                                      'en',
+                                      '',
+                                      reload: true);
+                            });
+                          });
+                    });
               },
-              backgroundColor: Theme.of(context).colorScheme.error.withValues(alpha:.05),
+              backgroundColor:
+                  Theme.of(context).colorScheme.error.withValues(alpha: .05),
               foregroundColor: Theme.of(context).colorScheme.error,
               icon: Icons.delete_forever_rounded,
               label: getTranslated('delete', context),
             ),
             SlidableAction(
-              onPressed: (value){
-                Navigator.of(context).push(MaterialPageRoute(builder: (_) => AddProductScreen(product: widget.productModel)));
+              onPressed: (value) {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) =>
+                        AddProductScreen(product: widget.productModel)));
               },
-              backgroundColor: Theme.of(context).primaryColor.withValues(alpha:.05),
+              backgroundColor:
+                  Theme.of(context).primaryColor.withValues(alpha: .05),
               foregroundColor: Theme.of(context).primaryColor,
               icon: Icons.edit,
               label: getTranslated('edit', context),
             ),
           ],
         ),
-
         child: Container(
-          padding: const EdgeInsets.only(left : Dimensions.paddingSizeSmall),
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.paddingSizeSmall),
+          padding: const EdgeInsets.only(left: Dimensions.paddingSizeSmall),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(Dimensions.paddingSizeSmall),
             color: Theme.of(context).cardColor,
-            boxShadow: [BoxShadow(color: Colors.grey[Provider.of<ThemeController>(context).darkTheme ? 800 : 200]!, spreadRadius: 0.5, blurRadius: 0.3)],),
-          child: Stack(children: [
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.grey[
+                      Provider.of<ThemeController>(context).darkTheme
+                          ? 800
+                          : 200]!,
+                  spreadRadius: 0.5,
+                  blurRadius: 0.3)
+            ],
+          ),
+          child: Stack(
+            children: [
               GestureDetector(
-                onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (_)=> ProductDetailsScreen(productModel: widget.productModel))),
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => ProductDetailsScreen(
+                            productModel: widget.productModel))),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: Dimensions.paddingSizeExtraSmall),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(Dimensions.paddingSizeExtraSmall)),
-                  child: Row(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Padding(padding: EdgeInsets.only(top: Dimensions.paddingSizeExtraSmall,
-                            right: Provider.of<LocalizationController>(context, listen: false).isLtr? 0: Dimensions.fontSizeSmall),
-
+                      borderRadius: BorderRadius.circular(
+                          Dimensions.paddingSizeExtraSmall)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: Dimensions.paddingSizeExtraSmall,
+                            right: Provider.of<LocalizationController>(context,
+                                        listen: false)
+                                    .isLtr
+                                ? 0
+                                : Dimensions.fontSizeSmall),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor.withValues(alpha:.10),
-                            borderRadius: BorderRadius.circular(Dimensions.paddingSizeExtraSmall),),
+                            color: Theme.of(context)
+                                .primaryColor
+                                .withValues(alpha: .10),
+                            borderRadius: BorderRadius.circular(
+                                Dimensions.paddingSizeExtraSmall),
+                          ),
                           width: Dimensions.stockOutImageSize,
                           height: Dimensions.stockOutImageSize,
                           child: ClipRRect(
-                              borderRadius: BorderRadius.circular(Dimensions.paddingSizeExtraSmall),
-                              child: CustomImageWidget(image: '${widget.productModel.thumbnailFullUrl?.path}')
+                              borderRadius: BorderRadius.circular(
+                                  Dimensions.paddingSizeExtraSmall),
+                              child: CustomImageWidget(
+                                  image:
+                                      '${widget.productModel.thumbnailFullUrl?.path}')),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: Dimensions.paddingSizeSmall,
+                      ),
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(widget.productModel.name ?? '',
+                                  style: robotoRegular.copyWith(
+                                      color: ColorHelper.blendColors(
+                                          Colors.white,
+                                          Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .color!,
+                                          0.7)),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis),
+                              const SizedBox(
+                                  height: Dimensions.paddingSizeSmall),
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        Dimensions.paddingSizeExtraSmall,
+                                        Dimensions.paddingSizeVeryTiny,
+                                        Dimensions.paddingSizeExtraSmall,
+                                        Dimensions.paddingSizeVeryTiny),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                            Dimensions.paddingSizeExtraSmall),
+                                        color:
+                                            widget.productModel.currentStock ==
+                                                    0
+                                                ? Theme.of(context)
+                                                    .colorScheme
+                                                    .error
+                                                : Theme.of(context)
+                                                    .colorScheme
+                                                    .onSecondary),
+                                    child: widget.productModel.currentStock == 0
+                                        ? Text(
+                                            '${widget.productModel.currentStock.toString()} ${getTranslated('stock_out', context)}',
+                                            style: robotoRegular.copyWith(
+                                                color: Colors.white),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis)
+                                        : Text(
+                                            '${widget.productModel.currentStock.toString()} ${getTranslated('in_stock', context)}',
+                                            style: robotoRegular.copyWith(
+                                                color: Colors.white),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                  height: Dimensions.paddingSizeSmall),
+                              variationLength != 0
+                                  ? Text(
+                                      '$variationLength ${getTranslated('variation', context)}')
+                                  : const SizedBox(),
+                            ],
                           ),
                         ),
                       ),
-                      const SizedBox(width: Dimensions.paddingSizeSmall,),
-
-
-                      Flexible(child: Padding(padding: const EdgeInsets.all(8.0),
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                          Text(widget.productModel.name ?? '', style: robotoRegular.copyWith(color: ColorHelper.blendColors(Colors.white, Theme.of(context).textTheme.bodyLarge!.color!, 0.7)),
-                              maxLines: 2, overflow: TextOverflow.ellipsis),
-                          const SizedBox(height: Dimensions.paddingSizeSmall),
-
-                          Row(children: [
-
-                              Container(padding: const EdgeInsets.fromLTRB(Dimensions.paddingSizeExtraSmall,
-                                    Dimensions.paddingSizeVeryTiny, Dimensions.paddingSizeExtraSmall,
-                                    Dimensions.paddingSizeVeryTiny),
-                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.paddingSizeExtraSmall),
-                                  color :widget.productModel.currentStock == 0?
-                                  Theme.of(context).colorScheme.error:
-                                  Theme.of(context).colorScheme.onSecondary),
-
-
-                                child:widget.productModel.currentStock == 0?
-                                Text('${widget.productModel.currentStock.toString()} ${getTranslated('stock_out', context)}'
-                                    , style: robotoRegular.copyWith(color: Colors.white),
-                                    maxLines: 1, overflow: TextOverflow.ellipsis):
-                                Text('${widget.productModel.currentStock.toString()} ${getTranslated('in_stock', context)}'
-                                    , style: robotoRegular.copyWith(color: Colors.white),
-                                    maxLines: 1, overflow: TextOverflow.ellipsis),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: Dimensions.paddingSizeSmall),
-
-                          variationLength != 0?
-                          Text('$variationLength ${getTranslated('variation', context)}'):const SizedBox(),
-                        ],),
-                      ),
-                      ),
-                    ],),
+                    ],
+                  ),
                 ),
               ),
-
-
-              Positioned(bottom: 15, right: Provider.of<LocalizationController>(context, listen: false).isLtr? 70 : null,
-                left: Provider.of<LocalizationController>(context, listen: false).isLtr? null : 70,
+              Positioned(
+                bottom: 15,
+                right:
+                    Provider.of<LocalizationController>(context, listen: false)
+                            .isLtr
+                        ? 70
+                        : null,
+                left:
+                    Provider.of<LocalizationController>(context, listen: false)
+                            .isLtr
+                        ? null
+                        : 70,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall),
-                  child: Center(child:  InkWell(onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => BarCodeGenerateScreen(product: widget.productModel)));
-                    Provider.of<BarcodeController>(context, listen: false).setBarCodeQuantity(4);
-                  },
-                    child: Image.asset(Images.barcodeIcon, width: 30,),),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: Dimensions.paddingSizeExtraSmall),
+                  child: Center(
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => BarCodeGenerateScreen(
+                                product: widget.productModel)));
+                        Provider.of<BarcodeController>(context, listen: false)
+                            .setBarCodeQuantity(4);
+                      },
+                      child: Image.asset(
+                        Images.barcodeIcon,
+                        width: 30,
+                      ),
+                    ),
                   ),
-                ),) ,
-
+                ),
+              ),
               Consumer<RestockController>(
                   builder: (context, productProvider, _) {
-                    return Positioned(bottom: 13, right: Provider.of<LocalizationController>(context, listen: false).isLtr? 15 : null,
-                      left: Provider.of<LocalizationController>(context, listen: false).isLtr? null : 5,
-                      child: Container(height: 35, width: 35,
-                      padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withValues(alpha:.75),
-                        borderRadius: BorderRadius.circular(20),),
-                      child: Center(child:  InkWell(
-                          onTap: (){
+                return Positioned(
+                  bottom: 13,
+                  right: Provider.of<LocalizationController>(context,
+                              listen: false)
+                          .isLtr
+                      ? 15
+                      : null,
+                  left: Provider.of<LocalizationController>(context,
+                              listen: false)
+                          .isLtr
+                      ? null
+                      : 5,
+                  child: Container(
+                    height: 35,
+                    width: 35,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: Dimensions.paddingSizeExtraSmall),
+                    decoration: BoxDecoration(
+                      color:
+                          Theme.of(context).primaryColor.withValues(alpha: .75),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Center(
+                      child: InkWell(
+                          onTap: () {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return LimitedStockQuantityUpdateDialogWidget(
-                                    stockQuantityController: _stockQuantityController,
+                                    stockQuantityController:
+                                        _stockQuantityController,
                                     product: widget.productModel,
-                                    title: getTranslated('product_variations', context),
+                                    title: getTranslated(
+                                        'product_variations', context),
                                     onYesPressed: () {
                                       bool isEmpty = false;
 
-                                      if(productProvider.variationQuantityController.isNotEmpty){
-                                        for (int i=0; i< productProvider.variationQuantityController.length; i++) {
-                                          if(productProvider.variationQuantityController[i].text == '' && !isEmpty) {
+                                      if (productProvider
+                                          .variationQuantityController
+                                          .isNotEmpty) {
+                                        for (int i = 0;
+                                            i <
+                                                productProvider
+                                                    .variationQuantityController
+                                                    .length;
+                                            i++) {
+                                          if (productProvider
+                                                      .variationQuantityController[
+                                                          i]
+                                                      .text ==
+                                                  '' &&
+                                              !isEmpty) {
                                             isEmpty = true;
                                           }
                                         }
                                       }
 
-                                      if(isEmpty) {
-                                        showCustomSnackBarWidget('variation_quantity_is_required', sanckBarType: SnackBarType.error, context);
-                                      } else if(_stockQuantityController.text.toString().isEmpty){
-                                        showCustomSnackBarWidget('product_quantity_is_required', context);
+                                      if (isEmpty) {
+                                        showCustomSnackBarWidget(
+                                            'variation_quantity_is_required',
+                                            sanckBarType: SnackBarType.error,
+                                            context);
+                                      } else if (_stockQuantityController.text
+                                          .toString()
+                                          .isEmpty) {
+                                        showCustomSnackBarWidget(
+                                            'product_quantity_is_required',
+                                            context);
                                         if (kDebugMode) {
                                           print(widget.productModel.id);
                                         }
-                                      }else{
-                                        productProvider.updateProductQuantity(context, widget.productModel.id, int.parse(_stockQuantityController.text.toString()), widget.productModel.variation!);
+                                      } else {
+                                        productProvider.updateProductQuantity(
+                                            context,
+                                            widget.productModel.id,
+                                            int.parse(_stockQuantityController
+                                                .text
+                                                .toString()),
+                                            widget.productModel.variation!);
                                       }
-                                    }
-                                );
+                                    });
                               },
                             );
                           },
-                          child: const Center(child: Icon(Icons.add, color: Colors.white))),
-                      ),
-                    ),);
-                  }
-              ),
+                          child: const Center(
+                              child: Icon(Icons.add, color: Colors.white))),
+                    ),
+                  ),
+                );
+              }),
             ],
           ),
         ),
       ),
     );
-
   }
 }

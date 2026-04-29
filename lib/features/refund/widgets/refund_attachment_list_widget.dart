@@ -18,32 +18,42 @@ class RefundAttachmentListWidget extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         shrinkWrap: true,
         itemCount: refundModel!.images!.length,
-        itemBuilder: (BuildContext context, index){
-          return refundModel!.images!.isNotEmpty ?
-          InkWell(
-            splashColor: Colors.transparent,
-            onTap: () => showDialog(context: context, builder: (ctx)  => ImageDialogWidget(imageUrl: '${refundModel!.imagesFullUrl![index].path}')),
-            child: Container(
-              width: Dimensions.productImageSize,
-              margin: const EdgeInsets.only(right: Dimensions.paddingSizeExtraSmall),
-              decoration:  BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.black.withValues(alpha:0.07), width: 1),
-                borderRadius: const BorderRadius.all(Radius.circular(Dimensions.paddingSizeOrder)),
-              ),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(Dimensions.paddingSizeOrder)),
-                child: CustomImageWidget(
-                  image: '${refundModel!.imagesFullUrl![index].path}',
-                  fit: BoxFit.cover,
-                  width: Dimensions.productImageSize,
-                  height: Dimensions.productImageSize,
-                ),
-              ),
-            ),
-          ) : const SizedBox();
-
-        },),
+        itemBuilder: (BuildContext context, index) {
+          return refundModel!.images!.isNotEmpty
+              ? InkWell(
+                  splashColor: Colors.transparent,
+                  onTap: () => showDialog(
+                      context: context,
+                      builder: (ctx) => ImageDialogWidget(
+                          imageUrl:
+                              '${refundModel!.imagesFullUrl![index].path}')),
+                  child: Container(
+                    width: Dimensions.productImageSize,
+                    margin: const EdgeInsets.only(
+                        right: Dimensions.paddingSizeExtraSmall),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(
+                          color: Colors.black.withValues(alpha: 0.07),
+                          width: 1),
+                      borderRadius: const BorderRadius.all(
+                          Radius.circular(Dimensions.paddingSizeOrder)),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.all(
+                          Radius.circular(Dimensions.paddingSizeOrder)),
+                      child: CustomImageWidget(
+                        image: '${refundModel!.imagesFullUrl![index].path}',
+                        fit: BoxFit.cover,
+                        width: Dimensions.productImageSize,
+                        height: Dimensions.productImageSize,
+                      ),
+                    ),
+                  ),
+                )
+              : const SizedBox();
+        },
+      ),
     );
   }
 }

@@ -19,7 +19,6 @@ class MessageModel {
       });
     }
   }
-
 }
 
 class Message {
@@ -43,55 +42,56 @@ class Message {
 
   Message(
       {this.id,
-        this.userId,
-        this.deliveryManId,
-        this.message,
-        this.sentByCustomer,
-        this.sentByDeliveryMan,
-        this.sentBySeller,
-        this.seenBySeller,
-        this.createdAt,
-        this.updatedAt,
-        this.customer,
+      this.userId,
+      this.deliveryManId,
+      this.message,
+      this.sentByCustomer,
+      this.sentByDeliveryMan,
+      this.sentBySeller,
+      this.seenBySeller,
+      this.createdAt,
+      this.updatedAt,
+      this.customer,
       this.deliveryMan,
-        this.attachment
-      });
+      this.attachment});
 
   Message.fromJson(Map<String, dynamic> json) {
-  id = json['id'];
-userId = json['user_id'];
+    id = json['id'];
+    userId = json['user_id'];
 
-if (json['delivery_man_id'] != null) {
-  deliveryManId = int.tryParse(json['delivery_man_id'].toString());
-}
+    if (json['delivery_man_id'] != null) {
+      deliveryManId = int.tryParse(json['delivery_man_id'].toString());
+    }
 
-if (json['admin_id'] != null) {
-  adminId = int.tryParse(json['admin_id'].toString());
-}
+    if (json['admin_id'] != null) {
+      adminId = int.tryParse(json['admin_id'].toString());
+    }
 
-message = json['message'];
-sentByCustomer = json['sent_by_customer'] ?? false;
-sentByDeliveryMan = json['sent_by_delivery_man'] ?? false;
-sentBySeller = json['sent_by_seller'] ?? false;
-sentByAdmin = json['sent_by_admin'] ?? false;
-seenBySeller = json['seen_by_seller'];
-seenByAdmin = json['seen_by_admin'];
-createdAt = json['created_at'];
-updatedAt = json['updated_at'];
-customer = json['customer'] != null ? Customer.fromJson(json['customer']) : null;
-admin = json['admin'] != null ? Customer.fromJson(json['admin']) : null;
-deliveryMan = json['delivery_man'] != null ? DeliveryMan.fromJson(json['delivery_man']) : null;
+    message = json['message'];
+    sentByCustomer = json['sent_by_customer'] ?? false;
+    sentByDeliveryMan = json['sent_by_delivery_man'] ?? false;
+    sentBySeller = json['sent_by_seller'] ?? false;
+    sentByAdmin = json['sent_by_admin'] ?? false;
+    seenBySeller = json['seen_by_seller'];
+    seenByAdmin = json['seen_by_admin'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    customer =
+        json['customer'] != null ? Customer.fromJson(json['customer']) : null;
+    admin = json['admin'] != null ? Customer.fromJson(json['admin']) : null;
+    deliveryMan = json['delivery_man'] != null
+        ? DeliveryMan.fromJson(json['delivery_man'])
+        : null;
     if (json['attachment'] != null) {
       attachment = <Attachment>[];
       json['attachment'].forEach((v) {
-        if(v['size'] != null){
+        if (v['size'] != null) {
           attachment!.add(Attachment.fromJson(v));
         }
       });
     }
   }
 }
-
 
 class Attachment {
   String? type;

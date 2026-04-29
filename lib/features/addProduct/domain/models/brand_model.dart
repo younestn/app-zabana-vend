@@ -3,7 +3,6 @@ class BrandModel {
   String? _name;
   String? _image;
 
-
   bool? _checked;
 
   BrandModel({int? id, String? name, String? image, bool checked = false}) {
@@ -11,18 +10,15 @@ class BrandModel {
     _name = name;
     _image = image;
 
-
     _checked = checked;
-
   }
 
   int? get id => _id;
   String? get name => _name;
   String? get image => _image;
 
-
   bool? get checked => _checked;
-  void toggleChecked(){
+  void toggleChecked() {
     _checked = !_checked!;
   }
 
@@ -30,7 +26,6 @@ class BrandModel {
     _id = json['id'];
     _name = json['name'];
     _image = json['image'];
-
 
     _checked = false;
   }

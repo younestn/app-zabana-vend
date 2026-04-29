@@ -17,36 +17,36 @@ class HtmlViewScreen extends StatelessWidget {
           Expanded(
             child: SingleChildScrollView(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
-                child: Column(
-                  children: [
-                    const SizedBox(height: Dimensions.paddingSizeSmall),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                      child: SizedBox(
-                        height: 70,
-                        width: double.infinity,
-                        child: CustomImageWidget(
-                          fit: BoxFit.cover,
-                          image: page?.bannerFullUrl?.path ?? "",
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: Dimensions.paddingSizeSmall),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: Dimensions.paddingSizeSmall),
+                      ClipRRect(
+                        borderRadius:
+                            BorderRadius.circular(Dimensions.radiusSmall),
+                        child: SizedBox(
+                          height: 70,
+                          width: double.infinity,
+                          child: CustomImageWidget(
+                            fit: BoxFit.cover,
+                            image: page?.bannerFullUrl?.path ?? "",
+                          ),
                         ),
                       ),
-                    ),
-                    // const SizedBox(height: Dimensions.paddingSizeSmall),
+                      // const SizedBox(height: Dimensions.paddingSizeSmall),
 
-                    Html(
-                      style: {
-                        "body": Style(
-                          color: Theme.of(context).textTheme.bodyLarge?.color,
-                          fontSize: FontSize.medium,
-                        ),
-                      },
-                      data: page?.description ?? '',
-                    ),
-
-                  ],
-                )
-              ),
+                      Html(
+                        style: {
+                          "body": Style(
+                            color: Theme.of(context).textTheme.bodyLarge?.color,
+                            fontSize: FontSize.medium,
+                          ),
+                        },
+                        data: page?.description ?? '',
+                      ),
+                    ],
+                  )),
             ),
           ),
         ],

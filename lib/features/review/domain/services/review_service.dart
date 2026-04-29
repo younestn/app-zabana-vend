@@ -1,15 +1,15 @@
-
-
 import 'package:sixvalley_vendor_app/features/review/domain/repositories/product_review_repository_interface.dart';
 import 'package:sixvalley_vendor_app/features/review/domain/services/review_service_interface.dart';
 
-class ReviewService implements ReviewServiceInterface{
+class ReviewService implements ReviewServiceInterface {
   final ProductReviewRepositoryInterface productReviewRepoInterface;
   ReviewService({required this.productReviewRepoInterface});
 
   @override
-  Future filterProductReviewList(int? productId, int? customerId, int status, String? from, String? to) {
-    return productReviewRepoInterface.filterProductReviewList(productId, customerId, status, from, to);
+  Future filterProductReviewList(
+      int? productId, int? customerId, int status, String? from, String? to) {
+    return productReviewRepoInterface.filterProductReviewList(
+        productId, customerId, status, from, to);
   }
 
   @override
@@ -29,13 +29,12 @@ class ReviewService implements ReviewServiceInterface{
 
   @override
   Future getProductWiseReviewList(int? productId, int offset) {
-    return productReviewRepoInterface.getProductWiseReviewList(productId, offset);
+    return productReviewRepoInterface.getProductWiseReviewList(
+        productId, offset);
   }
-
 
   @override
-  Future sendReviewReply(int? reviewId,String replyText) {
+  Future sendReviewReply(int? reviewId, String replyText) {
     return productReviewRepoInterface.sendReviewReply(reviewId, replyText);
   }
-
 }

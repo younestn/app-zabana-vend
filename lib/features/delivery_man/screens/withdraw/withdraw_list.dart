@@ -6,8 +6,6 @@ import 'package:sixvalley_vendor_app/utill/dimensions.dart';
 import 'package:sixvalley_vendor_app/common/basewidgets/no_data_screen.dart';
 import 'package:sixvalley_vendor_app/features/delivery_man/screens/withdraw/withdraw_card.dart';
 
-
-
 class WithdrawListView extends StatelessWidget {
   const WithdrawListView({super.key});
 
@@ -18,28 +16,33 @@ class WithdrawListView extends StatelessWidget {
         List<Withdraws> withdrawList;
         withdrawList = deliveryManProvider.withdrawList;
 
-
         return Column(mainAxisSize: MainAxisSize.min, children: [
-           withdrawList.isNotEmpty ?
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal : Dimensions.paddingSizeSmall,
-                vertical: Dimensions.paddingSizeSmall),
-            child: ListView.builder(
-              padding: const EdgeInsets.all(0),
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: withdrawList.length,
-              itemBuilder: (context, index) {
-                return WithdrawCardWidget(withdraw: withdrawList[index], index: index);
-              },
-            ),
-          ): const NoDataScreen(),
-
-          deliveryManProvider.isLoading ? Center(child: Padding(
-            padding: const EdgeInsets.all(Dimensions.iconSizeExtraSmall),
-            child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor)),
-          )) : const SizedBox.shrink(),
-
+          withdrawList.isNotEmpty
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: Dimensions.paddingSizeSmall,
+                      vertical: Dimensions.paddingSizeSmall),
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(0),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: withdrawList.length,
+                    itemBuilder: (context, index) {
+                      return WithdrawCardWidget(
+                          withdraw: withdrawList[index], index: index);
+                    },
+                  ),
+                )
+              : const NoDataScreen(),
+          deliveryManProvider.isLoading
+              ? Center(
+                  child: Padding(
+                  padding: const EdgeInsets.all(Dimensions.iconSizeExtraSmall),
+                  child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).primaryColor)),
+                ))
+              : const SizedBox.shrink(),
         ]);
       },
     );

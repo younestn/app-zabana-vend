@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
@@ -18,7 +17,7 @@ import 'package:sixvalley_vendor_app/data/model/response/response_model.dart';
 import 'package:sixvalley_vendor_app/features/bank_info/domain/models/current_commission_invoice_model.dart';
 import 'package:sixvalley_vendor_app/main.dart';
 
-class BankInfoService implements BankInfoServiceInterface{
+class BankInfoService implements BankInfoServiceInterface {
   BankInfoRepositoryInterface bankInfoRepoInterface;
   BankInfoService({required this.bankInfoRepoInterface});
 
@@ -28,13 +27,13 @@ class BankInfoService implements BankInfoServiceInterface{
   }
 
   @override
-  Future getBankList() async{
+  Future getBankList() async {
     ApiResponse apiResponse = await bankInfoRepoInterface.getList();
     if (apiResponse.response != null &&
         apiResponse.response!.statusCode == 200) {
-    return ProfileInfoModel.fromJson(apiResponse.response!.data);
+      return ProfileInfoModel.fromJson(apiResponse.response!.data);
     } else {
-    ApiChecker.checkApi(apiResponse);
+      ApiChecker.checkApi(apiResponse);
     }
   }
 
@@ -44,17 +43,24 @@ class BankInfoService implements BankInfoServiceInterface{
   }
 
   @override
-  Future updateBank(ProfileInfoModel userInfoModel, ProfileBody seller, String token) async{
-    http.StreamedResponse response = await bankInfoRepoInterface.updateBank(userInfoModel, seller, token);
+  Future updateBank(
+      ProfileInfoModel userInfoModel, ProfileBody seller, String token) async {
+    http.StreamedResponse response =
+        await bankInfoRepoInterface.updateBank(userInfoModel, seller, token);
     if (response.statusCode == 200) {
       Navigator.pop(Get.context!);
-      showCustomSnackBarWidget(getTranslated('bank_info_updated_successfully', Get.context!), Get.context!, isToaster: true, isError: false);
+      showCustomSnackBarWidget(
+          getTranslated('bank_info_updated_successfully', Get.context!),
+          Get.context!,
+          isToaster: true,
+          isError: false);
       return ResponseModel(true, '');
     } else {
       if (kDebugMode) {
         print('${response.statusCode} ${response.reasonPhrase}');
       }
-      return ResponseModel(false, '${response.statusCode} ${response.reasonPhrase}');
+      return ResponseModel(
+          false, '${response.statusCode} ${response.reasonPhrase}');
     }
   }
 
@@ -62,69 +68,72 @@ class BankInfoService implements BankInfoServiceInterface{
   Future getOrderFilterData(String? type) {
     return bankInfoRepoInterface.getOrderFilterData(type);
   }
-  
+
   @override
-Future getCurrentMonthCommissionInvoice() async {
-  ApiResponse apiResponse = await bankInfoRepoInterface.getCurrentMonthCommissionInvoice();
-  if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-    return CurrentCommissionInvoiceModel.fromJson(apiResponse.response!.data);
-  } else {
-    ApiChecker.checkApi(apiResponse);
+  Future getCurrentMonthCommissionInvoice() async {
+    ApiResponse apiResponse =
+        await bankInfoRepoInterface.getCurrentMonthCommissionInvoice();
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      return CurrentCommissionInvoiceModel.fromJson(apiResponse.response!.data);
+    } else {
+      ApiChecker.checkApi(apiResponse);
+    }
   }
-}
 
-@override
-Future<ResponseModel> sendCommissionReceipt(int invoiceId, String? note, XFile receiptImage) async {
-  try {
-    final http.StreamedResponse response =
-        await bankInfoRepoInterface.sendCommissionReceipt(invoiceId, note, receiptImage);
+  @override
+  Future<ResponseModel> sendCommissionReceipt(
+      int invoiceId, String? note, XFile receiptImage) async {
+    try {
+      final http.StreamedResponse response = await bankInfoRepoInterface
+          .sendCommissionReceipt(invoiceId, note, receiptImage);
 
-    final String responseBody = await response.stream.bytesToString();
-    dynamic decodedBody;
+      final String responseBody = await response.stream.bytesToString();
+      dynamic decodedBody;
 
-    if (responseBody.isNotEmpty) {
-      try {
-        decodedBody = jsonDecode(responseBody);
-      } catch (_) {
-        decodedBody = null;
-      }
-    }
-
-    if (response.statusCode == 200) {
-      final String successMessage =
-          decodedBody is Map<String, dynamic> && decodedBody['message'] != null
-              ? decodedBody['message'].toString()
-              : 'تم إرسال وصل الدفع إلى الإدارة بنجاح';
-
-      return ResponseModel(true, successMessage);
-    }
-
-    String errorMessage = 'عذرًا، حدث خطأ أثناء الإرسال';
-
-    if (decodedBody is Map<String, dynamic>) {
-      if (decodedBody['message'] != null &&
-          decodedBody['message'].toString().trim().isNotEmpty) {
-        errorMessage = decodedBody['message'].toString();
-      } else if (decodedBody['errors'] is List &&
-          (decodedBody['errors'] as List).isNotEmpty) {
-        final dynamic firstError = (decodedBody['errors'] as List).first;
-        if (firstError is Map && firstError['message'] != null) {
-          errorMessage = firstError['message'].toString();
+      if (responseBody.isNotEmpty) {
+        try {
+          decodedBody = jsonDecode(responseBody);
+        } catch (_) {
+          decodedBody = null;
         }
       }
-    }
 
-    if (kDebugMode) {
-      print('sendCommissionReceipt => ${response.statusCode} $errorMessage');
-    }
+      if (response.statusCode == 200) {
+        final String successMessage = decodedBody is Map<String, dynamic> &&
+                decodedBody['message'] != null
+            ? decodedBody['message'].toString()
+            : 'تم إرسال وصل الدفع إلى الإدارة بنجاح';
 
-    return ResponseModel(false, errorMessage);
-  } catch (e) {
-    if (kDebugMode) {
-      print('sendCommissionReceipt exception => $e');
+        return ResponseModel(true, successMessage);
+      }
+
+      String errorMessage = 'عذرًا، حدث خطأ أثناء الإرسال';
+
+      if (decodedBody is Map<String, dynamic>) {
+        if (decodedBody['message'] != null &&
+            decodedBody['message'].toString().trim().isNotEmpty) {
+          errorMessage = decodedBody['message'].toString();
+        } else if (decodedBody['errors'] is List &&
+            (decodedBody['errors'] as List).isNotEmpty) {
+          final dynamic firstError = (decodedBody['errors'] as List).first;
+          if (firstError is Map && firstError['message'] != null) {
+            errorMessage = firstError['message'].toString();
+          }
+        }
+      }
+
+      if (kDebugMode) {
+        print('sendCommissionReceipt => ${response.statusCode} $errorMessage');
+      }
+
+      return ResponseModel(false, errorMessage);
+    } catch (e) {
+      if (kDebugMode) {
+        print('sendCommissionReceipt exception => $e');
+      }
+      return ResponseModel(
+          false, 'تعذر الاتصال بالسيرفر. يرجى المحاولة مرة أخرى');
     }
-    return ResponseModel(false, 'تعذر الاتصال بالسيرفر. يرجى المحاولة مرة أخرى');
   }
-}
-
 }

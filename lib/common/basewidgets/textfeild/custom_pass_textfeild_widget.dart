@@ -14,33 +14,57 @@ class CustomPasswordTextFieldWidget extends StatefulWidget {
   final String? prefixIconImage;
   final Function? onChanged;
 
-
-  const CustomPasswordTextFieldWidget({super.key, this.controller, this.hintTxt, this.focusNode, this.nextNode, this.textInputAction, this.border = false, this.prefixIconImage, this.onChanged});
+  const CustomPasswordTextFieldWidget(
+      {super.key,
+      this.controller,
+      this.hintTxt,
+      this.focusNode,
+      this.nextNode,
+      this.textInputAction,
+      this.border = false,
+      this.prefixIconImage,
+      this.onChanged});
 
   @override
-  CustomPasswordTextFieldWidgetState createState() => CustomPasswordTextFieldWidgetState();
+  CustomPasswordTextFieldWidgetState createState() =>
+      CustomPasswordTextFieldWidgetState();
 }
 
-class CustomPasswordTextFieldWidgetState extends State<CustomPasswordTextFieldWidget> {
+class CustomPasswordTextFieldWidgetState
+    extends State<CustomPasswordTextFieldWidget> {
   bool _obscureText = true;
   void _toggle() {
-    setState(() { _obscureText = !_obscureText;
+    setState(() {
+      _obscureText = !_obscureText;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(height: 50, width: double.infinity,
+    return Container(
+      height: 50,
+      width: double.infinity,
       decoration: BoxDecoration(
-        border:widget.border? Border.all(width: 1, color: Theme.of(context).hintColor.withValues(alpha:.35)):null,
+        border: widget.border
+            ? Border.all(
+                width: 1,
+                color: Theme.of(context).hintColor.withValues(alpha: .35))
+            : null,
         color: Theme.of(context).highlightColor,
         borderRadius: BorderRadius.circular(Dimensions.paddingSizeExtraSmall),
         boxShadow: [
-          BoxShadow(color: Provider.of<ThemeController>(context, listen: false).darkTheme? Theme.of(context).primaryColor.withValues(alpha:0):
-          Colors.grey.withValues(alpha:0.2), spreadRadius: 1, blurRadius: 7, offset: const Offset(0, 1)) // changes position of shadow
+          BoxShadow(
+              color:
+                  Provider.of<ThemeController>(context, listen: false).darkTheme
+                      ? Theme.of(context).primaryColor.withValues(alpha: 0)
+                      : Colors.grey.withValues(alpha: 0.2),
+              spreadRadius: 1,
+              blurRadius: 7,
+              offset: const Offset(0, 1)) // changes position of shadow
         ],
       ),
-      child: ClipRRect( borderRadius: BorderRadius.circular(6),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(6),
         child: TextFormField(
           cursorColor: Theme.of(context).primaryColor,
           controller: widget.controller,
@@ -49,31 +73,54 @@ class CustomPasswordTextFieldWidgetState extends State<CustomPasswordTextFieldWi
           textInputAction: widget.textInputAction ?? TextInputAction.next,
           onFieldSubmitted: (v) {
             setState(() {
-              widget.textInputAction == TextInputAction.done ? FocusScope.of(context).consumeKeyboardToken()
+              widget.textInputAction == TextInputAction.done
+                  ? FocusScope.of(context).consumeKeyboardToken()
                   : FocusScope.of(context).requestFocus(widget.nextNode);
             });
-            },
+          },
           validator: (value) {
             return null;
           },
           decoration: InputDecoration(
-              prefixIconConstraints: const BoxConstraints( minWidth: 20, minHeight: 20),
-              prefixIcon: widget.prefixIconImage != null ?
-              Container(padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                  decoration: BoxDecoration( color: Theme.of(context).primaryColor.withValues(alpha:.135)),
-                  child: Image.asset(widget.prefixIconImage!,width: 20, height: 20,)):const SizedBox(),
-
-              suffixIcon: GestureDetector(onTap: _toggle,
-                  child: Icon(_obscureText ? Icons.visibility_off : Icons.visibility, size: 20,)),
-              suffixIconConstraints:  const BoxConstraints( minWidth: 50, minHeight: 20,),
+              prefixIconConstraints:
+                  const BoxConstraints(minWidth: 20, minHeight: 20),
+              prefixIcon: widget.prefixIconImage != null
+                  ? Container(
+                      padding:
+                          const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                      decoration: BoxDecoration(
+                          color: Theme.of(context)
+                              .primaryColor
+                              .withValues(alpha: .135)),
+                      child: Image.asset(
+                        widget.prefixIconImage!,
+                        width: 20,
+                        height: 20,
+                      ))
+                  : const SizedBox(),
+              suffixIcon: GestureDetector(
+                  onTap: _toggle,
+                  child: Icon(
+                    _obscureText ? Icons.visibility_off : Icons.visibility,
+                    size: 20,
+                  )),
+              suffixIconConstraints: const BoxConstraints(
+                minWidth: 50,
+                minHeight: 20,
+              ),
               hintText: widget.hintTxt ?? '',
-              contentPadding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 15),
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 12.0, horizontal: 15),
               isDense: true,
               filled: true,
-              focusedBorder: OutlineInputBorder( borderRadius: BorderRadius.circular(Dimensions.paddingSizeExtraSmall),
-                  borderSide: BorderSide(color: Theme.of(context).primaryColor)),
+              focusedBorder: OutlineInputBorder(
+                  borderRadius:
+                      BorderRadius.circular(Dimensions.paddingSizeExtraSmall),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).primaryColor)),
               fillColor: Theme.of(context).highlightColor,
-              hintStyle: titilliumRegular.copyWith(color: Theme.of(context).hintColor),
+              hintStyle:
+                  titilliumRegular.copyWith(color: Theme.of(context).hintColor),
               border: InputBorder.none),
           onChanged: widget.onChanged as void Function(String)?,
         ),

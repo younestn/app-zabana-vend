@@ -15,55 +15,73 @@ class CouponDialogWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog( surfaceTintColor: Theme.of(context).cardColor,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.paddingSizeSmall)),
+    return Dialog(
+      surfaceTintColor: Theme.of(context).cardColor,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Dimensions.paddingSizeSmall)),
       child: Consumer<CouponDiscountController>(
           builder: (context, couponDiscountController, _) {
-            CartController cartController = Provider.of<CartController>(context, listen: false);
-            return Container(padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-              height: 210, child: Column(crossAxisAlignment:CrossAxisAlignment.start,children: [
-
-                CustomFieldWithTitleWidget(
-                  customTextField: CustomTextFieldWidget(
-                    hintText: getTranslated('coupon_code_hint', context),
-                    controller:couponDiscountController.couponController,
-                    border: true,
-                  ),
-                  title: getTranslated('coupon_code', context),
-
-                  requiredField: true,
+        CartController cartController =
+            Provider.of<CartController>(context, listen: false);
+        return Container(
+          padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+          height: 210,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomFieldWithTitleWidget(
+                customTextField: CustomTextFieldWidget(
+                  hintText: getTranslated('coupon_code_hint', context),
+                  controller: couponDiscountController.couponController,
+                  border: true,
                 ),
-
-                Padding(
-                  padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
-                  child: Row(children: [
-                    Expanded(child: CustomButtonWidget(btnTxt: getTranslated('cancel', context),
-                        backgroundColor: Theme.of(context).hintColor,
-                        onTap: ()=> Navigator.pop(context))),
+                title: getTranslated('coupon_code', context),
+                requiredField: true,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
+                child: Row(
+                  children: [
+                    Expanded(
+                        child: CustomButtonWidget(
+                            btnTxt: getTranslated('cancel', context),
+                            backgroundColor: Theme.of(context).hintColor,
+                            onTap: () => Navigator.pop(context))),
                     const SizedBox(width: Dimensions.paddingSizeDefault),
+                    Expanded(
+                        child: CustomButtonWidget(
+                      btnTxt: getTranslated('apply', context),
+                      onTap: () {
+                        CustomerController customerController =
+                            Provider.of<CustomerController>(context,
+                                listen: false);
 
-                    Expanded(child: CustomButtonWidget(btnTxt: getTranslated('apply', context),
-                      onTap: (){
-                      CustomerController customerController = Provider.of<CustomerController>(context, listen: false);
-
-                      if(couponDiscountController.couponController.text.trim().isNotEmpty){
-                        if (kDebugMode) {
-                          print('${couponDiscountController.couponController.text.trim()}/'
-                            '${customerController.customerId}/'
-                            '${cartController.amount}');
+                        if (couponDiscountController.couponController.text
+                            .trim()
+                            .isNotEmpty) {
+                          if (kDebugMode) {
+                            print(
+                                '${couponDiscountController.couponController.text.trim()}/'
+                                '${customerController.customerId}/'
+                                '${cartController.amount}');
+                          }
+                          couponDiscountController.getCouponDiscount(
+                              context,
+                              couponDiscountController.couponController.text
+                                  .trim(),
+                              customerController.customerId,
+                              cartController.amount);
                         }
-                        couponDiscountController.getCouponDiscount(context,
-                            couponDiscountController.couponController.text.trim(),
-                            customerController.customerId,
-                            cartController.amount);
-                      }
-                      Navigator.pop(context);
-                    },)),
-                  ],),
-                )
-              ],),);
-          }
-      ),
+                        Navigator.pop(context);
+                      },
+                    )),
+                  ],
+                ),
+              )
+            ],
+          ),
+        );
+      }),
     );
   }
 }

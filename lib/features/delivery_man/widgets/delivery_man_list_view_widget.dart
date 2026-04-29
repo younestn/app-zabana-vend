@@ -14,23 +14,24 @@ class DeliveryManListViewWidget extends StatelessWidget {
     return Consumer<DeliveryManController>(
       builder: (context, prodProvider, child) {
         return Column(mainAxisSize: MainAxisSize.min, children: [
-
-          if(prodProvider.listOfDeliveryMan == null) const PosProductShimmerWidget(),
-
-          (prodProvider.listOfDeliveryMan?.isNotEmpty ?? false) ?
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal : Dimensions.paddingSizeSmall),
-            child: ListView.builder(
-              padding: const EdgeInsets.all(0),
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: prodProvider.listOfDeliveryMan?.length,
-              itemBuilder: (context, index) {
-                return DeliveryManCardWidget(deliveryMan: prodProvider.listOfDeliveryMan![index]);
-              },
-            ),
-          ) : const NoDataScreen(),
-
+          if (prodProvider.listOfDeliveryMan == null)
+            const PosProductShimmerWidget(),
+          (prodProvider.listOfDeliveryMan?.isNotEmpty ?? false)
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: Dimensions.paddingSizeSmall),
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(0),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: prodProvider.listOfDeliveryMan?.length,
+                    itemBuilder: (context, index) {
+                      return DeliveryManCardWidget(
+                          deliveryMan: prodProvider.listOfDeliveryMan![index]);
+                    },
+                  ),
+                )
+              : const NoDataScreen(),
         ]);
       },
     );

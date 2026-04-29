@@ -6,7 +6,8 @@ abstract class DeliveryServiceInterface {
   Future<dynamic> deliveryManWithdrawList(int offset, String status);
   Future<dynamic> getDeliveryManReviewList(int offset, int? id);
   Future<dynamic> deliveryManWithdrawDetails(int? id);
-  Future<dynamic> deliveryManWithdrawApprovedDenied(int? id, String note, int approved);
+  Future<dynamic> deliveryManWithdrawApprovedDenied(
+      int? id, String note, int approved);
   Future<dynamic> deliveryManList(int offset, String search);
   Future<dynamic> deliveryManDetails(int? deliveryManId);
   Future<dynamic> deliveryManOrderList(int offset, int? deliverymanId);
@@ -16,6 +17,8 @@ abstract class DeliveryServiceInterface {
   Future<dynamic> collectCashFromDeliveryMan(int? deliveryManId, String amount);
   Future<dynamic> deleteDeliveryMan(int? deliveryManId);
   Future<dynamic> getDeliverymanOrderHistoryLog(int? orderId);
-  Future<dynamic> addNewDeliveryMan(XFile? profileImage, List<XFile?> identityImage, DeliveryManBody deliveryManBody,String token,{bool isUpdate = false});
+  Future<dynamic> addNewDeliveryMan(XFile? profileImage,
+      List<XFile?> identityImage, DeliveryManBody deliveryManBody, String token,
+      {bool isUpdate = false});
   Future<dynamic> getDeliveryManCollectedCashList(int? id, int offset);
 }

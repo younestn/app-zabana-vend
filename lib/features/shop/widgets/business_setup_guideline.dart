@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sixvalley_vendor_app/common/basewidgets/custom_asset_image_widget.dart';
@@ -19,7 +18,6 @@ class BusinessSetupGuideline extends StatefulWidget {
 }
 
 class _BusinessSetupGuidelineState extends State<BusinessSetupGuideline> {
-
   // final CarouselSliderController _controller = CarouselSliderController();
   // int _current = 0;
 
@@ -29,15 +27,14 @@ class _BusinessSetupGuidelineState extends State<BusinessSetupGuideline> {
   void initState() {
     super.initState();
 
-    final ShopController shopController = Provider.of<ShopController>(context, listen: false);
-
+    final ShopController shopController =
+        Provider.of<ShopController>(context, listen: false);
 
     guidelineList = shopController.myShopPageIndex == 0
         ? AppConstants.inHouseShopGuidelineList
         : shopController.myShopPageIndex == 1
-        ? AppConstants.paymentInfoGuidelineList
-        : AppConstants.otherSetupGuidelineList;
-
+            ? AppConstants.paymentInfoGuidelineList
+            : AppConstants.otherSetupGuidelineList;
   }
 
   @override
@@ -51,86 +48,96 @@ class _BusinessSetupGuidelineState extends State<BusinessSetupGuideline> {
           topLeft: Radius.circular(Dimensions.radiusExtraLarge),
         ),
       ),
-      child: Column(mainAxisSize: MainAxisSize.min, children: [
-        Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).hintColor.withValues(alpha: 0.15),
-            borderRadius: const BorderRadius.only(
-              topRight: Radius.circular(Dimensions.radiusExtraLarge),
-              topLeft: Radius.circular(Dimensions.radiusExtraLarge),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).hintColor.withValues(alpha: 0.15),
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(Dimensions.radiusExtraLarge),
+                topLeft: Radius.circular(Dimensions.radiusExtraLarge),
+              ),
+            ),
+            padding: const EdgeInsets.symmetric(
+                horizontal: Dimensions.paddingSizeDefault,
+                vertical: Dimensions.paddingSizeSmall),
+            child: Row(
+              children: [
+                Text(getTranslated('business_setup_guideline', context) ?? '',
+                    style: robotoBold.copyWith(
+                        color: Theme.of(context).textTheme.bodyLarge?.color,
+                        fontSize: Dimensions.fontSizeLarge)),
+                const Spacer(),
+                InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: const CustomAssetImageWidget(Images.closeIcon,
+                        width: 20, height: 20)),
+              ],
             ),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault, vertical: Dimensions.paddingSizeSmall),
-          child: Row(
-            children: [
-              Text(getTranslated('business_setup_guideline', context) ?? '',
-                  style: robotoBold.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color, fontSize: Dimensions.fontSizeLarge)
-              ),
-              const Spacer(),
-      
-              InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: const CustomAssetImageWidget(Images.closeIcon, width: 20, height: 20)
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: Dimensions.paddingSizeSmall),
-      
-      
-        Expanded(
-          child: ListView.separated(
-            shrinkWrap: true,
-            padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault, vertical: Dimensions.paddingSizeSmall),
-            itemCount: guidelineList.length,
-            itemBuilder: (context, index){
-              return Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).hintColor.withValues(alpha: 0.15),
-                  borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusDefault)),
-                ),
-                child: CustomExpansionTile(
-                  expandedAlignment: Alignment.topLeft,
-                  title:  Row(children: [
-                
-                    Text(getTranslated(guidelineList[index].title, context)!,
-                        style: robotoBold.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color,
-                            fontSize: Dimensions.fontSizeLarge)
-                    ),
-                
-                    const Expanded(child: SizedBox()),
-                  ]),
-                  childrenPadding: const EdgeInsets.only(
-                    left: Dimensions.paddingSizeDefault,
-                    right: Dimensions.paddingSizeDefault,
-                    bottom: Dimensions.paddingSizeDefault,
-                
+          const SizedBox(height: Dimensions.paddingSizeSmall),
+          Expanded(
+            child: ListView.separated(
+              shrinkWrap: true,
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Dimensions.paddingSizeDefault,
+                  vertical: Dimensions.paddingSizeSmall),
+              itemCount: guidelineList.length,
+              itemBuilder: (context, index) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).hintColor.withValues(alpha: 0.15),
+                    borderRadius: const BorderRadius.all(
+                        Radius.circular(Dimensions.radiusDefault)),
                   ),
-                  expandedCrossAxisAlignment: CrossAxisAlignment.start,
-                  children: Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).cardColor,
-                        borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusSmall)),
-                      ),
-                      padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                      child: Text(getTranslated(guidelineList[index].description, context)!, style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color, fontSize: Dimensions.fontSizeSmall))),
-                ),
-              );
-            },
-            separatorBuilder: (context, index) => const SizedBox(height: Dimensions.paddingSizeSmall),
+                  child: CustomExpansionTile(
+                    expandedAlignment: Alignment.topLeft,
+                    title: Row(children: [
+                      Text(getTranslated(guidelineList[index].title, context)!,
+                          style: robotoBold.copyWith(
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge?.color,
+                              fontSize: Dimensions.fontSizeLarge)),
+                      const Expanded(child: SizedBox()),
+                    ]),
+                    childrenPadding: const EdgeInsets.only(
+                      left: Dimensions.paddingSizeDefault,
+                      right: Dimensions.paddingSizeDefault,
+                      bottom: Dimensions.paddingSizeDefault,
+                    ),
+                    expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                    children: Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).cardColor,
+                          borderRadius: const BorderRadius.all(
+                              Radius.circular(Dimensions.radiusSmall)),
+                        ),
+                        padding:
+                            const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                        child: Text(
+                            getTranslated(
+                                guidelineList[index].description, context)!,
+                            style: robotoRegular.copyWith(
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.color,
+                                fontSize: Dimensions.fontSizeSmall))),
+                  ),
+                );
+              },
+              separatorBuilder: (context, index) =>
+                  const SizedBox(height: Dimensions.paddingSizeSmall),
+            ),
           ),
-        ),
-      
-      
-      ],
+        ],
       ),
     );
   }
 }
-
-
 
 // class SetupGuideLineWidget extends StatefulWidget {
 //   final List<GuidelineModel> guidelineList;
@@ -259,8 +266,3 @@ class _BusinessSetupGuidelineState extends State<BusinessSetupGuideline> {
 //     );
 //   }
 // }
-
-
-
-
-

@@ -7,7 +7,8 @@ import 'package:sixvalley_vendor_app/features/product/screens/top_selling_produc
 class ProductListScreen extends StatelessWidget {
   final String title;
   final bool isPopular;
-  const ProductListScreen({super.key, required this.title, this.isPopular = false});
+  const ProductListScreen(
+      {super.key, required this.title, this.isPopular = false});
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +18,10 @@ class ProductListScreen extends StatelessWidget {
       appBar: CustomAppBarWidget(title: getTranslated(title, context)),
       body: SingleChildScrollView(
         controller: scrollController,
-        child: Container(child: isPopular?
-         const MostPopularProductScreen():
-         TopSellingProductScreen(scrollController: scrollController)),
+        child: Container(
+            child: isPopular
+                ? const MostPopularProductScreen()
+                : TopSellingProductScreen(scrollController: scrollController)),
       ),
     );
   }

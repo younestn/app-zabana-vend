@@ -7,16 +7,18 @@ import 'package:sixvalley_vendor_app/features/transaction/domain/models/year_mod
 import 'package:sixvalley_vendor_app/features/transaction/domain/repositories/transaction_repository_interface.dart';
 import 'package:sixvalley_vendor_app/utill/app_constants.dart';
 
-class TransactionRepository implements TransactionRepositoryInterface{
+class TransactionRepository implements TransactionRepositoryInterface {
   final DioClient? dioClient;
   TransactionRepository({required this.dioClient});
 
   @override
-  Future<ApiResponse> getTransactionList(String status, String from, String to) async {
+  Future<ApiResponse> getTransactionList(
+      String status, String from, String to) async {
     try {
-      final Response response = await dioClient!.get('${AppConstants.transactionUri}$status&from=$from&to=$to');
+      final Response response = await dioClient!
+          .get('${AppConstants.transactionUri}$status&from=$from&to=$to');
       return ApiResponse.withSuccess(response);
-    } catch (e){
+    } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
@@ -38,9 +40,11 @@ class TransactionRepository implements TransactionRepositoryInterface{
         MonthModel(id: 11, month: 'October'),
         MonthModel(id: 12, month: 'November'),
         MonthModel(id: 13, month: 'December'),
-
       ];
-      Response response = Response(requestOptions: RequestOptions(path: ''), data: monthTypeList, statusCode: 200);
+      Response response = Response(
+          requestOptions: RequestOptions(path: ''),
+          data: monthTypeList,
+          statusCode: 200);
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -64,9 +68,11 @@ class TransactionRepository implements TransactionRepositoryInterface{
         YearModel(id: 11, year: '2030'),
         YearModel(id: 12, year: '2031'),
         YearModel(id: 13, year: '2032'),
-
       ];
-      Response response = Response(requestOptions: RequestOptions(path: ''), data: yearList, statusCode: 200);
+      Response response = Response(
+          requestOptions: RequestOptions(path: ''),
+          data: yearList,
+          statusCode: 200);
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));

@@ -1,4 +1,5 @@
 import 'package:sixvalley_vendor_app/data/model/image_full_url.dart';
+import 'package:sixvalley_vendor_app/features/shop/domain/models/seller_badge_model.dart';
 
 class ShopModel {
   int? id;
@@ -31,39 +32,41 @@ class ShopModel {
   int? totalProducts;
   int? reorderLevel;
   Map<String, dynamic>? setupGuideApp;
+  SellerBadgeModel? sellerBadge;
 
-  ShopModel(
-      {this.id,
-        this.name,
-        this.address,
-        this.contact,
-        this.image,
-        this.imageFullUrl,
-        this.createdAt,
-        this.updatedAt,
-        this.banner,
-        this.bannerFullUrl,
-        this.tinCertificateFullUrl,
-        this.bottomBanner,
-        this.bottomBannerFullUrl,
-        this.offerBanner,
-        this.offerBannerFullUrl,
-        this.ratting,
-        this.rattingCount,
-        this.temporaryClose,
-        this.vacationEndDate,
-        this.vacationStartDate,
-        this.vacationStatus,
-        this.vacationDurationType,
-        this.vacationNote,
-        this.taxIdentificationNumber,
-        this.tinExpireDate,
-        this.totalReview,
-        this.totalOrder,
-        this.totalProducts,
-        this.setupGuideApp,
-        this.reorderLevel,
-      });
+  ShopModel({
+    this.id,
+    this.name,
+    this.address,
+    this.contact,
+    this.image,
+    this.imageFullUrl,
+    this.createdAt,
+    this.updatedAt,
+    this.banner,
+    this.bannerFullUrl,
+    this.tinCertificateFullUrl,
+    this.bottomBanner,
+    this.bottomBannerFullUrl,
+    this.offerBanner,
+    this.offerBannerFullUrl,
+    this.ratting,
+    this.rattingCount,
+    this.temporaryClose,
+    this.vacationEndDate,
+    this.vacationStartDate,
+    this.vacationStatus,
+    this.vacationDurationType,
+    this.vacationNote,
+    this.taxIdentificationNumber,
+    this.tinExpireDate,
+    this.totalReview,
+    this.totalOrder,
+    this.totalProducts,
+    this.setupGuideApp,
+    this.reorderLevel,
+    this.sellerBadge,
+  });
 
   ShopModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -72,8 +75,8 @@ class ShopModel {
     contact = json['contact'];
     image = json['image'];
     imageFullUrl = json['image_full_url'] != null
-      ? ImageFullUrl.fromJson(json['image_full_url'])
-      : null;
+        ? ImageFullUrl.fromJson(json['image_full_url'])
+        : null;
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     banner = json['banner'];
@@ -83,18 +86,15 @@ class ShopModel {
     rattingCount = json['rating_count'];
     // temporaryClose = json['temporary_close']??false;
 
-    temporaryClose = json['temporary_close'] != null ?
-    !json['temporary_close']
-    : true;
-
-
+    temporaryClose =
+        json['temporary_close'] != null ? !json['temporary_close'] : true;
 
     vacationEndDate = sanitizeApiDate(json['vacation_end_date']);
     vacationStartDate = sanitizeApiDate(json['vacation_start_date']);
-    vacationStatus = json['vacation_status']??false;
+    vacationStatus = json['vacation_status'] ?? false;
     offerBannerFullUrl = json['offer_banner_full_url'] != null
-      ? ImageFullUrl.fromJson(json['offer_banner_full_url'])
-      : null;
+        ? ImageFullUrl.fromJson(json['offer_banner_full_url'])
+        : null;
     bannerFullUrl = json['banner_full_url'] != null
         ? ImageFullUrl.fromJson(json['banner_full_url'])
         : null;
@@ -102,8 +102,8 @@ class ShopModel {
         ? ImageFullUrl.fromJson(json['bottom_banner_full_url'])
         : null;
     tinCertificateFullUrl = json['tin_certificate_full_url'] != null
-      ? ImageFullUrl.fromJson(json['tin_certificate_full_url'])
-      : null;
+        ? ImageFullUrl.fromJson(json['tin_certificate_full_url'])
+        : null;
     vacationDurationType = json['vacation_duration_type'] ?? 'custom';
     vacationNote = json['vacation_note'] ?? '';
     taxIdentificationNumber = json['tax_identification_number'];
@@ -112,25 +112,26 @@ class ShopModel {
     totalOrder = json['total_orders'];
     totalReview = json['total_reviews'];
     setupGuideApp = json['setup_guide_app'] != null
-      ? Map<String, dynamic>.from(json['setup_guide_app'])
-      : null;
+        ? Map<String, dynamic>.from(json['setup_guide_app'])
+        : null;
+    sellerBadge = SellerBadgeModel.fromNullableJson(json['seller_badge']);
 
     reorderLevel = json['stock_limit'] != null
-      ? int.tryParse(json['stock_limit'].toString())
-      : null;
+        ? int.tryParse(json['stock_limit'].toString())
+        : null;
   }
 
   static String? sanitizeApiDate(dynamic value) {
-  final String raw = value?.toString().trim() ?? '';
+    final String raw = value?.toString().trim() ?? '';
 
-  if (raw.isEmpty || raw == 'null') {
-    return null;
+    if (raw.isEmpty || raw == 'null') {
+      return null;
+    }
+
+    if (raw.startsWith('-0000') || raw.startsWith('-0001')) {
+      return null;
+    }
+
+    return raw;
   }
-
-  if (raw.startsWith('-0000') || raw.startsWith('-0001')) {
-    return null;
-  }
-
-  return raw;
-}
 }

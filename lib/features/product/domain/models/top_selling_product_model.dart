@@ -44,7 +44,7 @@ class Products {
     productId = json['product_id'];
     count = json['count'];
     product =
-    json['product'] != null ? Product.fromJson(json['product']) : null;
+        json['product'] != null ? Product.fromJson(json['product']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -57,5 +57,3 @@ class Products {
     return data;
   }
 }
-
-

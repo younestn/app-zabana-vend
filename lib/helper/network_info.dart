@@ -11,21 +11,31 @@ class NetworkInfo {
 
   Future<bool> get isConnected async {
     List<ConnectivityResult> result = await connectivity.checkConnectivity();
-    return result.contains(ConnectivityResult.wifi)  || result.contains(ConnectivityResult.mobile);
+    return result.contains(ConnectivityResult.wifi) ||
+        result.contains(ConnectivityResult.mobile);
   }
 
   static void checkConnectivity(BuildContext context) {
-    Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> result) {
-      if(Provider.of<SplashController>(Get.context!, listen: false).firstTimeConnectionCheck) {
-        Provider.of<SplashController>(Get.context!, listen: false).setFirstTimeConnectionCheck(false);
-      }else {
-        bool isConnected = result.contains(ConnectivityResult.wifi)  || result.contains(ConnectivityResult.mobile);
-        !isConnected ? const SizedBox() : ScaffoldMessenger.of(Get.context!).hideCurrentSnackBar();
+    Connectivity()
+        .onConnectivityChanged
+        .listen((List<ConnectivityResult> result) {
+      if (Provider.of<SplashController>(Get.context!, listen: false)
+          .firstTimeConnectionCheck) {
+        Provider.of<SplashController>(Get.context!, listen: false)
+            .setFirstTimeConnectionCheck(false);
+      } else {
+        bool isConnected = result.contains(ConnectivityResult.wifi) ||
+            result.contains(ConnectivityResult.mobile);
+        !isConnected
+            ? const SizedBox()
+            : ScaffoldMessenger.of(Get.context!).hideCurrentSnackBar();
         ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(
           backgroundColor: !isConnected ? Colors.red : Colors.green,
           duration: Duration(seconds: !isConnected ? 6000 : 3),
           content: Text(
-            !isConnected ? getTranslated('no_connection', Get.context!)! : getTranslated('connected', Get.context!)!,
+            !isConnected
+                ? getTranslated('no_connection', Get.context!)!
+                : getTranslated('connected', Get.context!)!,
             textAlign: TextAlign.center,
           ),
         ));

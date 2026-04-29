@@ -30,13 +30,12 @@ class Brands {
   bool? checked;
 
   Brands(
-    {this.id,
+      {this.id,
       this.name,
       this.image,
       this.brandAllProductsCount,
       this.productCount,
-      this.checked
-    });
+      this.checked});
 
   Brands.fromJson(Map<String, dynamic> json) {
     id = json['id'];

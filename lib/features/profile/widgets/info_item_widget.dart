@@ -11,41 +11,61 @@ class InfoItemWidget extends StatelessWidget {
   final String? title;
   final String? amount;
   final bool isMoney;
-  const InfoItemWidget({super.key, this.icon, this.title, this.amount, this.isMoney = false});
+  const InfoItemWidget(
+      {super.key, this.icon, this.title, this.amount, this.isMoney = false});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: Dimensions.paddingSizeExtraSmall),
-      child: Container(height: 120,
+      child: Container(
+        height: 120,
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(Dimensions.paddingSizeSmall),
-          boxShadow: [BoxShadow(color: Theme.of(context).primaryColor.withValues(alpha:.05),
-              spreadRadius: -3, blurRadius: 12, offset: Offset.fromDirection(0,6))],
+          boxShadow: [
+            BoxShadow(
+                color: Theme.of(context).primaryColor.withValues(alpha: .05),
+                spreadRadius: -3,
+                blurRadius: 12,
+                offset: Offset.fromDirection(0, 6))
+          ],
         ),
-        child: Column(mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(width: Dimensions.iconSizeExtraLarge,
+            Container(
+                width: Dimensions.iconSizeExtraLarge,
                 padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
                 decoration: BoxDecoration(
                     color: Theme.of(context).primaryColor,
-                    borderRadius: BorderRadius.circular(Dimensions.iconSizeExtraLarge)
-                ),
+                    borderRadius:
+                        BorderRadius.circular(Dimensions.iconSizeExtraLarge)),
                 child: Image.asset(icon!)),
-
-            Padding(padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall),
-              child: !isMoney? Text(amount!,
-                style: titilliumSemiBold.copyWith(color:  Theme.of(context).primaryColor, fontSize: Dimensions.fontSizeLarge),):
-              Text('${Provider.of<SplashController>(context, listen: false).myCurrency!.symbol} ${NumberFormat.compact().format(double.parse(amount!))}',
-                style: titilliumSemiBold.copyWith(color:  Theme.of(context).primaryColor, fontSize: Dimensions.fontSizeLarge))),
-
-
-            Text(getTranslated(title, context)!,
-              style: titilliumRegular.copyWith(color:  Theme.of(context).hintColor,
-                  fontSize: Dimensions.fontSizeLarge),),
-          ],),
+            Padding(
+                padding: const EdgeInsets.symmetric(
+                    vertical: Dimensions.paddingSizeExtraSmall),
+                child: !isMoney
+                    ? Text(
+                        amount!,
+                        style: titilliumSemiBold.copyWith(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: Dimensions.fontSizeLarge),
+                      )
+                    : Text(
+                        '${Provider.of<SplashController>(context, listen: false).myCurrency!.symbol} ${NumberFormat.compact().format(double.parse(amount!))}',
+                        style: titilliumSemiBold.copyWith(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: Dimensions.fontSizeLarge))),
+            Text(
+              getTranslated(title, context)!,
+              style: titilliumRegular.copyWith(
+                  color: Theme.of(context).hintColor,
+                  fontSize: Dimensions.fontSizeLarge),
+            ),
+          ],
+        ),
       ),
     );
   }

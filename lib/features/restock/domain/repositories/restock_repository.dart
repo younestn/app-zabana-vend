@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 
@@ -9,10 +8,9 @@ import 'package:sixvalley_vendor_app/features/product/domain/models/product_mode
 import 'package:sixvalley_vendor_app/features/restock/domain/repositories/restock_repository_interface.dart';
 import 'package:sixvalley_vendor_app/utill/app_constants.dart';
 
-class RestockRepository implements RestockRepositoryInterface{
+class RestockRepository implements RestockRepositoryInterface {
   final DioClient? dioClient;
   RestockRepository({required this.dioClient});
-
 
   @override
   Future<ApiResponse> getRestockProductList(Map<dynamic, dynamic> data) async {
@@ -21,24 +19,19 @@ class RestockRepository implements RestockRepositoryInterface{
 
     try {
       //final response = await dioClient!.get('${AppConstants.getRestockList}?search=$_searchText&category_id=$_categoryId&limit=10&offset=$offset');
-      final response = await dioClient!.post(AppConstants.getRestockList, data: data);
+      final response =
+          await dioClient!.post(AppConstants.getRestockList, data: data);
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
 
-
   @override
   Future<ApiResponse> deleteRestockProduct(String? type, String? id) async {
     try {
-      final response = await dioClient!.post(
-        AppConstants.getRestockList,
-        data: {
-          "type" : type,
-          "id" : id
-        }
-      );
+      final response = await dioClient!
+          .post(AppConstants.getRestockList, data: {"type": type, "id": id});
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -55,47 +48,45 @@ class RestockRepository implements RestockRepositoryInterface{
     }
   }
 
-
   @override
   Future<ApiResponse> deleteRestockItem(int id) async {
     try {
-      final response = await dioClient!.get(AppConstants.restockRequestDelete+id.toString());
+      final response = await dioClient!
+          .get(AppConstants.restockRequestDelete + id.toString());
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
 
-
   @override
-  Future<ApiResponse> updateRestockProductQuantity(int? productId,int currentStock, List <Variation> variation) async {
+  Future<ApiResponse> updateRestockProductQuantity(
+      int? productId, int currentStock, List<Variation> variation) async {
     try {
-      final response = await dioClient!.post(AppConstants.restockUpdateProductQuantity,
-          data: {
-            "product_id": productId,
-            "current_stock": currentStock,
-            "variation" : jsonEncode(variation),
-            // "_method":"put"
-          }
-      );
+      final response = await dioClient!
+          .post(AppConstants.restockUpdateProductQuantity, data: {
+        "product_id": productId,
+        "current_stock": currentStock,
+        "variation": jsonEncode(variation),
+        // "_method":"put"
+      });
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
 
-
   @override
-  Future<ApiResponse> updateProductQuantity(int? productId,int currentStock, List <Variation> variation) async {
+  Future<ApiResponse> updateProductQuantity(
+      int? productId, int currentStock, List<Variation> variation) async {
     try {
-      final response = await dioClient!.post(AppConstants.updateProductQuantity,
-          data: {
-            "product_id": productId,
-            "current_stock": currentStock,
-            "variation" : variation,
-            "_method":"put"
-          }
-      );
+      final response =
+          await dioClient!.post(AppConstants.updateProductQuantity, data: {
+        "product_id": productId,
+        "current_stock": currentStock,
+        "variation": variation,
+        "_method": "put"
+      });
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -114,7 +105,6 @@ class RestockRepository implements RestockRepositoryInterface{
     throw UnimplementedError();
   }
 
-
   @override
   Future getList({int? offset = 1}) {
     // TODO: implement getList
@@ -132,5 +122,4 @@ class RestockRepository implements RestockRepositoryInterface{
     // TODO: implement get
     throw UnimplementedError();
   }
-
 }

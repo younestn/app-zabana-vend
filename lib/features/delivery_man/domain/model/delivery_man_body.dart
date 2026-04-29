@@ -1,4 +1,3 @@
-
 class DeliveryManBody {
   int? id;
   String? fName;
@@ -14,7 +13,7 @@ class DeliveryManBody {
 
   DeliveryManBody(
       {this.id,
-        this.fName,
+      this.fName,
       this.lName,
       this.address,
       this.phone,
@@ -25,4 +24,3 @@ class DeliveryManBody {
       this.password,
       this.confirmPassword});
 }
-

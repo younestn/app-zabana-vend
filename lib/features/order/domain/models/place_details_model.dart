@@ -20,23 +20,23 @@ class PlaceDetailsModel {
 
   PlaceDetailsModel(
       {this.name,
-        this.id,
-        this.types,
-        this.formattedAddress,
-        this.addressComponents,
-        this.location,
-        this.viewport,
-        this.googleMapsUri,
-        this.utcOffsetMinutes,
-        this.adrFormatAddress,
-        this.iconMaskBaseUri,
-        this.iconBackgroundColor,
-        this.displayName,
-        this.shortFormattedAddress,
-        this.photos,
-        this.pureServiceAreaBusiness,
-        this.googleMapsLinks,
-        this.timeZone});
+      this.id,
+      this.types,
+      this.formattedAddress,
+      this.addressComponents,
+      this.location,
+      this.viewport,
+      this.googleMapsUri,
+      this.utcOffsetMinutes,
+      this.adrFormatAddress,
+      this.iconMaskBaseUri,
+      this.iconBackgroundColor,
+      this.displayName,
+      this.shortFormattedAddress,
+      this.photos,
+      this.pureServiceAreaBusiness,
+      this.googleMapsLinks,
+      this.timeZone});
 
   PlaceDetailsModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -49,12 +49,10 @@ class PlaceDetailsModel {
         addressComponents!.add(AddressComponents.fromJson(v));
       });
     }
-    location = json['location'] != null
-        ? Location.fromJson(json['location'])
-        : null;
-    viewport = json['viewport'] != null
-        ? Viewport.fromJson(json['viewport'])
-        : null;
+    location =
+        json['location'] != null ? Location.fromJson(json['location']) : null;
+    viewport =
+        json['viewport'] != null ? Viewport.fromJson(json['viewport']) : null;
     googleMapsUri = json['googleMapsUri'];
     utcOffsetMinutes = json['utcOffsetMinutes'];
     adrFormatAddress = json['adrFormatAddress'];
@@ -74,9 +72,8 @@ class PlaceDetailsModel {
     googleMapsLinks = json['googleMapsLinks'] != null
         ? GoogleMapsLinks.fromJson(json['googleMapsLinks'])
         : null;
-    timeZone = json['timeZone'] != null
-        ? TimeZone.fromJson(json['timeZone'])
-        : null;
+    timeZone =
+        json['timeZone'] != null ? TimeZone.fromJson(json['timeZone']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -215,11 +212,11 @@ class Photos {
 
   Photos(
       {this.name,
-        this.widthPx,
-        this.heightPx,
-        this.authorAttributions,
-        this.flagContentUri,
-        this.googleMapsUri});
+      this.widthPx,
+      this.heightPx,
+      this.authorAttributions,
+      this.flagContentUri,
+      this.googleMapsUri});
 
   Photos.fromJson(Map<String, dynamic> json) {
     name = json['name'];

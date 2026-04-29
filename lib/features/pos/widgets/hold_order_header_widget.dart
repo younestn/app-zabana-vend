@@ -10,38 +10,40 @@ class HoldOrderHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CartController>(
-        builder: (context, cartController, _ ){
-        return Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Row(
-                  children: [
-                    Text(getTranslated('hold_orders', context)!,
-                        style: titilliumSemiBold.copyWith(fontSize: Dimensions.fontSizeLarge)),
-                    const SizedBox(width: Dimensions.paddingSizeSmall),
-
-                    Container(
-                      padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
-                      decoration: (BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Theme.of(context).colorScheme.error,
-                      )),
-                      child: Text((cartController.customerCartList.length).toString(),
-                          style: titilliumSemiBold.copyWith(fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).cardColor)),
-                    )
-                  ],
-                ),
-                const SizedBox(height: Dimensions.paddingSizeExtraSmall),
-
-                Text(getTranslated('your_hold_orders', context)!,
-                    style: titilliumRegular.copyWith(fontSize: Dimensions.fontSizeLarge)),
-              ]),
-            ),
-
-            InkWell(
+    return Consumer<CartController>(builder: (context, cartController, _) {
+      return Row(
+        children: [
+          Expanded(
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(
+                children: [
+                  Text(getTranslated('hold_orders', context)!,
+                      style: titilliumSemiBold.copyWith(
+                          fontSize: Dimensions.fontSizeLarge)),
+                  const SizedBox(width: Dimensions.paddingSizeSmall),
+                  Container(
+                    padding:
+                        const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
+                    decoration: (BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Theme.of(context).colorScheme.error,
+                    )),
+                    child: Text(
+                        (cartController.customerCartList.length).toString(),
+                        style: titilliumSemiBold.copyWith(
+                            fontSize: Dimensions.fontSizeDefault,
+                            color: Theme.of(context).cardColor)),
+                  )
+                ],
+              ),
+              const SizedBox(height: Dimensions.paddingSizeExtraSmall),
+              Text(getTranslated('your_hold_orders', context)!,
+                  style: titilliumRegular.copyWith(
+                      fontSize: Dimensions.fontSizeLarge)),
+            ]),
+          ),
+          InkWell(
               onTap: () => Navigator.of(context).pop(),
               child: const Padding(
                   padding: EdgeInsets.only(
@@ -49,12 +51,9 @@ class HoldOrderHeaderWidget extends StatelessWidget {
                     bottom: Dimensions.paddingSizeSmall,
                     left: Dimensions.paddingSizeSmall,
                   ),
-                  child: Icon(Icons.close, size: 25))
-            ),
-
-          ],
-        );
-      }
-    );
+                  child: Icon(Icons.close, size: 25))),
+        ],
+      );
+    });
   }
 }

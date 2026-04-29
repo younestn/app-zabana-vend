@@ -16,7 +16,8 @@ import 'package:sixvalley_vendor_app/features/home/widgets/order_widget.dart';
 class OrderScreen extends StatefulWidget {
   final bool isBacButtonExist;
   final bool fromHome;
-  const OrderScreen({super.key, this.isBacButtonExist = false, this.fromHome = false});
+  const OrderScreen(
+      {super.key, this.isBacButtonExist = false, this.fromHome = false});
 
   @override
   State<OrderScreen> createState() => _OrderScreenState();
@@ -30,7 +31,8 @@ class _OrderScreenState extends State<OrderScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final orderController = Provider.of<OrderController>(context, listen: false);
+      final orderController =
+          Provider.of<OrderController>(context, listen: false);
       orderController.setIndex(context, 0, notify: false);
     });
   }
@@ -61,23 +63,33 @@ class _OrderScreenState extends State<OrderScreen> {
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     children: [
-                      OrderTypeButton(text: getTranslated('all', context), index: 0),
+                      OrderTypeButton(
+                          text: getTranslated('all', context), index: 0),
                       const SizedBox(width: 5),
-                      OrderTypeButton(text: getTranslated('pending', context), index: 1),
+                      OrderTypeButton(
+                          text: getTranslated('pending', context), index: 1),
                       const SizedBox(width: 5),
-                      OrderTypeButton(text: getTranslated('processing', context), index: 2),
+                      OrderTypeButton(
+                          text: getTranslated('processing', context), index: 2),
                       const SizedBox(width: 5),
-                      OrderTypeButton(text: getTranslated('delivered', context), index: 3),
+                      OrderTypeButton(
+                          text: getTranslated('delivered', context), index: 3),
                       const SizedBox(width: 5),
-                      OrderTypeButton(text: getTranslated('return', context), index: 4),
+                      OrderTypeButton(
+                          text: getTranslated('return', context), index: 4),
                       const SizedBox(width: 5),
-                      OrderTypeButton(text: getTranslated('failed', context), index: 5),
+                      OrderTypeButton(
+                          text: getTranslated('failed', context), index: 5),
                       const SizedBox(width: 5),
-                      OrderTypeButton(text: getTranslated('cancelled', context), index: 6),
+                      OrderTypeButton(
+                          text: getTranslated('cancelled', context), index: 6),
                       const SizedBox(width: 5),
-                      OrderTypeButton(text: getTranslated('confirmed', context), index: 7),
+                      OrderTypeButton(
+                          text: getTranslated('confirmed', context), index: 7),
                       const SizedBox(width: 5),
-                      OrderTypeButton(text: getTranslated('out_for_delivery', context), index: 8),
+                      OrderTypeButton(
+                          text: getTranslated('out_for_delivery', context),
+                          index: 8),
                     ],
                   ),
                 ),
@@ -87,7 +99,8 @@ class _OrderScreenState extends State<OrderScreen> {
                       ? Expanded(
                           child: RefreshIndicator(
                             onRefresh: () async {
-                              await order.getOrderList(context, 1, order.orderType);
+                              await order.getOrderList(
+                                  context, 1, order.orderType);
                             },
                             child: SingleChildScrollView(
                               controller: scrollController,
@@ -96,25 +109,32 @@ class _OrderScreenState extends State<OrderScreen> {
                                 scrollController: scrollController,
                                 totalSize: order.orderModel?.totalSize,
                                 offset: order.orderModel != null
-                                    ? int.parse(order.orderModel!.offset.toString())
+                                    ? int.parse(
+                                        order.orderModel!.offset.toString())
                                     : null,
                                 onPaginate: (int? offset) async {
-                                  await order.getOrderList(context, offset!, order.orderType, reload: false);
+                                  await order.getOrderList(
+                                      context, offset!, order.orderType,
+                                      reload: false);
                                 },
                                 itemView: ListView.builder(
                                   itemCount: orderList.length,
                                   padding: const EdgeInsets.all(0),
                                   physics: const NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return OrderWidget(orderModel: orderList![index], index: index);
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return OrderWidget(
+                                        orderModel: orderList![index],
+                                        index: index);
                                   },
                                 ),
                               ),
                             ),
                           ),
                         )
-                      : const Expanded(child: NoDataScreen(title: 'no_order_found'))
+                      : const Expanded(
+                          child: NoDataScreen(title: 'no_order_found'))
                   : const Expanded(child: OrderShimmer()),
             ],
           );
@@ -143,25 +163,47 @@ class OrderShimmer extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(height: 10, width: 150, color: Theme.of(context).colorScheme.secondaryContainer),
+                Container(
+                    height: 10,
+                    width: 150,
+                    color: Theme.of(context).colorScheme.secondaryContainer),
                 const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Expanded(child: Container(height: 45, color: Theme.of(context).colorScheme.secondaryContainer)),
+                    Expanded(
+                        child: Container(
+                            height: 45,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .secondaryContainer)),
                     const SizedBox(width: 10),
                     Expanded(
                       flex: 3,
                       child: Column(
                         children: [
-                          Container(height: 20, color: Theme.of(context).colorScheme.secondaryContainer),
+                          Container(
+                              height: 20,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .secondaryContainer),
                           const SizedBox(height: 10),
                           Row(
                             children: [
-                              Container(height: 10, width: 70, color: Theme.of(context).colorScheme.secondaryContainer),
+                              Container(
+                                  height: 10,
+                                  width: 70,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .secondaryContainer),
                               const SizedBox(width: 10),
-                              Container(height: 10, width: 20, color: Theme.of(context).colorScheme.secondaryContainer),
+                              Container(
+                                  height: 10,
+                                  width: 20,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .secondaryContainer),
                             ],
                           ),
                         ],
@@ -190,21 +232,25 @@ class OrderTypeButton extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          Provider.of<OrderController>(context, listen: false).setIndex(context, index);
+          Provider.of<OrderController>(context, listen: false)
+              .setIndex(context, index);
         },
         child: Consumer<OrderController>(
           builder: (context, order, child) {
             return Container(
               height: 40,
-              padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Dimensions.paddingSizeLarge),
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: order.orderTypeIndex == index
                     ? Theme.of(context).primaryColor
                     : Provider.of<ThemeController>(context).darkTheme
-                        ? ColorHelper.blendColors(Colors.white, Theme.of(context).highlightColor, 0.9)
+                        ? ColorHelper.blendColors(
+                            Colors.white, Theme.of(context).highlightColor, 0.9)
                         : Theme.of(context).colorScheme.secondaryContainer,
-                borderRadius: BorderRadius.circular(Dimensions.paddingSizeLarge),
+                borderRadius:
+                    BorderRadius.circular(Dimensions.paddingSizeLarge),
               ),
               child: Text(
                 text!,

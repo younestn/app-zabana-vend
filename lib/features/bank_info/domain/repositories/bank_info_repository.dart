@@ -9,16 +9,17 @@ import 'package:sixvalley_vendor_app/utill/app_constants.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
-class BankInfoRepository implements BankInfoRepositoryInterface{
-
+class BankInfoRepository implements BankInfoRepositoryInterface {
   final DioClient? dioClient;
   final SharedPreferences? sharedPreferences;
-  BankInfoRepository({required this.dioClient, required this.sharedPreferences});
+  BankInfoRepository(
+      {required this.dioClient, required this.sharedPreferences});
 
   @override
   Future<ApiResponse> chartFilterData(String? type) async {
     try {
-      final response = await dioClient!.get('${AppConstants.chartFilterData}$type');
+      final response =
+          await dioClient!.get('${AppConstants.chartFilterData}$type');
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -28,7 +29,8 @@ class BankInfoRepository implements BankInfoRepositoryInterface{
   @override
   Future<ApiResponse> getOrderFilterData(String? type) async {
     try {
-      final response = await dioClient!.get('${AppConstants.businessAnalytics}$type');
+      final response =
+          await dioClient!.get('${AppConstants.businessAnalytics}$type');
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -36,15 +38,24 @@ class BankInfoRepository implements BankInfoRepositoryInterface{
   }
 
   @override
-  Future<http.StreamedResponse> updateBank(ProfileInfoModel userInfoModel, ProfileBody seller, String token) async {
-    http.MultipartRequest request = http.MultipartRequest('POST', Uri.parse('${AppConstants.baseUrl}${AppConstants.sellerAndBankUpdate}'));
-    request.headers.addAll(<String,String>{'Authorization': 'Bearer $token'});
+  Future<http.StreamedResponse> updateBank(
+      ProfileInfoModel userInfoModel, ProfileBody seller, String token) async {
+    http.MultipartRequest request = http.MultipartRequest(
+        'POST',
+        Uri.parse(
+            '${AppConstants.baseUrl}${AppConstants.sellerAndBankUpdate}'));
+    request.headers.addAll(<String, String>{'Authorization': 'Bearer $token'});
 
     Map<String, String> fields = {};
     fields.addAll(<String, String>{
-      '_method': 'put', 'bank_name': userInfoModel.bankName!, 'branch': userInfoModel.branch!,
-      'holder_name': userInfoModel.holderName!, 'account_no': userInfoModel.accountNo!,
-      'f_name': seller.fName!, 'l_name': seller.lName!, 'phone': userInfoModel.phone!
+      '_method': 'put',
+      'bank_name': userInfoModel.bankName!,
+      'branch': userInfoModel.branch!,
+      'holder_name': userInfoModel.holderName!,
+      'account_no': userInfoModel.accountNo!,
+      'f_name': seller.fName!,
+      'l_name': seller.lName!,
+      'phone': userInfoModel.phone!
     });
     request.fields.addAll(fields);
     http.StreamedResponse response = await request.send();
@@ -88,41 +99,42 @@ class BankInfoRepository implements BankInfoRepositoryInterface{
   Future update(Map<String, dynamic> body, int id) {
     // TODO: implement update
     throw UnimplementedError();
-  
   }
-
 
   @override
-Future<ApiResponse> getCurrentMonthCommissionInvoice() async {
-  try {
-    final response = await dioClient!.get(AppConstants.currentMonthCommissionInvoiceUri);
-    return ApiResponse.withSuccess(response);
-  } catch (e) {
-    return ApiResponse.withError(ApiErrorHandler.getMessage(e));
+  Future<ApiResponse> getCurrentMonthCommissionInvoice() async {
+    try {
+      final response =
+          await dioClient!.get(AppConstants.currentMonthCommissionInvoiceUri);
+      return ApiResponse.withSuccess(response);
+    } catch (e) {
+      return ApiResponse.withError(ApiErrorHandler.getMessage(e));
+    }
   }
-}
 
-@override
-Future<http.StreamedResponse> sendCommissionReceipt(int invoiceId, String? note, XFile receiptImage) async {
-  final String token = sharedPreferences!.getString(AppConstants.token) ?? '';
+  @override
+  Future<http.StreamedResponse> sendCommissionReceipt(
+      int invoiceId, String? note, XFile receiptImage) async {
+    final String token = sharedPreferences!.getString(AppConstants.token) ?? '';
 
-  final request = http.MultipartRequest(
-    'POST',
-    Uri.parse('${AppConstants.baseUrl}${AppConstants.sendCommissionReceiptUri}$invoiceId/send-payment-receipt'),
-  );
+    final request = http.MultipartRequest(
+      'POST',
+      Uri.parse(
+          '${AppConstants.baseUrl}${AppConstants.sendCommissionReceiptUri}$invoiceId/send-payment-receipt'),
+    );
 
     request.headers.addAll(<String, String>{
-    'Authorization': 'Bearer $token',
-    'Accept': 'application/json',
-  });
+      'Authorization': 'Bearer $token',
+      'Accept': 'application/json',
+    });
 
-  if (note != null && note.trim().isNotEmpty) {
-    request.fields['note'] = note.trim();
+    if (note != null && note.trim().isNotEmpty) {
+      request.fields['note'] = note.trim();
+    }
+
+    request.files.add(
+        await http.MultipartFile.fromPath('receipt_image', receiptImage.path));
+
+    return await request.send();
   }
-
-  request.files.add(await http.MultipartFile.fromPath('receipt_image', receiptImage.path));
-
-  return await request.send();
-}
-
 }

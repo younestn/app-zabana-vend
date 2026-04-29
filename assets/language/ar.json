@@ -1095,8 +1095,24 @@
   "home_delivery": "التوصيل إلى المنزل",
   "please_wait": "يرجى الانتظار...",
 "product_is_being_processed": "جاري رفع صور المنتج ومعالجة الطلب",
-  "desk_delivery": "التوصيل إلى المكتب"
+  "desk_delivery": "التوصيل إلى المكتب",
 
+  "seller_badge": "شارة البائع",
+  "your_current_badge": "شارتك الحالية",
+  "badge_not_evaluated_yet": "لم يتم تقييم الشارة بعد",
+  "new_seller": "بائع جديد",
+  "rising_seller": "بائع واعد",
+  "verified_seller": "بائع معتمد",
+  "trusted_seller": "بائع موثوق",
+  "elite_seller": "بائع نخبة",
+  "compliance_score": "نسبة الالتزام",
+  "automatic_badge": "شارة تلقائية",
+  "manual_badge": "شارة معدلة يدويًا",
+  "badge_assigned_by_admin": "معيّنة من الإدارة",
+  "badge_level": "مستوى الشارة",
+  "seller_performance": "أداء البائع",
+  "view_your_seller_badge": "عرض شارة متجرك",
+  "badge_based_on_performance": "تعتمد هذه الشارة على أداء المتجر والالتزام"
 }
 
 

@@ -11,12 +11,12 @@ class WithdrawModel {
 
   WithdrawModel(
       {this.id,
-        this.methodName,
-        this.methodFields,
-        this.isDefault,
-        this.isActive,
-        this.createdAt,
-        this.updatedAt});
+      this.methodName,
+      this.methodFields,
+      this.isDefault,
+      this.isActive,
+      this.createdAt,
+      this.updatedAt});
 
   WithdrawModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -27,7 +27,7 @@ class WithdrawModel {
         methodFields!.add(InfoMethodFields.fromJson(v));
       });
     }
-    isDefault = json['is_default']??false;
+    isDefault = json['is_default'] ?? false;
     isActive = json['is_active'] ? 1 : 0;
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
@@ -38,8 +38,7 @@ class WithdrawModel {
     data['id'] = id;
     data['method_name'] = methodName;
     if (methodFields != null) {
-      data['method_fields'] =
-      methodFields!.map((v) => v.toJson()).toList();
+      data['method_fields'] = methodFields!.map((v) => v.toJson()).toList();
     }
     data['is_default'] = isDefault;
     data['is_active'] = isActive;
@@ -49,8 +48,6 @@ class WithdrawModel {
   }
 }
 
-
-
 class MethodModel {
   int? id;
   String? inputName;
@@ -59,7 +56,13 @@ class MethodModel {
   bool? isDefault;
   Map<String, dynamic>? methodInfo;
 
-  MethodModel({this.id, this.inputName, this.type, this.methodFields, this.methodInfo, this.isDefault});
+  MethodModel(
+      {this.id,
+      this.inputName,
+      this.type,
+      this.methodFields,
+      this.methodInfo,
+      this.isDefault});
 
   MethodModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -72,8 +75,8 @@ class MethodModel {
       });
     }
     methodInfo = json['method_info'] != null
-      ? Map<String, dynamic>.from(json['method_info'])
-      : null;
+        ? Map<String, dynamic>.from(json['method_info'])
+        : null;
     isDefault = json['is_default'];
   }
 
@@ -83,8 +86,7 @@ class MethodModel {
     data['input_name'] = inputName;
     data['type'] = type;
     if (methodFields != null) {
-      data['method_fields'] =
-      methodFields!.map((v) => v.toJson()).toList();
+      data['method_fields'] = methodFields!.map((v) => v.toJson()).toList();
     }
     if (methodInfo != null) {
       data['method_info'] = methodInfo;

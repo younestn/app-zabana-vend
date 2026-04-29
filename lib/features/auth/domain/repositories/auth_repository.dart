@@ -12,7 +12,7 @@ import 'package:sixvalley_vendor_app/utill/app_constants.dart';
 import 'package:path/path.dart';
 import 'package:http/http.dart' as http;
 
-class AuthRepository implements AuthRepositoryInterface{
+class AuthRepository implements AuthRepositoryInterface {
   final DioClient? dioClient;
   final SharedPreferences? sharedPreferences;
   AuthRepository({required this.dioClient, required this.sharedPreferences});
@@ -20,22 +20,21 @@ class AuthRepository implements AuthRepositoryInterface{
   @override
   Future<ApiResponse> login({String? emailAddress, String? password}) async {
     try {
-      Response response = await dioClient!.post(AppConstants.loginUri,
+      Response response = await dioClient!.post(
+        AppConstants.loginUri,
         data: {"email": emailAddress, "password": password},
       );
       return ApiResponse.withSuccess(response);
     } catch (e) {
-     return ApiResponse.withError(ApiErrorHandler.getMessage(e));
+      return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
 
   @override
   Future<ApiResponse> setLanguageCode(String languageCode) async {
     try {
-      final response = await dioClient!.post(AppConstants.setCurrentLanguageUri, data: {
-        'current_language' : languageCode,
-        '_method' : 'put'
-      });
+      final response = await dioClient!.post(AppConstants.setCurrentLanguageUri,
+          data: {'current_language': languageCode, '_method': 'put'});
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -45,7 +44,8 @@ class AuthRepository implements AuthRepositoryInterface{
   @override
   Future<ApiResponse> forgotPassword(String identity) async {
     try {
-      Response response = await dioClient!.post(AppConstants.forgotPasswordUri, data: {"identity": identity});
+      Response response = await dioClient!
+          .post(AppConstants.forgotPasswordUri, data: {"identity": identity});
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -53,12 +53,17 @@ class AuthRepository implements AuthRepositoryInterface{
   }
 
   @override
-  Future<ApiResponse> resetPassword(String identity, String otp ,String password, String confirmPassword) async {
+  Future<ApiResponse> resetPassword(String identity, String otp,
+      String password, String confirmPassword) async {
     try {
-      Response response = await dioClient!.post(
-          AppConstants.resetPasswordUri, data: {"_method" : "put",
-        "identity": identity.trim(), "otp": otp,
-        "password": password, "confirm_password":confirmPassword});
+      Response response =
+          await dioClient!.post(AppConstants.resetPasswordUri, data: {
+        "_method": "put",
+        "identity": identity.trim(),
+        "otp": otp,
+        "password": password,
+        "confirm_password": confirmPassword
+      });
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -68,8 +73,8 @@ class AuthRepository implements AuthRepositoryInterface{
   @override
   Future<ApiResponse> verifyOtp(String identity, String otp) async {
     try {
-      Response response = await dioClient!.post(
-          AppConstants.verifyOtpUri, data: {"identity": identity.trim(), "otp": otp});
+      Response response = await dioClient!.post(AppConstants.verifyOtpUri,
+          data: {"identity": identity.trim(), "otp": otp});
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -81,7 +86,8 @@ class AuthRepository implements AuthRepositoryInterface{
     try {
       String? deviceToken = await _getDeviceToken();
       FirebaseMessaging.instance.subscribeToTopic(AppConstants.topic);
-      FirebaseMessaging.instance.subscribeToTopic(AppConstants.maintenanceModeTopic);
+      FirebaseMessaging.instance
+          .subscribeToTopic(AppConstants.maintenanceModeTopic);
       Response response = await dioClient!.post(
         AppConstants.tokenUri,
         data: {"_method": "put", "cm_firebase_token": deviceToken},
@@ -107,7 +113,10 @@ class AuthRepository implements AuthRepositoryInterface{
   @override
   Future<void> saveUserToken(String token) async {
     dioClient!.token = token;
-    dioClient!.dio!.options.headers = {'Content-Type': 'application/json; charset=UTF-8', 'Authorization': 'Bearer $token'};
+    dioClient!.dio!.options.headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token'
+    };
 
     try {
       await sharedPreferences!.setString(AppConstants.token, token);
@@ -128,10 +137,11 @@ class AuthRepository implements AuthRepositoryInterface{
 
   @override
   Future<bool> clearSharedData() async {
-    try{
+    try {
       await FirebaseMessaging.instance.unsubscribeFromTopic(AppConstants.topic);
-      await FirebaseMessaging.instance.unsubscribeFromTopic(AppConstants.maintenanceModeTopic);
-    }catch(e) {
+      await FirebaseMessaging.instance
+          .unsubscribeFromTopic(AppConstants.maintenanceModeTopic);
+    } catch (e) {
       if (kDebugMode) {
         print("====Execption====>>$e");
       }
@@ -166,28 +176,48 @@ class AuthRepository implements AuthRepositoryInterface{
   }
 
   @override
-  Future<ApiResponse> registration(XFile? profileImage, XFile? shopLogo, XFile? shopBanner, XFile? secondaryBanner, RegisterModel registerModel, XFile? tinCertificate) async {
-    http.MultipartRequest request = http.MultipartRequest('POST', Uri.parse('${AppConstants.baseUrl}${AppConstants.registration}'));
-    if(profileImage != null) {
+  Future<ApiResponse> registration(
+      XFile? profileImage,
+      XFile? shopLogo,
+      XFile? shopBanner,
+      XFile? secondaryBanner,
+      RegisterModel registerModel,
+      XFile? tinCertificate) async {
+    http.MultipartRequest request = http.MultipartRequest('POST',
+        Uri.parse('${AppConstants.baseUrl}${AppConstants.registration}'));
+    if (profileImage != null) {
       Uint8List list = await profileImage.readAsBytes();
-      var part = http.MultipartFile('image', profileImage.readAsBytes().asStream(), list.length, filename: basename(profileImage.path));
-      request.files.add(part);
-    } if(shopLogo != null) {
-      Uint8List list = await shopLogo.readAsBytes();
-      var part = http.MultipartFile('logo', shopLogo.readAsBytes().asStream(), list.length, filename: basename(shopLogo.path));
-      request.files.add(part);
-    } if(shopBanner != null) {
-      Uint8List list = await shopBanner.readAsBytes();
-      var part = http.MultipartFile('banner', shopBanner.readAsBytes().asStream(), list.length, filename: basename(shopBanner.path));
-      request.files.add(part);
-    }if(secondaryBanner != null) {
-      Uint8List list = await secondaryBanner.readAsBytes();
-      var part = http.MultipartFile('bottom_banner', secondaryBanner.readAsBytes().asStream(), list.length, filename: basename(secondaryBanner.path));
+      var part = http.MultipartFile(
+          'image', profileImage.readAsBytes().asStream(), list.length,
+          filename: basename(profileImage.path));
       request.files.add(part);
     }
-    if(tinCertificate != null) {
+    if (shopLogo != null) {
+      Uint8List list = await shopLogo.readAsBytes();
+      var part = http.MultipartFile(
+          'logo', shopLogo.readAsBytes().asStream(), list.length,
+          filename: basename(shopLogo.path));
+      request.files.add(part);
+    }
+    if (shopBanner != null) {
+      Uint8List list = await shopBanner.readAsBytes();
+      var part = http.MultipartFile(
+          'banner', shopBanner.readAsBytes().asStream(), list.length,
+          filename: basename(shopBanner.path));
+      request.files.add(part);
+    }
+    if (secondaryBanner != null) {
+      Uint8List list = await secondaryBanner.readAsBytes();
+      var part = http.MultipartFile('bottom_banner',
+          secondaryBanner.readAsBytes().asStream(), list.length,
+          filename: basename(secondaryBanner.path));
+      request.files.add(part);
+    }
+    if (tinCertificate != null) {
       Uint8List list = await tinCertificate.readAsBytes();
-      var part = http.MultipartFile('tin_certificate', tinCertificate.readAsBytes().asStream(), list.length, filename: basename(tinCertificate.path));
+      var part = http.MultipartFile('tin_certificate',
+          tinCertificate.readAsBytes().asStream(), list.length,
+          filename: basename(tinCertificate.path));
       request.files.add(part);
     }
 
@@ -217,12 +247,13 @@ class AuthRepository implements AuthRepositoryInterface{
     }
 
     try {
-      return ApiResponse.withSuccess(Response(statusCode: response.statusCode,
+      return ApiResponse.withSuccess(Response(
+          statusCode: response.statusCode,
           requestOptions: RequestOptions(path: ''),
-          statusMessage: response.reasonPhrase, data: res.body));
+          statusMessage: response.reasonPhrase,
+          data: res.body));
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
-
     }
   }
 
@@ -255,5 +286,4 @@ class AuthRepository implements AuthRepositoryInterface{
     // TODO: implement update
     throw UnimplementedError();
   }
-
 }

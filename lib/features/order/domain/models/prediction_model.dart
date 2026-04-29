@@ -126,7 +126,7 @@ class StructuredFormat {
 
   StructuredFormat.fromJson(Map<String, dynamic> json) {
     mainText =
-    json['mainText'] != null ? Text.fromJson(json['mainText']) : null;
+        json['mainText'] != null ? Text.fromJson(json['mainText']) : null;
     secondaryText = json['secondaryText'] != null
         ? SecondaryText.fromJson(json['secondaryText'])
         : null;
@@ -159,13 +159,6 @@ class SecondaryText {
     return data;
   }
 }
-
-
-
-
-
-
-
 
 // class PredictionModel {
 //   String? description;

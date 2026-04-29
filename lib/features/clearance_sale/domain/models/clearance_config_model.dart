@@ -20,24 +20,23 @@ class ClearanceConfigModel {
 
   ClearanceConfigModel(
       {this.id,
-        this.setupBy,
-        this.userId,
-        this.shopId,
-        this.isActive,
-        this.discountType,
-        this.discountAmount,
-        this.offerActiveTime,
-        this.offerActiveRangeStart,
-        this.offerActiveRangeEnd,
-        this.showInHomepage,
-        this.showInHomepageOnce,
-        this.showInShop,
-        this.durationStartDate,
-        this.durationEndDate,
-        this.createdAt,
-        this.updatedAt,
-        this.clearanceSaleDuration
-      });
+      this.setupBy,
+      this.userId,
+      this.shopId,
+      this.isActive,
+      this.discountType,
+      this.discountAmount,
+      this.offerActiveTime,
+      this.offerActiveRangeStart,
+      this.offerActiveRangeEnd,
+      this.showInHomepage,
+      this.showInHomepageOnce,
+      this.showInShop,
+      this.durationStartDate,
+      this.durationEndDate,
+      this.createdAt,
+      this.updatedAt,
+      this.clearanceSaleDuration});
 
   ClearanceConfigModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];

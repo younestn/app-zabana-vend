@@ -12,18 +12,18 @@ class RefundDetailsModel {
   DeliverymanDetails? deliverymanDetails;
   double? referralDiscount;
 
-  RefundDetailsModel(
-      {this.productPrice,
-        this.quntity,
-        this.productTotalDiscount,
-        this.productTotalTax,
-        this.subtotal,
-        this.couponDiscount,
-        this.refundAmount,
-        this.refundRequest,
-        this.deliverymanDetails,
-        this.referralDiscount,
-      });
+  RefundDetailsModel({
+    this.productPrice,
+    this.quntity,
+    this.productTotalDiscount,
+    this.productTotalTax,
+    this.subtotal,
+    this.couponDiscount,
+    this.refundAmount,
+    this.refundRequest,
+    this.deliverymanDetails,
+    this.referralDiscount,
+  });
 
   RefundDetailsModel.fromJson(Map<String, dynamic> json) {
     productPrice = json['product_price'].toDouble();
@@ -46,7 +46,6 @@ class RefundDetailsModel {
     referralDiscount = (json['referral_discount'] != null)
         ? double.tryParse(json['referral_discount'].toString()) ?? 0.0
         : null;
-
   }
 
   Map<String, dynamic> toJson() {
@@ -59,8 +58,7 @@ class RefundDetailsModel {
     data['coupon_discount'] = couponDiscount;
     data['refund_amount'] = refundAmount;
     if (refundRequest != null) {
-      data['refund_request'] =
-          refundRequest!.map((v) => v.toJson()).toList();
+      data['refund_request'] = refundRequest!.map((v) => v.toJson()).toList();
     }
     if (deliverymanDetails != null) {
       data['deliveryman_details'] = deliverymanDetails!.toJson();
@@ -89,21 +87,21 @@ class RefundRequest {
 
   RefundRequest(
       {this.id,
-        this.orderDetailsId,
-        this.customerId,
-        this.status,
-        this.amount,
-        this.productId,
-        this.orderId,
-        this.refundReason,
-        this.images,
-        this.createdAt,
-        this.updatedAt,
-        this.approvedNote,
-        this.rejectedNote,
-        this.paymentInfo,
-        this.changeBy,
-        this.refundStatus});
+      this.orderDetailsId,
+      this.customerId,
+      this.status,
+      this.amount,
+      this.productId,
+      this.orderId,
+      this.refundReason,
+      this.images,
+      this.createdAt,
+      this.updatedAt,
+      this.approvedNote,
+      this.rejectedNote,
+      this.paymentInfo,
+      this.changeBy,
+      this.refundStatus});
 
   RefundRequest.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -114,7 +112,7 @@ class RefundRequest {
     productId = json['product_id'];
     orderId = json['order_id'];
     refundReason = json['refund_reason'];
-    if(json['images']!=null){
+    if (json['images'] != null) {
       images = json['images'].cast<String>();
     }
 
@@ -150,8 +148,7 @@ class RefundRequest {
     data['payment_info'] = paymentInfo;
     data['change_by'] = changeBy;
     if (refundStatus != null) {
-      data['refund_status'] =
-          refundStatus!.map((v) => v.toJson()).toList();
+      data['refund_status'] = refundStatus!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -169,26 +166,25 @@ class RefundStatus {
 
   RefundStatus(
       {this.id,
-        this.refundRequestId,
-        this.changeBy,
-        this.changeById,
-        this.status,
-        this.message,
-        this.createdAt,
-        this.updatedAt});
+      this.refundRequestId,
+      this.changeBy,
+      this.changeById,
+      this.status,
+      this.message,
+      this.createdAt,
+      this.updatedAt});
 
   RefundStatus.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     refundRequestId = json['refund_request_id'];
     changeBy = json['change_by'];
-    if(json['change_by_id']!=null)
-      {
-        try{
-          changeById = json['change_by_id'];
-        }catch(e){
-          changeById = int.parse(json['change_by_id']);
-        }
+    if (json['change_by_id'] != null) {
+      try {
+        changeById = json['change_by_id'];
+      } catch (e) {
+        changeById = int.parse(json['change_by_id']);
       }
+    }
 
     status = json['status'];
     message = json['message'];
@@ -229,21 +225,20 @@ class DeliverymanDetails {
 
   DeliverymanDetails(
       {this.id,
-        this.sellerId,
-        this.fName,
-        this.lName,
-        this.phone,
-        this.email,
-        this.identityNumber,
-        this.identityType,
-        this.identityImage,
-        this.image,
-        this.isActive,
-        this.createdAt,
-        this.updatedAt,
-        this.fcmToken,
-        this.identityImagesFullUrl
-      });
+      this.sellerId,
+      this.fName,
+      this.lName,
+      this.phone,
+      this.email,
+      this.identityNumber,
+      this.identityType,
+      this.identityImage,
+      this.image,
+      this.isActive,
+      this.createdAt,
+      this.updatedAt,
+      this.fcmToken,
+      this.identityImagesFullUrl});
 
   DeliverymanDetails.fromJson(Map<String, dynamic> json) {
     id = json['id'];

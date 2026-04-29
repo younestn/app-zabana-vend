@@ -8,27 +8,37 @@ class PosProductListWidget extends StatelessWidget {
   final List<Product>? productList;
   final ScrollController? scrollController;
   final ProductController? productProvider;
-  const PosProductListWidget({super.key, this.productList, this.scrollController, this.productProvider});
+  const PosProductListWidget(
+      {super.key,
+      this.productList,
+      this.scrollController,
+      this.productProvider});
 
   @override
   Widget build(BuildContext context) {
     return PaginatedListViewWidget(
-        reverse: true,
-        scrollController: scrollController,
-        totalSize: productProvider!.posProductModel?.totalSize,
-        offset: productProvider!.posProductModel != null ? int.parse(productProvider!.posProductModel!.offset.toString()) : null,
-        onPaginate: (int? offset) async {
-          await productProvider!.getPosProductList(offset!, context, [], reload: false);
+      reverse: true,
+      scrollController: scrollController,
+      totalSize: productProvider!.posProductModel?.totalSize,
+      offset: productProvider!.posProductModel != null
+          ? int.parse(productProvider!.posProductModel!.offset.toString())
+          : null,
+      onPaginate: (int? offset) async {
+        await productProvider!
+            .getPosProductList(offset!, context, [], reload: false);
+      },
+      itemView: ListView.builder(
+        itemCount: productList!.length,
+        padding: const EdgeInsets.all(0),
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemBuilder: (BuildContext context, int index) {
+          return POSProductWidget(
+            productModel: productList![index],
+            index: index,
+          );
         },
-        itemView: ListView.builder(
-          itemCount: productList!.length,
-          padding: const EdgeInsets.all(0),
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemBuilder: (BuildContext context, int index) {
-            return POSProductWidget(productModel: productList![index], index: index,);
-          },
-        ),
-      );
+      ),
+    );
   }
 }

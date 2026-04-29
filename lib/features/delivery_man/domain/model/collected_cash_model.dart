@@ -25,8 +25,7 @@ class CollectedCashModel {
     data['limit'] = limit;
     data['offset'] = offset;
     if (collectedCash != null) {
-      data['collected_cash'] =
-          collectedCash!.map((v) => v.toJson()).toList();
+      data['collected_cash'] = collectedCash!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -41,10 +40,10 @@ class CollectedCash {
 
   CollectedCash(
       {this.id,
-        this.credit,
-        this.transactionType,
-        this.createdAt,
-        this.updatedAt});
+      this.credit,
+      this.transactionType,
+      this.createdAt,
+      this.updatedAt});
 
   CollectedCash.fromJson(Map<String, dynamic> json) {
     id = json['id'];

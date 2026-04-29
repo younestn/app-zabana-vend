@@ -18,24 +18,19 @@ import 'package:sixvalley_vendor_app/helper/api_checker.dart';
 import 'package:sixvalley_vendor_app/localization/language_constrants.dart';
 import 'package:sixvalley_vendor_app/main.dart';
 
-
-
-class BarcodeScanController extends ChangeNotifier{
+class BarcodeScanController extends ChangeNotifier {
   final CartServiceInterface cartServiceInterface;
   BarcodeScanController({required this.cartServiceInterface});
-
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  Product? _scanProduct ;
-  Product? get scanProduct=>_scanProduct;
+  Product? _scanProduct;
+  Product? get scanProduct => _scanProduct;
 
-
-
-  Future<void> scanProductBarCode(BuildContext context) async{
+  Future<void> scanProductBarCode(BuildContext context) async {
     String? scannedProductBarCode;
-    try{
+    try {
       final result = await BarcodeScanner.scan(
         options: const ScanOptions(
           strings: {
@@ -53,8 +48,7 @@ class BarcodeScanController extends ChangeNotifier{
         ),
       );
       scannedProductBarCode = result.rawContent;
-    }
-    on PlatformException{
+    } on PlatformException {
       if (kDebugMode) {
         print('object');
       }
@@ -62,31 +56,52 @@ class BarcodeScanController extends ChangeNotifier{
     getProductFromScan(Get.context!, scannedProductBarCode);
   }
 
-
-  Future<void> getProductFromScan(BuildContext context, String? productCode) async {
+  Future<void> getProductFromScan(
+      BuildContext context, String? productCode) async {
     _isLoading = true;
-    ApiResponse response = await cartServiceInterface.getProductFromScan(productCode);
+    ApiResponse response =
+        await cartServiceInterface.getProductFromScan(productCode);
 
-    if(response.response!.statusCode == 200) {
+    if (response.response!.statusCode == 200) {
       _scanProduct = Product.fromJson(response.response!.data);
-      Provider.of<ProductController>(Get.context!, listen: false).initData(_scanProduct!,1, Get.context!);
-      if(scanProduct!.variation!.isNotEmpty || scanProduct!.digitalProductFileTypes!.isNotEmpty){
-        showModalBottomSheet(context: Get.context!, isScrollControlled: true,
-            backgroundColor: Theme.of(Get.context!).primaryColor.withValues(alpha:0),
-            builder: (con) => CartBottomSheetWidget(product: _scanProduct, callback: () {
-              showCustomSnackBarWidget(getTranslated('added_to_cart', context), context, isError: false);},));
-
-      } else{
-        CartModel cartModel = CartModel(_scanProduct!.unitPrice, _scanProduct!.discount, 1, _scanProduct!.tax, null,null,null,null, _scanProduct, _scanProduct!.taxModel);
-        Provider.of<CartController>(Get.context!, listen: false).addToCart(Get.context!, cartModel);
+      Provider.of<ProductController>(Get.context!, listen: false)
+          .initData(_scanProduct!, 1, Get.context!);
+      if (scanProduct!.variation!.isNotEmpty ||
+          scanProduct!.digitalProductFileTypes!.isNotEmpty) {
+        showModalBottomSheet(
+            context: Get.context!,
+            isScrollControlled: true,
+            backgroundColor:
+                Theme.of(Get.context!).primaryColor.withValues(alpha: 0),
+            builder: (con) => CartBottomSheetWidget(
+                  product: _scanProduct,
+                  callback: () {
+                    showCustomSnackBarWidget(
+                        getTranslated('added_to_cart', context), context,
+                        isError: false);
+                  },
+                ));
+      } else {
+        CartModel cartModel = CartModel(
+            _scanProduct!.unitPrice,
+            _scanProduct!.discount,
+            1,
+            _scanProduct!.tax,
+            null,
+            null,
+            null,
+            null,
+            _scanProduct,
+            _scanProduct!.taxModel);
+        Provider.of<CartController>(Get.context!, listen: false)
+            .addToCart(Get.context!, cartModel);
       }
 
       _isLoading = false;
-    }else {
-      ApiChecker.checkApi( response);
+    } else {
+      ApiChecker.checkApi(response);
     }
     _isLoading = false;
     notifyListeners();
   }
-
 }

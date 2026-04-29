@@ -31,8 +31,8 @@ class _CommissionInvoiceDetailsScreenState
     return Scaffold(
       body: Consumer<BankInfoController>(
         builder: (context, bankInfoController, _) {
-          final invoice =
-              bankInfoController.currentMonthCommissionInvoice ?? widget.invoice;
+          final invoice = bankInfoController.currentMonthCommissionInvoice ??
+              widget.invoice;
 
           return Column(
             children: [
@@ -45,7 +45,6 @@ class _CommissionInvoiceDetailsScreenState
                     children: [
                       _heroCard(context, invoice),
                       const SizedBox(height: Dimensions.paddingSizeDefault),
-
                       Row(
                         children: [
                           Expanded(
@@ -70,20 +69,13 @@ class _CommissionInvoiceDetailsScreenState
                           ),
                         ],
                       ),
-
                       const SizedBox(height: Dimensions.paddingSizeDefault),
-
                       _summaryCard(context, invoice),
-
                       const SizedBox(height: Dimensions.paddingSizeDefault),
-
                       _adjustmentsCard(context, invoice),
-
                       const SizedBox(height: Dimensions.paddingSizeDefault),
-
                       if (invoice.hasInvoice && invoice.paymentStatus != 'paid')
                         _receiptUploadCard(context, invoice),
-
                       if (invoice.paymentStatus == 'paid')
                         Container(
                           width: double.infinity,
@@ -101,9 +93,7 @@ class _CommissionInvoiceDetailsScreenState
                             style: robotoMedium.copyWith(color: Colors.green),
                           ),
                         ),
-
                       const SizedBox(height: Dimensions.paddingSizeDefault),
-
                       SizedBox(
                         width: double.infinity,
                         child: OutlinedButton.icon(
@@ -138,7 +128,8 @@ class _CommissionInvoiceDetailsScreenState
     );
   }
 
-  Widget _heroCard(BuildContext context, CurrentCommissionInvoiceModel invoice) {
+  Widget _heroCard(
+      BuildContext context, CurrentCommissionInvoiceModel invoice) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
@@ -188,7 +179,9 @@ class _CommissionInvoiceDetailsScreenState
           ),
           const SizedBox(height: Dimensions.paddingSizeExtraSmall),
           Text(
-            invoice.paymentStatus == 'paid' ? 'حالة الفاتورة: مدفوعة' : 'حالة الفاتورة: غير مدفوعة',
+            invoice.paymentStatus == 'paid'
+                ? 'حالة الفاتورة: مدفوعة'
+                : 'حالة الفاتورة: غير مدفوعة',
             style: robotoMedium.copyWith(
               color: Colors.white.withValues(alpha: .96),
               fontSize: Dimensions.fontSizeDefault,
@@ -222,7 +215,9 @@ class _CommissionInvoiceDetailsScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: robotoRegular.copyWith(color: Theme.of(context).hintColor)),
+          Text(title,
+              style:
+                  robotoRegular.copyWith(color: Theme.of(context).hintColor)),
           const SizedBox(height: Dimensions.paddingSizeExtraSmall),
           Text(
             value,
@@ -236,7 +231,8 @@ class _CommissionInvoiceDetailsScreenState
     );
   }
 
-  Widget _summaryCard(BuildContext context, CurrentCommissionInvoiceModel invoice) {
+  Widget _summaryCard(
+      BuildContext context, CurrentCommissionInvoiceModel invoice) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
@@ -255,30 +251,27 @@ class _CommissionInvoiceDetailsScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('ملخص العمولة', style: robotoBold.copyWith(fontSize: Dimensions.fontSizeLarge)),
+          Text('ملخص العمولة',
+              style: robotoBold.copyWith(fontSize: Dimensions.fontSizeLarge)),
           const SizedBox(height: Dimensions.paddingSizeDefault),
-
           _summaryRow(
             context,
             'عمولات الطلبات',
             PriceConverter.convertPrice(context, invoice.orderCommissionTotal),
           ),
           const SizedBox(height: Dimensions.paddingSizeSmall),
-
           _summaryRow(
             context,
             'التسويات اليدوية',
             PriceConverter.convertPrice(context, invoice.manualAdjustmentTotal),
           ),
           const Divider(height: Dimensions.paddingSizeLarge),
-
           _summaryRow(
             context,
             'الإجمالي',
             PriceConverter.convertPrice(context, invoice.totalCommission),
             isTotal: true,
           ),
-
           if ((invoice.paymentNote ?? '').isNotEmpty) ...[
             const SizedBox(height: Dimensions.paddingSizeDefault),
             Container(
@@ -335,7 +328,8 @@ class _CommissionInvoiceDetailsScreenState
     );
   }
 
-  Widget _adjustmentsCard(BuildContext context, CurrentCommissionInvoiceModel invoice) {
+  Widget _adjustmentsCard(
+      BuildContext context, CurrentCommissionInvoiceModel invoice) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
@@ -354,9 +348,9 @@ class _CommissionInvoiceDetailsScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('التسويات اليدوية', style: robotoBold.copyWith(fontSize: Dimensions.fontSizeLarge)),
+          Text('التسويات اليدوية',
+              style: robotoBold.copyWith(fontSize: Dimensions.fontSizeLarge)),
           const SizedBox(height: Dimensions.paddingSizeDefault),
-
           if (invoice.adjustments.isEmpty)
             Center(
               child: Padding(
@@ -365,17 +359,18 @@ class _CommissionInvoiceDetailsScreenState
                 ),
                 child: Text(
                   'لا توجد تسويات على هذه الفاتورة',
-                  style: robotoRegular.copyWith(color: Theme.of(context).hintColor),
+                  style: robotoRegular.copyWith(
+                      color: Theme.of(context).hintColor),
                 ),
               ),
             ),
-
           ...invoice.adjustments.map((adjustment) {
             final bool isAdd = adjustment.adjustmentType == 'add';
 
             return Container(
               width: double.infinity,
-              margin: const EdgeInsets.only(bottom: Dimensions.paddingSizeSmall),
+              margin:
+                  const EdgeInsets.only(bottom: Dimensions.paddingSizeSmall),
               padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
               decoration: BoxDecoration(
                 color: isAdd
@@ -407,7 +402,8 @@ class _CommissionInvoiceDetailsScreenState
     );
   }
 
-  Widget _receiptUploadCard(BuildContext context, CurrentCommissionInvoiceModel invoice) {
+  Widget _receiptUploadCard(
+      BuildContext context, CurrentCommissionInvoiceModel invoice) {
     return Consumer<BankInfoController>(
       builder: (context, bankInfoController, _) {
         return Container(
@@ -428,10 +424,11 @@ class _CommissionInvoiceDetailsScreenState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('إرسال وصل الدفع', style: robotoBold.copyWith(fontSize: Dimensions.fontSizeLarge)),
+              Text('إرسال وصل الدفع',
+                  style:
+                      robotoBold.copyWith(fontSize: Dimensions.fontSizeLarge)),
               const SizedBox(height: Dimensions.paddingSizeSmall),
-
-                            TextField(
+              TextField(
                 controller: _noteController,
                 enabled: !bankInfoController.isSendingReceipt,
                 maxLines: 3,
@@ -443,7 +440,6 @@ class _CommissionInvoiceDetailsScreenState
                 ),
               ),
               const SizedBox(height: Dimensions.paddingSizeDefault),
-
               InkWell(
                 onTap: bankInfoController.isSendingReceipt
                     ? null
@@ -452,17 +448,23 @@ class _CommissionInvoiceDetailsScreenState
                   width: double.infinity,
                   height: 180,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor.withValues(alpha: .04),
-                    borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+                    color:
+                        Theme.of(context).primaryColor.withValues(alpha: .04),
+                    borderRadius:
+                        BorderRadius.circular(Dimensions.radiusDefault),
                     border: Border.all(
-                      color: Theme.of(context).primaryColor.withValues(alpha: .18),
+                      color:
+                          Theme.of(context).primaryColor.withValues(alpha: .18),
                     ),
                   ),
-                  child: bankInfoController.selectedCommissionReceiptImage != null
+                  child: bankInfoController.selectedCommissionReceiptImage !=
+                          null
                       ? ClipRRect(
-                          borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+                          borderRadius:
+                              BorderRadius.circular(Dimensions.radiusDefault),
                           child: Image.file(
-                            File(bankInfoController.selectedCommissionReceiptImage!.path),
+                            File(bankInfoController
+                                .selectedCommissionReceiptImage!.path),
                             fit: BoxFit.cover,
                           ),
                         )
@@ -485,21 +487,21 @@ class _CommissionInvoiceDetailsScreenState
                         ),
                 ),
               ),
-
               const SizedBox(height: Dimensions.paddingSizeDefault),
-
-                            CustomButtonWidget(
+              CustomButtonWidget(
                 btnTxt: 'إرسال الوصل للإدارة',
                 isLoading: bankInfoController.isSendingReceipt,
                 onTap: bankInfoController.isSendingReceipt
                     ? null
                     : () async {
                         if (!invoice.hasInvoice) {
-                          showCustomSnackBarWidget('لا توجد فاتورة حالية للإرسال', context);
+                          showCustomSnackBarWidget(
+                              'لا توجد فاتورة حالية للإرسال', context);
                           return;
                         }
 
-                        final response = await bankInfoController.sendCommissionReceipt(
+                        final response =
+                            await bankInfoController.sendCommissionReceipt(
                           context,
                           invoiceId: invoice.id!,
                           note: _noteController.text.trim(),

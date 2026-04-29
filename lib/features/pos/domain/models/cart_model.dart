@@ -22,8 +22,7 @@ class CartModel {
       String? varientKey,
       double? digitalVariationPrice,
       Product? product,
-      String? taxModel
-      ) {
+      String? taxModel) {
     _price = price;
     _discountAmount = discountAmount;
     _quantity = quantity;
@@ -48,14 +47,16 @@ class CartModel {
   String? get varientKey => _varientKey;
   double? get digitalVariationPrice => _digitalVariationPrice;
   String? get variant => _variant;
-  String? get taxModel=> _taxModel;
+  String? get taxModel => _taxModel;
 
   CartModel.fromJson(Map<String, dynamic> json) {
     _price = json['price'].toDouble();
     _discountAmount = json['discount_amount'].toDouble();
     _quantity = json['quantity'];
     _taxAmount = json['tax_amount'].toDouble();
-    _variation = json['variation'] != null ? Variation.fromJson(json['variation']) : null;
+    _variation = json['variation'] != null
+        ? Variation.fromJson(json['variation'])
+        : null;
     _variant = json['variant'];
     _varientKey = json['variant_key'];
     _digitalVariationPrice = json['digital_variation_price'];
@@ -80,5 +81,3 @@ class CartModel {
     return data;
   }
 }
-
-

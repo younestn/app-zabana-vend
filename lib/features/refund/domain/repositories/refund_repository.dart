@@ -5,15 +5,15 @@ import 'package:sixvalley_vendor_app/data/model/response/base/api_response.dart'
 import 'package:sixvalley_vendor_app/features/refund/domain/repositories/refund_repository_interface.dart';
 import 'package:sixvalley_vendor_app/utill/app_constants.dart';
 
-class RefundRepository implements RefundRepositoryInterface{
+class RefundRepository implements RefundRepositoryInterface {
   final DioClient? dioClient;
   RefundRepository({required this.dioClient});
-
 
   @override
   Future<ApiResponse> getRefundReqDetails(int? orderDetailsId) async {
     try {
-      final response = await dioClient!.get('${AppConstants.refundItemDetails}?order_details_id=$orderDetailsId');
+      final response = await dioClient!.get(
+          '${AppConstants.refundItemDetails}?order_details_id=$orderDetailsId');
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -21,11 +21,16 @@ class RefundRepository implements RefundRepositoryInterface{
   }
 
   @override
-  Future<ApiResponse> refundStatus(int? refundId , String status, String note) async {
+  Future<ApiResponse> refundStatus(
+      int? refundId, String status, String note) async {
     try {
       Response response = await dioClient!.post(
         AppConstants.refundReqStatusUpdate,
-        data: {'refund_status': status, 'refund_request_id': refundId, 'note' : note},
+        data: {
+          'refund_status': status,
+          'refund_request_id': refundId,
+          'note': note
+        },
       );
       return ApiResponse.withSuccess(response);
     } catch (e) {
@@ -39,12 +44,14 @@ class RefundRepository implements RefundRepositoryInterface{
       List<String> refundTypeList = [];
 
       refundTypeList = [
-          'Select Refund Status',
-          AppConstants.approved,
-          AppConstants.rejected,
-
-        ];
-      Response response = Response(requestOptions: RequestOptions(path: ''), data: refundTypeList, statusCode: 200);
+        'Select Refund Status',
+        AppConstants.approved,
+        AppConstants.rejected,
+      ];
+      Response response = Response(
+          requestOptions: RequestOptions(path: ''),
+          data: refundTypeList,
+          statusCode: 200);
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -70,7 +77,7 @@ class RefundRepository implements RefundRepositoryInterface{
   }
 
   @override
-  Future getList({int? offset = 1}) async{
+  Future getList({int? offset = 1}) async {
     try {
       final response = await dioClient!.get(AppConstants.refundListUri);
       return ApiResponse.withSuccess(response);
@@ -86,13 +93,13 @@ class RefundRepository implements RefundRepositoryInterface{
   }
 
   @override
-  Future<ApiResponse> getSingleRefundModel(int? refundId) async{
+  Future<ApiResponse> getSingleRefundModel(int? refundId) async {
     try {
-      final response = await dioClient!.get('${AppConstants.getSingleRefundModel}$refundId');
+      final response =
+          await dioClient!.get('${AppConstants.getSingleRefundModel}$refundId');
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
-
 }

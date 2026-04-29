@@ -10,11 +10,8 @@ class BusinessController extends ChangeNotifier {
   List<BusinessModel>? _businessList;
   List<BusinessModel>? get businessList => _businessList;
 
-
-
   Future<void> getBusinessList(BuildContext context) async {
     _businessList = await businessServiceInterface.getBusinessList();
     notifyListeners();
   }
-
 }

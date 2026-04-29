@@ -17,75 +17,101 @@ class DeliveryManInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-
-      padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault,
+      padding: const EdgeInsets.symmetric(
+          horizontal: Dimensions.paddingSizeDefault,
           vertical: Dimensions.paddingSizeDefault),
-      decoration: BoxDecoration(color: Theme.of(context).cardColor,
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
         boxShadow: ThemeShadow.getShadow(context),
-       ),
+      ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(getTranslated('deliveryman_contact_details', context)!,
-            style: titilliumBold.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color)),
+            style: titilliumBold.copyWith(
+                color: Theme.of(context).textTheme.bodyLarge?.color)),
         const SizedBox(height: Dimensions.paddingSizeMedium),
-
-        Row(children: [ClipRRect(borderRadius: BorderRadius.circular(50),
-          child: CachedNetworkImage(
-              errorWidget: (ctx, url, err) => Image.asset(Images.placeholderImage, height: 50,width: 50, fit: BoxFit.cover),
-              placeholder: (ctx, url) => Image.asset(Images.placeholderImage,height: 50,width: 50, fit: BoxFit.cover),
-              imageUrl: '${Provider.of<SplashController>(context, listen: false).
-              baseUrls!.deliveryManImageUrl}/${refundReq!.refundDetailsModel!.deliverymanDetails!.image}',
-              height: 50,width: 50, fit: BoxFit.cover),),
+        Row(children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: CachedNetworkImage(
+                errorWidget: (ctx, url, err) => Image.asset(
+                    Images.placeholderImage,
+                    height: 50,
+                    width: 50,
+                    fit: BoxFit.cover),
+                placeholder: (ctx, url) => Image.asset(Images.placeholderImage,
+                    height: 50, width: 50, fit: BoxFit.cover),
+                imageUrl:
+                    '${Provider.of<SplashController>(context, listen: false).baseUrls!.deliveryManImageUrl}/${refundReq!.refundDetailsModel!.deliverymanDetails!.image}',
+                height: 50,
+                width: 50,
+                fit: BoxFit.cover),
+          ),
           const SizedBox(width: Dimensions.paddingSizeLarge),
-
-          Expanded(child: Column( crossAxisAlignment: CrossAxisAlignment.start, children: [
-
-            Text(
-              '${refundReq!.refundDetailsModel!.deliverymanDetails!.fName ?? ''} '
+          Expanded(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                Text(
+                  '${refundReq!.refundDetailsModel!.deliverymanDetails!.fName ?? ''} '
                   '${refundReq!.refundDetailsModel!.deliverymanDetails!.lName ?? ''}',
-              style: robotoMedium.copyWith(
-                color: Theme.of(context).textTheme.bodyLarge?.color,
-                fontSize: Dimensions.fontSizeDefault,
-              ),
-            ),
-
-            InkWell(
-              onTap: () => _launchUrl(Platform.isIOS? 'tel://${refundReq!.refundDetailsModel!.deliverymanDetails!.phone!}' : 'tel:${refundReq!.refundDetailsModel!.deliverymanDetails!.phone!}'),
-              child: Row(
-                children: [
-                  SizedBox(width: 20, child: Image.asset(Images.phone),),
-                  const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-
-                  Text('${refundReq!.refundDetailsModel!.deliverymanDetails!.phone}', style: robotoRegular.copyWith(
-                    color: Theme.of(context).hintColor,
+                  style: robotoMedium.copyWith(
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
                     fontSize: Dimensions.fontSizeDefault,
-                  )),
-                ],
-              ),
-            ),
-            const SizedBox(height: Dimensions.paddingSizeExtraSmall,),
+                  ),
+                ),
+                InkWell(
+                  onTap: () => _launchUrl(Platform.isIOS
+                      ? 'tel://${refundReq!.refundDetailsModel!.deliverymanDetails!.phone!}'
+                      : 'tel:${refundReq!.refundDetailsModel!.deliverymanDetails!.phone!}'),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 20,
+                        child: Image.asset(Images.phone),
+                      ),
+                      const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+                      Text(
+                          '${refundReq!.refundDetailsModel!.deliverymanDetails!.phone}',
+                          style: robotoRegular.copyWith(
+                            color: Theme.of(context).hintColor,
+                            fontSize: Dimensions.fontSizeDefault,
+                          )),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: Dimensions.paddingSizeExtraSmall,
+                ),
+                InkWell(
+                  onTap: () async {
+                    final Uri email = Uri(
+                      scheme: 'mailto',
+                      path: refundReq!
+                              .refundDetailsModel!.deliverymanDetails!.email ??
+                          '',
+                    );
 
-            InkWell(
-              onTap: () async {
-                final Uri email =  Uri(
-                  scheme: 'mailto',
-                  path: refundReq!.refundDetailsModel!.deliverymanDetails!.email ?? '',
-                );
-
-                await launchUrl(email, mode: LaunchMode.externalApplication);
-              },
-              child: Row(children: [
-                SizedBox(width: 20, child: Image.asset(Images.email),),
-                const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-
-                Text(refundReq!.refundDetailsModel!.deliverymanDetails!.email ?? '', style: robotoRegular.copyWith(
-                  color: Theme.of(context).hintColor,
-                  fontSize: Dimensions.fontSizeDefault,
-                )),
-              ]),
-            ),
-            const SizedBox(height: Dimensions.paddingSizeExtraSmall),
-
-          ])),
+                    await launchUrl(email,
+                        mode: LaunchMode.externalApplication);
+                  },
+                  child: Row(children: [
+                    SizedBox(
+                      width: 20,
+                      child: Image.asset(Images.email),
+                    ),
+                    const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+                    Text(
+                        refundReq!.refundDetailsModel!.deliverymanDetails!
+                                .email ??
+                            '',
+                        style: robotoRegular.copyWith(
+                          color: Theme.of(context).hintColor,
+                          fontSize: Dimensions.fontSizeDefault,
+                        )),
+                  ]),
+                ),
+                const SizedBox(height: Dimensions.paddingSizeExtraSmall),
+              ])),
         ]),
       ]),
     );

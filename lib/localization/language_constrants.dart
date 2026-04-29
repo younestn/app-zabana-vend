@@ -3,10 +3,9 @@ import 'package:sixvalley_vendor_app/localization/app_localization.dart';
 
 String? getTranslated(String? key, BuildContext context) {
   String? text = key;
-  try{
+  try {
     text = AppLocalization.of(context)!.translate(key);
-
-  }catch (error){
+  } catch (error) {
     debugPrint('error --- $error');
   }
   return text;

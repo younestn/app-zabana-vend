@@ -1,4 +1,4 @@
-class GuidelineModel{
+class GuidelineModel {
   final String? title;
   final String? description;
 

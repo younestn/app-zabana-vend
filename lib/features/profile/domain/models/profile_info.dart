@@ -1,4 +1,5 @@
 import 'package:sixvalley_vendor_app/data/model/image_full_url.dart';
+import 'package:sixvalley_vendor_app/features/shop/domain/models/seller_badge_model.dart';
 
 class ProfileInfoModel {
   int? id;
@@ -27,35 +28,37 @@ class ProfileInfoModel {
   double? minimumOrderAmount;
   double? freeOverDeliveryAmount;
   int? freeOverDeliveryAmountStatus;
+  SellerBadgeModel? sellerBadge;
 
-  ProfileInfoModel(
-      {this.id,
-        this.fName,
-        this.lName,
-        this.phone,
-        this.image,
-        this.imageFullUrl,
-        this.email,
-        this.password,
-        this.status,
-        this.rememberToken,
-        this.createdAt,
-        this.updatedAt,
-        this.bankName,
-        this.branch,
-        this.accountNo,
-        this.holderName,
-        this.authToken,
-        this.salesCommissionPercentage,
-        this.gst,
-        this.posActive,
-        this.productCount,
-        this.ordersCount,
-        this.wallet,
-        this.minimumOrderAmount,
-        this.freeOverDeliveryAmount,
-        this.freeOverDeliveryAmountStatus
-      });
+  ProfileInfoModel({
+    this.id,
+    this.fName,
+    this.lName,
+    this.phone,
+    this.image,
+    this.imageFullUrl,
+    this.email,
+    this.password,
+    this.status,
+    this.rememberToken,
+    this.createdAt,
+    this.updatedAt,
+    this.bankName,
+    this.branch,
+    this.accountNo,
+    this.holderName,
+    this.authToken,
+    this.salesCommissionPercentage,
+    this.gst,
+    this.posActive,
+    this.productCount,
+    this.ordersCount,
+    this.wallet,
+    this.minimumOrderAmount,
+    this.freeOverDeliveryAmount,
+    this.freeOverDeliveryAmountStatus,
+    this.sellerBadge,
+  });
 
   ProfileInfoModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -74,58 +77,59 @@ class ProfileInfoModel {
     accountNo = json['account_no'];
     holderName = json['holder_name'];
     authToken = json['auth_token'];
-    if(json['sales_commission_percentage']!=null){
-      try{
-        salesCommissionPercentage = (json['sales_commission_percentage']).toDouble();
-      }catch(e){
-        salesCommissionPercentage = double.parse(json['sales_commission_percentage'].toString());
+    if (json['sales_commission_percentage'] != null) {
+      try {
+        salesCommissionPercentage =
+            (json['sales_commission_percentage']).toDouble();
+      } catch (e) {
+        salesCommissionPercentage =
+            double.parse(json['sales_commission_percentage'].toString());
       }
-
-
     }
-    if(json['gst']!=null){
+    if (json['gst'] != null) {
       gst = json['gst'];
     }
     posActive = int.parse(json['pos_status'].toString());
     productCount = json['product_count'];
     ordersCount = json['orders_count'];
-    wallet =
-    json['wallet'] != null ? Wallet.fromJson(json['wallet']) : null;
-    if(json['minimum_order_amount'] != null){
-      try{
+    wallet = json['wallet'] != null ? Wallet.fromJson(json['wallet']) : null;
+    if (json['minimum_order_amount'] != null) {
+      try {
         minimumOrderAmount = json['minimum_order_amount'].toDouble();
-      }catch(e){
-        minimumOrderAmount = double.parse(json['minimum_order_amount'].toString());
+      } catch (e) {
+        minimumOrderAmount =
+            double.parse(json['minimum_order_amount'].toString());
       }
-    }else{
+    } else {
       minimumOrderAmount = 0;
     }
-    if(json['free_delivery_over_amount'] != null){
-      try{
+    if (json['free_delivery_over_amount'] != null) {
+      try {
         freeOverDeliveryAmount = json['free_delivery_over_amount'].toDouble();
-      }catch(e){
-        freeOverDeliveryAmount = double.parse(json['free_delivery_over_amount'].toString());
+      } catch (e) {
+        freeOverDeliveryAmount =
+            double.parse(json['free_delivery_over_amount'].toString());
       }
-    }else{
+    } else {
       freeOverDeliveryAmount = 0;
     }
 
-    if(json['free_delivery_status'] != null){
-      try{
+    if (json['free_delivery_status'] != null) {
+      try {
         freeOverDeliveryAmountStatus = json['free_delivery_status'];
-      }catch(e){
-        freeOverDeliveryAmountStatus = int.parse(json['free_delivery_status'].toString());
+      } catch (e) {
+        freeOverDeliveryAmountStatus =
+            int.parse(json['free_delivery_status'].toString());
       }
-    }else{
+    } else {
       freeOverDeliveryAmountStatus = 0;
     }
 
     imageFullUrl = json['image_full_url'] != null
         ? ImageFullUrl.fromJson(json['image_full_url'])
         : null;
+    sellerBadge = SellerBadgeModel.fromNullableJson(json['seller_badge']);
   }
-
-
 }
 
 class Wallet {
@@ -142,15 +146,15 @@ class Wallet {
 
   Wallet(
       {this.id,
-        this.totalEarning,
-        this.withdrawn,
-        this.createdAt,
-        this.updatedAt,
-        this.commissionGiven,
-        this.pendingWithdraw,
-        this.deliveryChargeEarned,
-        this.collectedCash,
-        this.totalTaxCollected});
+      this.totalEarning,
+      this.withdrawn,
+      this.createdAt,
+      this.updatedAt,
+      this.commissionGiven,
+      this.pendingWithdraw,
+      this.deliveryChargeEarned,
+      this.collectedCash,
+      this.totalTaxCollected});
 
   Wallet.fromJson(Map<String, dynamic> json) {
     id = json['id'];

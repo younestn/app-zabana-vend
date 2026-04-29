@@ -8,13 +8,6 @@ class FileUploadModel {
   XFile? file;
   String? fileName;
 
-
   FileUploadModel(
-    {
-      this.priceController,
-      this.skuController,
-      this.file,
-      this.fileName
-    }
-  );
+      {this.priceController, this.skuController, this.file, this.fileName});
 }

@@ -9,30 +9,29 @@ class OrderSetupModel {
   String? thirdPartyDeliveryServiceTrackingId;
   String? deliveryType;
 
-  OrderSetupModel({
-    this.orderId,
-    this.orderStatus,
-    this.paymentStatus,
-    this.deliveryManId,
-    this.deliveryManCharge,
-    this.expectedDeliveryDate,
-    this.thirdPartyDeliveryServiceName,
-    this.thirdPartyDeliveryServiceTrackingId,
-    this.deliveryType
-  });
+  OrderSetupModel(
+      {this.orderId,
+      this.orderStatus,
+      this.paymentStatus,
+      this.deliveryManId,
+      this.deliveryManCharge,
+      this.expectedDeliveryDate,
+      this.thirdPartyDeliveryServiceName,
+      this.thirdPartyDeliveryServiceTrackingId,
+      this.deliveryType});
 
   factory OrderSetupModel.fromJson(Map<String, dynamic> json) {
     return OrderSetupModel(
-      orderId: json['order_id'],
-      orderStatus: json['order_status'],
-      paymentStatus: json['payment_status'],
-      deliveryManId: json['delivery_man_id'],
-      deliveryManCharge: json['deliveryman_charge'],
-      expectedDeliveryDate: json['expected_delivery_date'],
-      thirdPartyDeliveryServiceName: json['delivery_service_name'],
-      thirdPartyDeliveryServiceTrackingId: json['third_party_delivery_tracking_id'],
-      deliveryType: json['delivery_type']
-    );
+        orderId: json['order_id'],
+        orderStatus: json['order_status'],
+        paymentStatus: json['payment_status'],
+        deliveryManId: json['delivery_man_id'],
+        deliveryManCharge: json['deliveryman_charge'],
+        expectedDeliveryDate: json['expected_delivery_date'],
+        thirdPartyDeliveryServiceName: json['delivery_service_name'],
+        thirdPartyDeliveryServiceTrackingId:
+            json['third_party_delivery_tracking_id'],
+        deliveryType: json['delivery_type']);
   }
 
   Map<String, dynamic> toJson() {
@@ -49,7 +48,6 @@ class OrderSetupModel {
     };
   }
 
-
   void clear() {
     orderId = null;
     orderStatus = null;
@@ -62,5 +60,3 @@ class OrderSetupModel {
     deliveryType = null;
   }
 }
-
-

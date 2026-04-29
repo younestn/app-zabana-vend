@@ -4,13 +4,13 @@ import 'package:sixvalley_vendor_app/features/splash/domain/repositories/splash_
 import 'package:sixvalley_vendor_app/features/splash/domain/services/splash_service_interface.dart';
 import 'package:sixvalley_vendor_app/helper/api_checker.dart';
 
-class SplashService implements SplashServiceInterface{
+class SplashService implements SplashServiceInterface {
   final SplashRepositoryInterface splashRepoInterface;
   SplashService({required this.splashRepoInterface});
 
   @override
   Future getConfig() {
-   return splashRepoInterface.getConfig();
+    return splashRepoInterface.getConfig();
   }
 
   @override
@@ -24,10 +24,12 @@ class SplashService implements SplashServiceInterface{
   }
 
   @override
-  Future getShippingTypeList(BuildContext context, String type) async{
-    ApiResponse apiResponse = await splashRepoInterface.getShippingTypeList(context, type);
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-     return apiResponse;
+  Future getShippingTypeList(BuildContext context, String type) async {
+    ApiResponse apiResponse =
+        await splashRepoInterface.getShippingTypeList(context, type);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      return apiResponse;
     } else {
       ApiChecker.checkApi(apiResponse);
     }
@@ -40,7 +42,7 @@ class SplashService implements SplashServiceInterface{
 
   @override
   void setCurrency(String currencyCode) {
-   return splashRepoInterface.setCurrency(currencyCode);
+    return splashRepoInterface.setCurrency(currencyCode);
   }
 
   @override

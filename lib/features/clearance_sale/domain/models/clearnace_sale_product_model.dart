@@ -33,7 +33,6 @@ class ClearanceSaleProductModel {
   }
 }
 
-
 class Products {
   int? id;
   String? addedBy;
@@ -49,16 +48,16 @@ class Products {
 
   Products(
       {this.id,
-        this.addedBy,
-        this.userId,
-        this.shopId,
-        this.productId,
-        this.isActive,
-        this.discountType,
-        this.discountAmount,
-        this.createdAt,
-        this.updatedAt,
-        this.product});
+      this.addedBy,
+      this.userId,
+      this.shopId,
+      this.productId,
+      this.isActive,
+      this.discountType,
+      this.discountAmount,
+      this.createdAt,
+      this.updatedAt,
+      this.product});
 
   Products.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -68,10 +67,13 @@ class Products {
     productId = json['product_id'];
     isActive = json['is_active'];
     discountType = json['discount_type'];
-    discountAmount = json['discount_amount'] !=null ? double.tryParse(json['discount_amount'].toString()) : null;
+    discountAmount = json['discount_amount'] != null
+        ? double.tryParse(json['discount_amount'].toString())
+        : null;
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    product = json['product'] != null ? Product.fromJson(json['product']) : null;
+    product =
+        json['product'] != null ? Product.fromJson(json['product']) : null;
   }
 
   Map<String, dynamic> toJson() {

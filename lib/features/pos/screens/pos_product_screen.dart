@@ -26,96 +26,128 @@ class POSProductScreen extends StatefulWidget {
 class _POSProductScreenState extends State<POSProductScreen> {
   @override
   void initState() {
-    Provider.of<CategoryController>(context,listen: false).emptyCategoryList();
-    Provider.of<ProductController>(context, listen: false).shoHideDialog(false,notify: false);
-    Provider.of<ProductController>(context, listen: false).getPosProductList(1, context,[]);
-    Provider.of<CategoryController>(context,listen: false).getCategoryList(context,null, 'en');
+    Provider.of<CategoryController>(context, listen: false).emptyCategoryList();
+    Provider.of<ProductController>(context, listen: false)
+        .shoHideDialog(false, notify: false);
+    Provider.of<ProductController>(context, listen: false)
+        .getPosProductList(1, context, []);
+    Provider.of<CategoryController>(context, listen: false)
+        .getCategoryList(context, null, 'en');
     super.initState();
   }
+
   final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
     TextEditingController searchController = TextEditingController();
     return Scaffold(
-      appBar: CustomAppBarWidget(title: getTranslated('product_list', context), isCart: true, isAction: true,),
-        body: RefreshIndicator(
-          onRefresh: () async{
-            Provider.of<ProductController>(context, listen: false).getPosProductList(1, context, []);
-          },
-          child: CustomScrollView(
-            controller: _scrollController,
-            slivers: [
-              SliverPersistentHeader(
+      appBar: CustomAppBarWidget(
+        title: getTranslated('product_list', context),
+        isCart: true,
+        isAction: true,
+      ),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          Provider.of<ProductController>(context, listen: false)
+              .getPosProductList(1, context, []);
+        },
+        child: CustomScrollView(
+          controller: _scrollController,
+          slivers: [
+            SliverPersistentHeader(
                 pinned: true,
-                  delegate: SliverDelegateWidget(
-                  height: 85,
-                  child : Consumer<ProductController>(
-                    builder: (context, searchProductController, _) {
+                delegate: SliverDelegateWidget(
+                    height: 85,
+                    child: Consumer<ProductController>(
+                        builder: (context, searchProductController, _) {
                       return Container(
                         color: Theme.of(context).cardColor,
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(Dimensions.paddingSizeDefault, Dimensions.paddingSizeDefault, Dimensions.paddingSizeDefault, Dimensions.paddingSizeDefault),
+                          padding: const EdgeInsets.fromLTRB(
+                              Dimensions.paddingSizeDefault,
+                              Dimensions.paddingSizeDefault,
+                              Dimensions.paddingSizeDefault,
+                              Dimensions.paddingSizeDefault),
                           child: CustomSearchFieldWidget(
                             controller: searchController,
                             hint: getTranslated('search', context),
                             prefix: Images.iconsSearch,
-                            iconPressed: () => (){},
-                            onSubmit: (text) => (){},
-                            onChanged: (value){
-                              if(value.toString().isNotEmpty){
-                                searchProductController.getSearchedPosProductList(context, value, []);
-                              }else{
+                            iconPressed: () => () {},
+                            onSubmit: (text) => () {},
+                            onChanged: (value) {
+                              if (value.toString().isNotEmpty) {
+                                searchProductController
+                                    .getSearchedPosProductList(
+                                        context, value, []);
+                              } else {
                                 searchProductController.shoHideDialog(false);
                               }
                             },
                             isFilter: true,
                             filterAction: () async {
-                              await Future.delayed(const Duration(milliseconds: 150));
+                              await Future.delayed(
+                                  const Duration(milliseconds: 150));
                               showModalBottomSheet(
-                                backgroundColor: Colors.transparent,
-                                isScrollControlled: true,
-                                context: Get.context!, builder: (_) => const CategoryFilterBottomSheetWidget());
+                                  backgroundColor: Colors.transparent,
+                                  isScrollControlled: true,
+                                  context: Get.context!,
+                                  builder: (_) =>
+                                      const CategoryFilterBottomSheetWidget());
                             },
                           ),
                         ),
                       );
-                    }
-                  )
-              )),
-              SliverToBoxAdapter(
-                child: Consumer<ProductController>(
-                    builder: (context, prodProvider, child) {
-                      List<Product>? productList =[];
-                      productList = prodProvider.posProductModel?.products;
-                      return Stack(
-                        children: [
-                          Column(children: [
-                            const SizedBox(height: Dimensions.paddingSizeExtraSmall,),
-
-                            productList != null ? productList.isNotEmpty ?
-                            PosProductListWidget(productList : productList, scrollController: _scrollController,productProvider: prodProvider) : Padding(
-                              padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height/4),
-                              child: const NoDataScreen(),
-                            ) : const PosProductShimmerWidget(),
-
-                            prodProvider.isLoading ? Center(child: Padding(
-                              padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                              child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor)),
-                            )) : const SizedBox.shrink(),
-
-                            const SizedBox(height: Dimensions.paddingSizeBottomSpace,),
-
-                          ]),
-                          prodProvider.showDialog?
-                          const ProductSearchDialogWidget():const SizedBox(),
-                        ],
-                      );
-                    }
-                ),
-              )
-            ],
-          ),),
+                    }))),
+            SliverToBoxAdapter(
+              child: Consumer<ProductController>(
+                  builder: (context, prodProvider, child) {
+                List<Product>? productList = [];
+                productList = prodProvider.posProductModel?.products;
+                return Stack(
+                  children: [
+                    Column(children: [
+                      const SizedBox(
+                        height: Dimensions.paddingSizeExtraSmall,
+                      ),
+                      productList != null
+                          ? productList.isNotEmpty
+                              ? PosProductListWidget(
+                                  productList: productList,
+                                  scrollController: _scrollController,
+                                  productProvider: prodProvider)
+                              : Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical:
+                                          MediaQuery.of(context).size.height /
+                                              4),
+                                  child: const NoDataScreen(),
+                                )
+                          : const PosProductShimmerWidget(),
+                      prodProvider.isLoading
+                          ? Center(
+                              child: Padding(
+                              padding: const EdgeInsets.all(
+                                  Dimensions.paddingSizeSmall),
+                              child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Theme.of(context).primaryColor)),
+                            ))
+                          : const SizedBox.shrink(),
+                      const SizedBox(
+                        height: Dimensions.paddingSizeBottomSpace,
+                      ),
+                    ]),
+                    prodProvider.showDialog
+                        ? const ProductSearchDialogWidget()
+                        : const SizedBox(),
+                  ],
+                );
+              }),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

@@ -8,20 +8,24 @@ class CustomerShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final baseColor = Theme.of(context).disabledColor.withValues(alpha: 0.05);
-    final highlightColor = Theme.of(context).disabledColor.withValues(alpha: 0.15);
+    final highlightColor =
+        Theme.of(context).disabledColor.withValues(alpha: 0.15);
     final width = MediaQuery.of(context).size.width;
 
     return Shimmer.fromColors(
       baseColor: baseColor,
       highlightColor: highlightColor,
       child: ListView.builder(
-        padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeDefault),
+        padding:
+            const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeDefault),
         itemCount: 10,
         itemBuilder: (context, index) {
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
+            padding: const EdgeInsets.symmetric(
+                horizontal: Dimensions.paddingSizeDefault),
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
+              padding: const EdgeInsets.symmetric(
+                  vertical: Dimensions.paddingSizeSmall),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

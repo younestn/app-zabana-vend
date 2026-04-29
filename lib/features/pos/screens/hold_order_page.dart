@@ -19,45 +19,40 @@ class _HoldOrderScreenState extends State<HoldOrderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<CartController>(
-        builder: (context, cartController, _) {
-          return Center(
-            child: Column(
-              children: [
-                const SizedBox(height: 15),
-
-                const Padding(
-                  padding: EdgeInsets.all(Dimensions.paddingSizeDefault),
-                  child: HoldOrderHeaderWidget()
-                ),
-
-                cartController.customerCartList.length > 1 ?
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault, vertical: 0),
-                  child: HoldOrderSearchBarWidget()
-                ) : const SizedBox(),
-
-                cartController.customerCartList.isNotEmpty ?
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: ListView.builder(
-                      itemCount: cartController.customerCartList.length,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        TemporaryCartListModel customerCard = cartController.customerCartList[index];
-                        return  HoldOrderItemWidget(customerCard: customerCard, index: index);
-                      }
+        body: Consumer<CartController>(builder: (context, cartController, _) {
+      return Center(
+        child: Column(
+          children: [
+            const SizedBox(height: 15),
+            const Padding(
+                padding: EdgeInsets.all(Dimensions.paddingSizeDefault),
+                child: HoldOrderHeaderWidget()),
+            cartController.customerCartList.length > 1
+                ? const Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: Dimensions.paddingSizeDefault, vertical: 0),
+                    child: HoldOrderSearchBarWidget())
+                : const SizedBox(),
+            cartController.customerCartList.isNotEmpty
+                ? Expanded(
+                    child: SingleChildScrollView(
+                      child: ListView.builder(
+                          itemCount: cartController.customerCartList.length,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            TemporaryCartListModel customerCard =
+                                cartController.customerCartList[index];
+                            return HoldOrderItemWidget(
+                                customerCard: customerCard, index: index);
+                          }),
                     ),
-                  ),
-                ) : const Expanded(child: NoDataScreen(title: 'no_hold_order')),
-
-                const SizedBox(height: Dimensions.paddingSizeSmall),
-
-              ],
-            ),
-          );
-        })
-    );
+                  )
+                : const Expanded(child: NoDataScreen(title: 'no_hold_order')),
+            const SizedBox(height: Dimensions.paddingSizeSmall),
+          ],
+        ),
+      );
+    }));
   }
 }

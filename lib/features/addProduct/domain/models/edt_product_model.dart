@@ -1,4 +1,3 @@
-
 import 'package:sixvalley_vendor_app/data/model/image_full_url.dart';
 
 class EditProductModel {
@@ -12,15 +11,14 @@ class EditProductModel {
   SeoInfo? seoInfo;
 
   EditProductModel(
-    {this.id,
+      {this.id,
       this.name,
       this.details,
       this.translations,
       this.digitalProductFileTypes,
       this.digitalProductExtensions,
       this.digitalVariation,
-      this.seoInfo
-    });
+      this.seoInfo});
 
   EditProductModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -32,13 +30,16 @@ class EditProductModel {
         translations!.add(Translations.fromJson(v));
       });
     }
-    if(json['digital_product_file_types'] != null) {
-      digitalProductFileTypes = json['digital_product_file_types'].cast<String>();
+    if (json['digital_product_file_types'] != null) {
+      digitalProductFileTypes =
+          json['digital_product_file_types'].cast<String>();
     }
 
-    if(json['digital_product_extensions'] != null && json['digital_product_extensions'] is !List) {
-      digitalProductExtensions = (json['digital_product_extensions'] as Map<String, dynamic>).map(
-         (key, value) => MapEntry(key, List<String>.from(value)),
+    if (json['digital_product_extensions'] != null &&
+        json['digital_product_extensions'] is! List) {
+      digitalProductExtensions =
+          (json['digital_product_extensions'] as Map<String, dynamic>).map(
+        (key, value) => MapEntry(key, List<String>.from(value)),
       );
     }
 
@@ -48,9 +49,8 @@ class EditProductModel {
         digitalVariation!.add(DigitalVariation.fromJson(v));
       });
     }
-    seoInfo = json['seo_info'] != null
-        ? SeoInfo.fromJson(json['seo_info'])
-        : null;
+    seoInfo =
+        json['seo_info'] != null ? SeoInfo.fromJson(json['seo_info']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -72,7 +72,6 @@ class EditProductModel {
   }
 }
 
-
 class Translations {
   int? id;
   String? translationableType;
@@ -83,11 +82,11 @@ class Translations {
 
   Translations(
       {this.id,
-        this.translationableType,
-        this.translationableId,
-        this.locale,
-        this.key,
-        this.value});
+      this.translationableType,
+      this.translationableId,
+      this.locale,
+      this.key,
+      this.value});
 
   Translations.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -110,7 +109,6 @@ class Translations {
   }
 }
 
-
 class DigitalVariation {
   int? id;
   int? productId;
@@ -123,13 +121,13 @@ class DigitalVariation {
 
   DigitalVariation(
       {this.id,
-        this.productId,
-        this.variantKey,
-        this.sku,
-        this.price,
-        this.file,
-        this.createdAt,
-        this.updatedAt});
+      this.productId,
+      this.variantKey,
+      this.sku,
+      this.price,
+      this.file,
+      this.createdAt,
+      this.updatedAt});
 
   DigitalVariation.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -154,11 +152,7 @@ class DigitalVariation {
     data['updated_at'] = updatedAt;
     return data;
   }
-
-
 }
-
-
 
 class SeoInfo {
   int? id;
@@ -183,25 +177,24 @@ class SeoInfo {
 
   SeoInfo(
       {this.id,
-        this.productId,
-        this.title,
-        this.description,
-        this.index,
-        this.noFollow,
-        this.noImageIndex,
-        this.noArchive,
-        this.noSnippet,
-        this.maxSnippet,
-        this.maxSnippetValue,
-        this.maxVideoPreview,
-        this.maxVideoPreviewValue,
-        this.maxImagePreview,
-        this.maxImagePreviewValue,
-        this.image,
-        this.createdAt,
-        this.updatedAt,
-        this.imageFullUrl
-      });
+      this.productId,
+      this.title,
+      this.description,
+      this.index,
+      this.noFollow,
+      this.noImageIndex,
+      this.noArchive,
+      this.noSnippet,
+      this.maxSnippet,
+      this.maxSnippetValue,
+      this.maxVideoPreview,
+      this.maxVideoPreviewValue,
+      this.maxImagePreview,
+      this.maxImagePreviewValue,
+      this.image,
+      this.createdAt,
+      this.updatedAt,
+      this.imageFullUrl});
 
   SeoInfo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -210,8 +203,8 @@ class SeoInfo {
     description = json['description'];
     index = json['index'] == '' ? '1' : 'noindex';
     noFollow = json['no_follow'] == '' ? '0' : '1';
-    noImageIndex = json['no_image_index']  == '' ? '0' : '1';
-    noArchive = json['no_archive']  == '' ? '0' : '1';
+    noImageIndex = json['no_image_index'] == '' ? '0' : '1';
+    noArchive = json['no_archive'] == '' ? '0' : '1';
     noSnippet = json['no_snippet'];
     maxSnippet = json['max_snippet'];
     maxSnippetValue = json['max_snippet_value'];
@@ -219,12 +212,14 @@ class SeoInfo {
     maxVideoPreviewValue = json['max_video_preview_value'];
     maxImagePreview = json['max_image_preview'];
     maxImagePreviewValue = json['max_image_preview_value'];
-    if(json['image'] != null){
+    if (json['image'] != null) {
       image = json['image'];
     }
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    imageFullUrl = json['image_full_url'] != null ? ImageFullUrl.fromJson(json['image_full_url']) : null;
+    imageFullUrl = json['image_full_url'] != null
+        ? ImageFullUrl.fromJson(json['image_full_url'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {

@@ -18,7 +18,6 @@ class _AudioPreviewState extends State<AudioPreview> {
   Duration _duration = const Duration();
   Duration _position = const Duration();
 
-
   @override
   void initState() {
     super.initState();
@@ -37,15 +36,12 @@ class _AudioPreviewState extends State<AudioPreview> {
     });
   }
 
-
   @override
   void dispose() {
     _stop();
     _audioPlayer.dispose();
     super.dispose();
   }
-
-
 
   void _playPause() {
     if (isPlaying) {
@@ -71,10 +67,6 @@ class _AudioPreviewState extends State<AudioPreview> {
     return "$minutes:$seconds";
   }
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -82,32 +74,35 @@ class _AudioPreviewState extends State<AudioPreview> {
       width: MediaQuery.of(context).size.height * 0.9,
       padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
       decoration: BoxDecoration(
-          color: Theme.of(context).hintColor.withValues(alpha:0.50),
-          borderRadius: BorderRadius.circular(Dimensions.radiusDefault)
-      ),
+          color: Theme.of(context).hintColor.withValues(alpha: 0.50),
+          borderRadius: BorderRadius.circular(Dimensions.radiusDefault)),
       child: Column(
         children: [
           Row(
             children: [
               Expanded(
                 child: Text(widget.fileName,
-                    style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge), maxLines: 1, overflow: TextOverflow.ellipsis),
+                    style: robotoMedium.copyWith(
+                        fontSize: Dimensions.fontSizeLarge),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis),
               ),
               const SizedBox(width: Dimensions.paddingSizeSmall),
-
-
               SizedBox(
-                  height: 20, width: 20,
+                  height: 20,
+                  width: 20,
                   child: IconButton(
                       padding: EdgeInsets.zero,
-                      onPressed: ()=> Navigator.of(context, rootNavigator: true).pop(),
-                      icon: Icon(Icons.close, color: Theme.of(context).hintColor, size: 20,)
-                  )
-              ),
+                      onPressed: () =>
+                          Navigator.of(context, rootNavigator: true).pop(),
+                      icon: Icon(
+                        Icons.close,
+                        color: Theme.of(context).hintColor,
+                        size: 20,
+                      ))),
             ],
           ),
           const SizedBox(height: Dimensions.paddingSizeDefault),
-
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
@@ -115,13 +110,11 @@ class _AudioPreviewState extends State<AudioPreview> {
             ),
             child: Row(
               children: [
-
                 IconButton(
                   onPressed: _playPause,
-                  icon : Icon(isPlaying ? Icons.pause : Icons.play_arrow),
+                  icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
                 ),
                 const SizedBox(width: Dimensions.paddingSizeSmall),
-
                 Slider(
                   value: _position.inSeconds.toDouble(),
                   min: 0.0,
@@ -134,7 +127,6 @@ class _AudioPreviewState extends State<AudioPreview> {
                   },
                 ),
                 const SizedBox(width: Dimensions.paddingSizeSmall),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

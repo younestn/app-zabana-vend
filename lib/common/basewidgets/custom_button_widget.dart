@@ -17,7 +17,8 @@ class CustomButtonWidget extends StatelessWidget {
   final TextStyle? textStyle;
 
   const CustomButtonWidget({
-    super.key, this.onTap,
+    super.key,
+    this.onTap,
     required this.btnTxt,
     this.backgroundColor,
     this.isColor = false,
@@ -26,37 +27,50 @@ class CustomButtonWidget extends StatelessWidget {
     this.borderColor,
     this.buttonHeight = 40,
     this.textSize = Dimensions.fontSizeDefault,
-    this.isLoading = false, this.textStyle,
+    this.isLoading = false,
+    this.textStyle,
   });
 
   @override
   Widget build(BuildContext context) {
-    return isLoading ? Center(child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-       SizedBox(
-        height: 15, width: 15,
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
-          strokeWidth: 2,
-        ),
-      ),
-      const SizedBox(width: Dimensions.paddingSizeSmall),
-
-      Text(getTranslated('loading', context)!, style: robotoBold.copyWith(color: Theme.of(context).primaryColor)),
-
-    ])) : GestureDetector(
-      onTap: onTap as void Function()?,
-      child: Container( height: buttonHeight, alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: isColor? backgroundColor : backgroundColor ?? Theme.of(context).primaryColor,
-          borderRadius: BorderRadius.circular(borderRadius != null? borderRadius! : Dimensions.radiusDefault),
-          border: Border.all(color: borderColor ?? Theme.of(context).cardColor)
-        ),
-        child: Text(btnTxt!,
-            style: textStyle ?? robotoBold.copyWith(
-              fontSize: textSize,
-              color: fontColor ?? Colors.white,
-            )),
-      ),
-    );
+    return isLoading
+        ? Center(
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            SizedBox(
+              height: 15,
+              width: 15,
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                    Theme.of(context).primaryColor),
+                strokeWidth: 2,
+              ),
+            ),
+            const SizedBox(width: Dimensions.paddingSizeSmall),
+            Text(getTranslated('loading', context)!,
+                style:
+                    robotoBold.copyWith(color: Theme.of(context).primaryColor)),
+          ]))
+        : GestureDetector(
+            onTap: onTap as void Function()?,
+            child: Container(
+              height: buttonHeight,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: isColor
+                      ? backgroundColor
+                      : backgroundColor ?? Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.circular(borderRadius != null
+                      ? borderRadius!
+                      : Dimensions.radiusDefault),
+                  border: Border.all(
+                      color: borderColor ?? Theme.of(context).cardColor)),
+              child: Text(btnTxt!,
+                  style: textStyle ??
+                      robotoBold.copyWith(
+                        fontSize: textSize,
+                        color: fontColor ?? Colors.white,
+                      )),
+            ),
+          );
   }
 }

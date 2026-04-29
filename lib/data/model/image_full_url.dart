@@ -9,7 +9,7 @@ class ImageFullUrl {
     key = json['key'];
     path = json['path'];
     status = json['status'];
-    if(status != 200){
+    if (status != 200) {
       path = '';
     }
   }

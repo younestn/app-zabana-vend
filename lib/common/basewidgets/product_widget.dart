@@ -16,8 +16,6 @@ import 'package:sixvalley_vendor_app/utill/styles.dart';
 import 'package:sixvalley_vendor_app/features/addProduct/screens/add_product_screen.dart';
 import 'package:sixvalley_vendor_app/features/product_details/screens/product_details_screen.dart';
 
-
-
 class ProductWidget extends StatefulWidget {
   final Product productModel;
   const ProductWidget({super.key, required this.productModel});
@@ -42,62 +40,101 @@ class _ProductWidgetState extends State<ProductWidget> {
 
   @override
   Widget build(BuildContext context) {
-    double imageSize = MediaQuery.of(context).size.width/2.5;
+    double imageSize = MediaQuery.of(context).size.width / 2.5;
     double totalRatting = 0;
     double averageProductRatting = 0;
-    if(widget.productModel.reviews!.isNotEmpty){
-      for(int i =0; i< widget.productModel.reviews!.length; i++ ){
+    if (widget.productModel.reviews!.isNotEmpty) {
+      for (int i = 0; i < widget.productModel.reviews!.length; i++) {
         totalRatting += widget.productModel.reviews![i].rating!;
       }
-      averageProductRatting = totalRatting/widget.productModel.reviews!.length;
+      averageProductRatting =
+          totalRatting / widget.productModel.reviews!.length;
     }
     return GestureDetector(
-      onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (_)=> ProductDetailsScreen(productModel: widget.productModel))),
-      child: SizedBox(width: imageSize+20,
+      onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (_) =>
+                  ProductDetailsScreen(productModel: widget.productModel))),
+      child: SizedBox(
+        width: imageSize + 20,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 7.0,vertical: 4.0),
-          child: Stack(children: [
-              Container(decoration: BoxDecoration(color: Theme.of(context).cardColor),
-
-                child: Column(children: [
-                  Container(decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor.withValues(alpha:.10),
-                    borderRadius: const BorderRadius.only(topLeft:Radius.circular(Dimensions.paddingSizeSmall),
-                        topRight: Radius.circular(Dimensions.paddingSizeSmall)),),
-                    width: imageSize, height:  imageSize,
-
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.only(topLeft:Radius.circular(Dimensions.paddingSizeSmall),
-                          topRight: Radius.circular(Dimensions.paddingSizeSmall)),
-                      child: CustomImageWidget(height: imageSize,width: imageSize,
-                          image: '${widget.productModel.thumbnailFullUrl?.path}'),
-                    ),
-                  ),
-                  const SizedBox(height: Dimensions.paddingSizeSmall,),
-
-                  Flexible(child: Padding(padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall),
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text(widget.productModel.name ?? '', style: robotoRegular.copyWith(
-                          color: ColorHelper.blendColors(Colors.white, Theme.of(context).textTheme.bodyLarge!.color!, 0.7),fontSize: Dimensions.fontSizeDefault
+          padding: const EdgeInsets.symmetric(horizontal: 7.0, vertical: 4.0),
+          child: Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(color: Theme.of(context).cardColor),
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context)
+                            .primaryColor
+                            .withValues(alpha: .10),
+                        borderRadius: const BorderRadius.only(
+                            topLeft:
+                                Radius.circular(Dimensions.paddingSizeSmall),
+                            topRight:
+                                Radius.circular(Dimensions.paddingSizeSmall)),
                       ),
-                          maxLines: 1, overflow: TextOverflow.ellipsis),
-                      const SizedBox(height: Dimensions.paddingSizeSmall),
-
-                      Row(mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          RatingBar(rating: averageProductRatting),
-                          const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-                          Text('(${widget.productModel.reviewsCount.toString()})')
-                        ],
-                      )
-
-                    ],),
-                  ),
-                  ),
-                ],),
+                      width: imageSize,
+                      height: imageSize,
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                            topLeft:
+                                Radius.circular(Dimensions.paddingSizeSmall),
+                            topRight:
+                                Radius.circular(Dimensions.paddingSizeSmall)),
+                        child: CustomImageWidget(
+                            height: imageSize,
+                            width: imageSize,
+                            image:
+                                '${widget.productModel.thumbnailFullUrl?.path}'),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: Dimensions.paddingSizeSmall,
+                    ),
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: Dimensions.paddingSizeExtraSmall),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(widget.productModel.name ?? '',
+                                style: robotoRegular.copyWith(
+                                    color: ColorHelper.blendColors(
+                                        Colors.white,
+                                        Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .color!,
+                                        0.7),
+                                    fontSize: Dimensions.fontSizeDefault),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis),
+                            const SizedBox(height: Dimensions.paddingSizeSmall),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                RatingBar(rating: averageProductRatting),
+                                const SizedBox(
+                                    width: Dimensions.paddingSizeExtraSmall),
+                                Text(
+                                    '(${widget.productModel.reviewsCount.toString()})')
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-
-              Positioned(top: 0,right: 0,
+              Positioned(
+                top: 0,
+                right: 0,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: SpeedDial(
@@ -120,10 +157,12 @@ class _ProductWidgetState extends State<ProductWidget> {
                     useRotationAnimation: useRAnimation,
                     backgroundColor: Theme.of(context).cardColor,
                     foregroundColor: Theme.of(context).disabledColor,
-                    elevation: extend? 0: 8.0,
+                    elevation: extend ? 0 : 8.0,
                     animationCurve: Curves.elasticInOut,
                     isOpenOnStart: false,
-                    shape: customDialRoot ? const RoundedRectangleBorder() : const StadiumBorder(),
+                    shape: customDialRoot
+                        ? const RoundedRectangleBorder()
+                        : const StadiumBorder(),
                     onOpen: () {
                       setState(() {
                         extend = true;
@@ -135,21 +174,26 @@ class _ProductWidgetState extends State<ProductWidget> {
                       });
                     },
                     children: [
-                      SpeedDialChild(elevation: 0,
-                        child: Padding(padding: const EdgeInsets.all(8.0),
+                      SpeedDialChild(
+                        elevation: 0,
+                        child: Padding(
+                            padding: const EdgeInsets.all(8.0),
                             child: Image.asset(Images.editIcon)),
+                        onTap: () async {
+                          setState(() {
+                            isDialOpen.value = false;
+                            extend = false;
+                          });
 
-                        onTap:() async {
-                        setState(() {
-                        isDialOpen.value = false;
-                        extend = false;
-                        });
-
-                        await Future.delayed(const Duration(milliseconds : 350));
-                          Navigator.of(Get.context!).push(MaterialPageRoute(builder: (_) => AddProductScreen(product: widget.productModel)));
+                          await Future.delayed(
+                              const Duration(milliseconds: 350));
+                          Navigator.of(Get.context!).push(MaterialPageRoute(
+                              builder: (_) => AddProductScreen(
+                                  product: widget.productModel)));
                         },
                       ),
-                      SpeedDialChild( elevation: 0,
+                      SpeedDialChild(
+                        elevation: 0,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Image.asset(Images.delete),
@@ -160,20 +204,46 @@ class _ProductWidgetState extends State<ProductWidget> {
                             extend = false;
                           });
 
-                          await Future.delayed(const Duration(milliseconds : 350));
-                          showDialog(context: Get.context!, builder: (BuildContext context){
-                            return ConfirmationDialogWidget(icon: Images.deleteProduct,
-                                refund: false,
-                                description: getTranslated('are_you_sure_want_to_delete_this_product', context),
-                                onYesPressed: () {
-                                  Provider.of<ProductController>(context, listen:false).deleteProduct(context ,widget.productModel.id).then((value) {
-                                    Provider.of<ProductController>(Get.context!,listen: false).getStockOutProductList(1, 'en');
-                                    Provider.of<ProductController>(Get.context!, listen: false).getSellerProductList(Provider.of<ProfileController>(Get.context!, listen: false).
-                                    userInfoModel!.id.toString(), 1, 'en','', reload: true);
-                                  });}
-                              );});
-                          },
-                        ),
+                          await Future.delayed(
+                              const Duration(milliseconds: 350));
+                          showDialog(
+                              context: Get.context!,
+                              builder: (BuildContext context) {
+                                return ConfirmationDialogWidget(
+                                    icon: Images.deleteProduct,
+                                    refund: false,
+                                    description: getTranslated(
+                                        'are_you_sure_want_to_delete_this_product',
+                                        context),
+                                    onYesPressed: () {
+                                      Provider.of<ProductController>(context,
+                                              listen: false)
+                                          .deleteProduct(
+                                              context, widget.productModel.id)
+                                          .then((value) {
+                                        Provider.of<ProductController>(
+                                                Get.context!,
+                                                listen: false)
+                                            .getStockOutProductList(1, 'en');
+                                        Provider.of<ProductController>(
+                                                Get.context!,
+                                                listen: false)
+                                            .getSellerProductList(
+                                                Provider.of<ProfileController>(
+                                                        Get.context!,
+                                                        listen: false)
+                                                    .userInfoModel!
+                                                    .id
+                                                    .toString(),
+                                                1,
+                                                'en',
+                                                '',
+                                                reload: true);
+                                      });
+                                    });
+                              });
+                        },
+                      ),
                     ],
                   ),
                 ),

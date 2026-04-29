@@ -5,7 +5,8 @@ class LoggingInterceptor extends InterceptorsWrapper {
   int maxCharactersPerLine = 200;
 
   @override
-  Future onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+  Future onRequest(
+      RequestOptions options, RequestInterceptorHandler handler) async {
     if (kDebugMode) {
       print("--> ${options.method} ${options.path}");
     }
@@ -20,10 +21,11 @@ class LoggingInterceptor extends InterceptorsWrapper {
   }
 
   @override
-  Future onResponse(Response response, ResponseInterceptorHandler handler) async {
+  Future onResponse(
+      Response response, ResponseInterceptorHandler handler) async {
     if (kDebugMode) {
       print(
-        "<-- ${response.statusCode} ${response.requestOptions.method} ${response.requestOptions.path}");
+          "<-- ${response.statusCode} ${response.requestOptions.method} ${response.requestOptions.path}");
     }
 
     String responseAsString = response.data.toString();
@@ -36,8 +38,8 @@ class LoggingInterceptor extends InterceptorsWrapper {
           endingIndex = responseAsString.length;
         }
         if (kDebugMode) {
-          print(
-            responseAsString.substring(i * maxCharactersPerLine, endingIndex));
+          print(responseAsString.substring(
+              i * maxCharactersPerLine, endingIndex));
         }
       }
     } else {
@@ -57,8 +59,8 @@ class LoggingInterceptor extends InterceptorsWrapper {
   Future onError(DioException err, ErrorInterceptorHandler handler) async {
     if (kDebugMode) {
       print(
-  "ERROR[${err.response?.statusCode}] => TYPE: ${err.type} => MESSAGE: ${err.message} => PATH: ${err.requestOptions.path}",
-);
+        "ERROR[${err.response?.statusCode}] => TYPE: ${err.type} => MESSAGE: ${err.message} => PATH: ${err.requestOptions.path}",
+      );
     }
     return super.onError(err, handler);
   }

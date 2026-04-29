@@ -3,7 +3,6 @@ import 'package:sixvalley_vendor_app/features/product/domain/enums/product_type_
 import 'package:sixvalley_vendor_app/helper/date_converter.dart';
 
 class ProductModel {
-
   int? totalSize;
   int? limit;
   int? offset;
@@ -21,34 +20,40 @@ class ProductModel {
 
   List<Product>? get products => _products;
 
-  ProductModel.fromJson(Map<String, dynamic> json, {bool fromGetProducts = false}) {
+  ProductModel.fromJson(Map<String, dynamic> json,
+      {bool fromGetProducts = false}) {
     totalSize = int.tryParse('${json['total_size']}');
     limit = int.parse(json['limit'].toString());
     offset = int.parse(json['offset'].toString());
 
-    if(json['product_type'] != null) {
+    if (json['product_type'] != null) {
       productType = _getProductType(json['product_type']);
     }
     minPrice = double.tryParse('${json['min_price']}');
     maxPrice = double.tryParse('${json['max_price']}');
-    startDate = DateConverter.convertDurationDateTimeFromString(json['start_date']);
+    startDate =
+        DateConverter.convertDurationDateTimeFromString(json['start_date']);
     endDate = DateConverter.convertDurationDateTimeFromString(json['end_date']);
     search = json['search'];
 
     // Parse brandIds and categoryIds as lists of integers
     if (json['brand_ids'] != null) {
-      brandIds = Set<int>.from(json['brand_ids'].map((id) => int.parse(id.toString())));
+      brandIds = Set<int>.from(
+          json['brand_ids'].map((id) => int.parse(id.toString())));
     }
     if (json['category_ids'] != null) {
-      categoryIds = List<int>.from(json['category_ids'].map((id) => int.parse(id.toString())));
+      categoryIds = List<int>.from(
+          json['category_ids'].map((id) => int.parse(id.toString())));
     }
 
     if (json['publishing_house_ids'] != null) {
-      publishHouseIds = Set<int>.from(json['publishing_house_ids'].map((id) => int.parse(id.toString())));
+      publishHouseIds = Set<int>.from(
+          json['publishing_house_ids'].map((id) => int.parse(id.toString())));
     }
 
-    if(json['author_ids'] != null) {
-      authorIds = Set<int>.from(json['author_ids'].map((id) => int.parse(id.toString())));
+    if (json['author_ids'] != null) {
+      authorIds = Set<int>.from(
+          json['author_ids'].map((id) => int.parse(id.toString())));
     }
 
     if (json['products'] != null) {
@@ -71,20 +76,23 @@ class ProductModel {
   }
 
   ProductTypeEnum _getProductType(String value) {
-    switch(value) {
-      case 'all': {
-        return ProductTypeEnum.all;
-      }
-      case 'physical': {
-        return ProductTypeEnum.physical;
-      }
-      case 'digital': {
-        return ProductTypeEnum.digital;
-
-      }
-      default: {
-        return ProductTypeEnum.all;
-      }
+    switch (value) {
+      case 'all':
+        {
+          return ProductTypeEnum.all;
+        }
+      case 'physical':
+        {
+          return ProductTypeEnum.physical;
+        }
+      case 'digital':
+        {
+          return ProductTypeEnum.digital;
+        }
+      default:
+        {
+          return ProductTypeEnum.all;
+        }
     }
   }
 }
@@ -150,70 +158,70 @@ class Product {
   ImageFullUrl? digitalFileReadyFullUrl;
   String? videoUrl;
 
-  Product(
-      {this.id,
-        this.addedBy,
-        this.userId,
-        this.name,
-        this.slug,
-        this.productType,
-        this.code,
-        this.brandId,
-        this.categoryIds,
-        this.unit,
-        this.minQty,
-        this.images,
-        this.imagesFullUrl,
-        this.thumbnail,
-        this.thumbnailFullUrl,
-        this.metaImageFullUrl,
-        this.colors,
-        String? variantProduct,
-        this.attributes,
-        this.choiceOptions,
-        this.variation,
-        this.digitalProductFileTypes,
-        this.digitalProductExtensions,
-        this.unitPrice,
-        this.purchasePrice,
-        this.tax,
-        this.taxModel,
-        this.taxType,
-        this.discount,
-        this.discountType,
-        this.currentStock,
-        this.details,
-        String? attachment,
-        this.createdAt,
-        this.updatedAt,
-        this.status,
-        this.requestStatus,
-        int? featuredStatus,
-        this.rating,
-        this.metaTitle,
-        this.metaDescription,
-        this.metaImage,
-        this.shippingCost,
-        this.multiplyWithQuantity,
-        this.minimumOrderQty,
-        String? digitalProductType,
-        String? digitalFileReady,
-        int? reviewsCount,
-        String? averageReview,
-        List<Reviews>? reviews,
-        String? deniedNote,
-        List<Tags>? tags,
-        this.metaSeoInfo,
-        this.digitalVariation,
-        this.authors,
-        this.publishingHouse,
-        this.previewFileFullUrl,
-        this.brand,
-        this.category,
-        this.clearanceSale,
-        this.digitalFileReadyFullUrl,
-        this.videoUrl,
-      }) {
+  Product({
+    this.id,
+    this.addedBy,
+    this.userId,
+    this.name,
+    this.slug,
+    this.productType,
+    this.code,
+    this.brandId,
+    this.categoryIds,
+    this.unit,
+    this.minQty,
+    this.images,
+    this.imagesFullUrl,
+    this.thumbnail,
+    this.thumbnailFullUrl,
+    this.metaImageFullUrl,
+    this.colors,
+    String? variantProduct,
+    this.attributes,
+    this.choiceOptions,
+    this.variation,
+    this.digitalProductFileTypes,
+    this.digitalProductExtensions,
+    this.unitPrice,
+    this.purchasePrice,
+    this.tax,
+    this.taxModel,
+    this.taxType,
+    this.discount,
+    this.discountType,
+    this.currentStock,
+    this.details,
+    String? attachment,
+    this.createdAt,
+    this.updatedAt,
+    this.status,
+    this.requestStatus,
+    int? featuredStatus,
+    this.rating,
+    this.metaTitle,
+    this.metaDescription,
+    this.metaImage,
+    this.shippingCost,
+    this.multiplyWithQuantity,
+    this.minimumOrderQty,
+    String? digitalProductType,
+    String? digitalFileReady,
+    int? reviewsCount,
+    String? averageReview,
+    List<Reviews>? reviews,
+    String? deniedNote,
+    List<Tags>? tags,
+    this.metaSeoInfo,
+    this.digitalVariation,
+    this.authors,
+    this.publishingHouse,
+    this.previewFileFullUrl,
+    this.brand,
+    this.category,
+    this.clearanceSale,
+    this.digitalFileReadyFullUrl,
+    this.videoUrl,
+  }) {
     if (digitalProductType != null) {
       this.digitalProductType = digitalProductType;
     }
@@ -235,7 +243,6 @@ class Product {
     if (tags != null) {
       this.tags = tags;
     }
-
   }
 
   Product.fromJson(Map<String, dynamic> json, {bool fromGetProducts = false}) {
@@ -247,7 +254,7 @@ class Product {
     productType = json['product_type'];
     code = json['code'];
     brandId = json['brand_id'];
-    if (json['category_ids'] != null && json['category_ids'] is !String) {
+    if (json['category_ids'] != null && json['category_ids'] is! String) {
       categoryIds = [];
       json['category_ids'].forEach((v) {
         categoryIds!.add(CategoryIds.fromJson(v));
@@ -255,44 +262,49 @@ class Product {
     }
     unit = json['unit'];
     minQty = json['min_qty'];
-    if(json['images'] != null && json['category_ids'] is !String && json['images'] is List){
+    if (json['images'] != null &&
+        json['category_ids'] is! String &&
+        json['images'] is List) {
       images = json['images'] != null ? json['images'].cast<String>() : [];
     }
 
     thumbnail = json['thumbnail'];
-    if (json['colors_formatted'] != null && json['category_ids'] is !String) {
+    if (json['colors_formatted'] != null && json['category_ids'] is! String) {
       colors = [];
       json['colors_formatted'].forEach((v) {
         colors!.add(ProductColors.fromJson(v));
       });
     }
-    if(json['attributes'] != null && json['category_ids'] is !String) {
+    if (json['attributes'] != null && json['category_ids'] is! String) {
       attributes = [];
-      for(int index=0; index<json['attributes'].length; index++) {
+      for (int index = 0; index < json['attributes'].length; index++) {
         attributes!.add(int.parse(json['attributes'][index].toString()));
       }
     }
-    if (json['choice_options'] != null && json['category_ids'] is !String) {
+    if (json['choice_options'] != null && json['category_ids'] is! String) {
       choiceOptions = [];
       json['choice_options'].forEach((v) {
         choiceOptions!.add(ChoiceOptions.fromJson(v));
       });
     }
-    if (json['variation'] != null && json['category_ids'] is !String) {
+    if (json['variation'] != null && json['category_ids'] is! String) {
       variation = [];
       json['variation'].forEach((v) {
         variation!.add(Variation.fromJson(v));
       });
     }
-    if(json['digital_product_file_types'] != null) {
-      digitalProductFileTypes = json['digital_product_file_types'].cast<String>();
-    }else {
+    if (json['digital_product_file_types'] != null) {
+      digitalProductFileTypes =
+          json['digital_product_file_types'].cast<String>();
+    } else {
       digitalProductFileTypes = [];
     }
 
-    if(json['digital_product_extensions'] != null && json['digital_product_extensions'] is !List) {
-      digitalProductExtensions = (json['digital_product_extensions'] as Map<String, dynamic>).map(
-            (key, value) => MapEntry(key, List<String>.from(value)),
+    if (json['digital_product_extensions'] != null &&
+        json['digital_product_extensions'] is! List) {
+      digitalProductExtensions =
+          (json['digital_product_extensions'] as Map<String, dynamic>).map(
+        (key, value) => MapEntry(key, List<String>.from(value)),
       );
     }
     unitPrice = json['unit_price'].toDouble();
@@ -307,15 +319,14 @@ class Product {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     status = json['status'];
-    if(json['request_status'] != null) {
-      try{
+    if (json['request_status'] != null) {
+      try {
         requestStatus = json['request_status'];
-      }catch(e){
+      } catch (e) {
         requestStatus = int.parse(json['request_status']);
       }
     }
     deniedNote = json['denied_note'];
-
 
     if (json['rating'] != null) {
       rating = [];
@@ -326,28 +337,28 @@ class Product {
     metaTitle = json['meta_title'];
     metaDescription = json['meta_description'];
     metaImage = json['meta_image'];
-    if(json['shipping_cost']!=null){
+    if (json['shipping_cost'] != null) {
       shippingCost = json['shipping_cost'].toDouble();
     }
-    if(json['multiply_qty']!=null){
+    if (json['multiply_qty'] != null) {
       multiplyWithQuantity = json['multiply_qty'];
     }
-    if(json['minimum_order_qty']!=null){
-      try{
+    if (json['minimum_order_qty'] != null) {
+      try {
         minimumOrderQty = json['minimum_order_qty'];
-      }catch(e){
+      } catch (e) {
         minimumOrderQty = int.parse(json['minimum_order_qty'].toString());
       }
     }
-    if(json['digital_product_type']!=null){
+    if (json['digital_product_type'] != null) {
       digitalProductType = json['digital_product_type'];
     }
-    if(json['digital_file_ready']!=null){
+    if (json['digital_file_ready'] != null) {
       digitalFileReady = json['digital_file_ready'];
     }
-    if(json['reviews_count'] != null){
+    if (json['reviews_count'] != null) {
       reviewsCount = int.parse(json['reviews_count'].toString());
-    }else{
+    } else {
       reviewsCount = 0;
     }
 
@@ -365,22 +376,23 @@ class Product {
       });
     }
     metaSeoInfo = json['seo_info'] != null
-      ? MetaSeoInfo.fromJson(json['seo_info'], fromGetProducts: fromGetProducts)
-      : null;
+        ? MetaSeoInfo.fromJson(json['seo_info'],
+            fromGetProducts: fromGetProducts)
+        : null;
 
     thumbnailFullUrl = json['thumbnail_full_url'] != null
-      ? ImageFullUrl.fromJson(json['thumbnail_full_url'])
-      : null;
-    metaImageFullUrl  = json['meta_image_full_url'] != null
-      ? ImageFullUrl.fromJson(json['meta_image_full_url'])
-      : null;
+        ? ImageFullUrl.fromJson(json['thumbnail_full_url'])
+        : null;
+    metaImageFullUrl = json['meta_image_full_url'] != null
+        ? ImageFullUrl.fromJson(json['meta_image_full_url'])
+        : null;
 
-    previewFileFullUrl  = json['preview_file_full_url'] != null
-      ? ImageFullUrl.fromJson(json['preview_file_full_url'])
-      : null;
+    previewFileFullUrl = json['preview_file_full_url'] != null
+        ? ImageFullUrl.fromJson(json['preview_file_full_url'])
+        : null;
 
     if (json['images_full_url'] != null) {
-     imagesFullUrl = <ImageFullUrl>[];
+      imagesFullUrl = <ImageFullUrl>[];
       json['images_full_url'].forEach((v) {
         imagesFullUrl!.add(ImageFullUrl.fromJson(v));
       });
@@ -395,25 +407,36 @@ class Product {
       digitalVariation = [];
     }
 
-    if(json['digital_product_authors_names'] != null && json['digital_product_authors_names'] is !String && json['digital_product_authors_names'] is List){
-      authors = json['digital_product_authors_names'] != null ? json['digital_product_authors_names'].cast<String>() : [];
+    if (json['digital_product_authors_names'] != null &&
+        json['digital_product_authors_names'] is! String &&
+        json['digital_product_authors_names'] is List) {
+      authors = json['digital_product_authors_names'] != null
+          ? json['digital_product_authors_names'].cast<String>()
+          : [];
     }
 
-    if(json['digital_product_publishing_house_names'] != null && json['digital_product_publishing_house_names'] is !String && json['digital_product_publishing_house_names'] is List){
-      publishingHouse = json['digital_product_publishing_house_names'] != null ? json['digital_product_publishing_house_names'].cast<String>() : [];
+    if (json['digital_product_publishing_house_names'] != null &&
+        json['digital_product_publishing_house_names'] is! String &&
+        json['digital_product_publishing_house_names'] is List) {
+      publishingHouse = json['digital_product_publishing_house_names'] != null
+          ? json['digital_product_publishing_house_names'].cast<String>()
+          : [];
     }
 
     brand = json['brand'] != null ? Brand.fromJson(json['brand']) : null;
 
-    category = json['category'] != null ? Category.fromJson(json['category']) : null;
+    category =
+        json['category'] != null ? Category.fromJson(json['category']) : null;
 
-    clearanceSale = json['clearance_sale'] != null ? ClearanceSale.fromJson(json['clearance_sale']) : null;
+    clearanceSale = json['clearance_sale'] != null
+        ? ClearanceSale.fromJson(json['clearance_sale'])
+        : null;
 
     digitalFileReadyFullUrl = json['digital_file_ready_full_url'] != null
-      ? ImageFullUrl.fromJson(json['digital_file_ready_full_url'])
-      : null;
+        ? ImageFullUrl.fromJson(json['digital_file_ready_full_url'])
+        : null;
 
-    if(json['video_url']!=null){
+    if (json['video_url'] != null) {
       videoUrl = json['video_url'];
     }
   }
@@ -437,13 +460,12 @@ class Product {
     data['authors'] = authors;
     data['publishing_house'] = publishingHouse;
     data['thumbnail'] = thumbnail;
-    if (colors != null ) {
+    if (colors != null) {
       data['colors_formatted'] = colors!.map((v) => v.toJson()).toList();
     }
     data['attributes'] = attributes;
     if (choiceOptions != null) {
-      data['choice_options'] =
-          choiceOptions!.map((v) => v.toJson()).toList();
+      data['choice_options'] = choiceOptions!.map((v) => v.toJson()).toList();
     }
     if (variation != null) {
       data['variation'] = variation!.map((v) => v.toJson()).toList();
@@ -484,7 +506,7 @@ class Product {
     if (metaSeoInfo != null) {
       data['seo_info'] = metaSeoInfo!.toJson();
     }
-    if(clearanceSale != null) {
+    if (clearanceSale != null) {
       data['clearance_sale'] = clearanceSale!.toJson();
     }
     data['video_url'] = averageReview;
@@ -505,28 +527,29 @@ class DigitalVariation {
 
   DigitalVariation(
       {this.id,
-        this.productId,
-        this.variantKey,
-        this.sku,
-        this.price,
-        this.file,
-        this.createdAt,
-        this.updatedAt,
-        this.fileFullUrl
-      });
+      this.productId,
+      this.variantKey,
+      this.sku,
+      this.price,
+      this.file,
+      this.createdAt,
+      this.updatedAt,
+      this.fileFullUrl});
 
   DigitalVariation.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     productId = json['product_id'];
     variantKey = json['variant_key'];
     sku = json['sku'];
-    price = json['price'] != null ?
-    double.tryParse(json['price'].toString()) : null;
+    price = json['price'] != null
+        ? double.tryParse(json['price'].toString())
+        : null;
     file = json['file'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    fileFullUrl =  json['file_full_url'] != null
-        ? ImageFullUrl.fromJson(json['file_full_url']) : null;
+    fileFullUrl = json['file_full_url'] != null
+        ? ImageFullUrl.fromJson(json['file_full_url'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -548,7 +571,6 @@ class CategoryIds {
   int? position;
 
   CategoryIds({this.id, this.position});
-
 
   CategoryIds.fromJson(Map<String, dynamic> json) {
     id = json['id'].toString();
@@ -693,16 +715,16 @@ class Reviews {
 
   Reviews(
       {int? id,
-        int? productId,
-        int? customerId,
-        String? comment,
-        String? attachment,
-        int? rating,
-        int? status,
-        String? createdAt,
-        String? updatedAt,
-        Customer? customer,
-        List<ImageFullUrl>? attachmentFullUrl}) {
+      int? productId,
+      int? customerId,
+      String? comment,
+      String? attachment,
+      int? rating,
+      int? status,
+      String? createdAt,
+      String? updatedAt,
+      Customer? customer,
+      List<ImageFullUrl>? attachmentFullUrl}) {
     if (id != null) {
       _id = id;
     }
@@ -733,7 +755,7 @@ class Reviews {
     if (customer != null) {
       _customer = customer;
     }
-    if(attachmentFullUrl != null) {
+    if (attachmentFullUrl != null) {
       _attachmentFullUrl = attachmentFullUrl;
     }
   }
@@ -755,16 +777,15 @@ class Reviews {
     _productId = json['product_id'];
     _customerId = json['customer_id'];
     _comment = json['comment'];
-    if(json['attachment'] is String) {
+    if (json['attachment'] is String) {
       _attachment = json['attachment'];
     }
     _rating = json['rating'];
     _status = json['status'];
     _createdAt = json['created_at'];
     _updatedAt = json['updated_at'];
-    _customer = json['customer'] != null
-      ? Customer.fromJson(json['customer'])
-      : null;
+    _customer =
+        json['customer'] != null ? Customer.fromJson(json['customer']) : null;
     if (json['attachment_images_full_url'] != null) {
       _attachmentFullUrl = <ImageFullUrl>[];
       json['attachment_images_full_url'].forEach((v) {
@@ -800,15 +821,15 @@ class Customer {
   String? _email;
   ImageFullUrl? _imageFullUrl;
 
-  Customer(
-      {int? id,
-        String? fName,
-        String? lName,
-        String? phone,
-        String? image,
-        String? email,
-        ImageFullUrl? imageFullUrl,
-      }) {
+  Customer({
+    int? id,
+    String? fName,
+    String? lName,
+    String? phone,
+    String? image,
+    String? email,
+    ImageFullUrl? imageFullUrl,
+  }) {
     if (id != null) {
       _id = id;
     }
@@ -831,8 +852,6 @@ class Customer {
     if (imageFullUrl != null) {
       _imageFullUrl = imageFullUrl;
     }
-
-
   }
 
   int? get id => _id;
@@ -842,7 +861,6 @@ class Customer {
   String? get image => _image;
   String? get email => _email;
   ImageFullUrl? get imageFullUrl => _imageFullUrl;
-
 
   Customer.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
@@ -854,7 +872,6 @@ class Customer {
     _imageFullUrl = json['image_full_url'] != null
         ? ImageFullUrl.fromJson(json['image_full_url'])
         : null;
-
   }
 
   Map<String, dynamic> toJson() {
@@ -873,7 +890,6 @@ class Customer {
 class Tags {
   int? id;
   String? tag;
-
 
   Tags({this.id, this.tag});
 
@@ -912,49 +928,63 @@ class MetaSeoInfo {
   String? metaUpdatedAt;
   ImageFullUrl? imageFullUrl;
 
-
   MetaSeoInfo(
       {this.metaId,
-        this.metaProductId,
-        this.metaTitle,
-        this.metaDescription,
-        this.metaIndex = '1',
-        this.metaNoIndex,
-        this.metaNoFollow = '',
-        this.metaNoImageIndex = '0',
-        this.metaNoArchive = '0',
-        this.metaNoSnippet = '0',
-        this.metaMaxSnippet = '0',
-        this.metaMaxSnippetValue,
-        this.metaMaxVideoPreview = '0',
-        this.metaMaxVideoPreviewValue,
-        this.metaMaxImagePreview = '0',
-        this.metaMaxImagePreviewValue,
-        this.metaImage,
-        this.metaCreatedAt,
-        this.metaUpdatedAt,
-        this.imageFullUrl
-      });
+      this.metaProductId,
+      this.metaTitle,
+      this.metaDescription,
+      this.metaIndex = '1',
+      this.metaNoIndex,
+      this.metaNoFollow = '',
+      this.metaNoImageIndex = '0',
+      this.metaNoArchive = '0',
+      this.metaNoSnippet = '0',
+      this.metaMaxSnippet = '0',
+      this.metaMaxSnippetValue,
+      this.metaMaxVideoPreview = '0',
+      this.metaMaxVideoPreviewValue,
+      this.metaMaxImagePreview = '0',
+      this.metaMaxImagePreviewValue,
+      this.metaImage,
+      this.metaCreatedAt,
+      this.metaUpdatedAt,
+      this.imageFullUrl});
 
-  MetaSeoInfo.fromJson(Map<String, dynamic> json, {bool fromGetProducts = false}) {
+  MetaSeoInfo.fromJson(Map<String, dynamic> json,
+      {bool fromGetProducts = false}) {
     metaTitle = fromGetProducts ? json['title'] : json['meta_title'];
-    metaDescription = fromGetProducts ? json['description'] : json['meta_description'];
+    metaDescription =
+        fromGetProducts ? json['description'] : json['meta_description'];
     metaIndex = fromGetProducts ? json['index'] : json['meta_index'];
     metaNoIndex = fromGetProducts ? json['index'] : json['meta_index'];
     metaNoFollow = fromGetProducts ? json['no_follow'] : json['meta_no_follow'];
-    metaNoImageIndex = fromGetProducts  ? json['no_image_index'] : json['meta_no_image_index'];
-    metaNoArchive = fromGetProducts  ? json['no_archive'] : json['meta_no_archive'];
-    metaNoSnippet = fromGetProducts  ? json['no_snippet'] : json['meta_no_snippet'];
-    metaMaxSnippet = fromGetProducts  ? json['max_snippet'] : json['meta_max_snippet'];
-    metaMaxSnippetValue = fromGetProducts  ? json['max_snippet_value'] : json['meta_max_snippet_value'];
-    metaMaxVideoPreview = fromGetProducts  ? json['max_video_preview'] : json['meta_max_video_preview'];
-    metaMaxVideoPreviewValue = fromGetProducts  ? json['max_video_preview_value'] : json['meta_max_video_preview_value'];
-    metaMaxImagePreview = fromGetProducts  ? json['max_image_preview'] : json['meta_max_image_preview'];
-    metaMaxImagePreviewValue = fromGetProducts  ? json['max_image_preview_value'] : json['meta_max_image_preview_value'];
-    metaImage = fromGetProducts  ? json['meta_image'] : json['meta_image'];
-    imageFullUrl  = json['image_full_url'] != null
-      ? ImageFullUrl.fromJson(json['image_full_url'])
-      : null;
+    metaNoImageIndex =
+        fromGetProducts ? json['no_image_index'] : json['meta_no_image_index'];
+    metaNoArchive =
+        fromGetProducts ? json['no_archive'] : json['meta_no_archive'];
+    metaNoSnippet =
+        fromGetProducts ? json['no_snippet'] : json['meta_no_snippet'];
+    metaMaxSnippet =
+        fromGetProducts ? json['max_snippet'] : json['meta_max_snippet'];
+    metaMaxSnippetValue = fromGetProducts
+        ? json['max_snippet_value']
+        : json['meta_max_snippet_value'];
+    metaMaxVideoPreview = fromGetProducts
+        ? json['max_video_preview']
+        : json['meta_max_video_preview'];
+    metaMaxVideoPreviewValue = fromGetProducts
+        ? json['max_video_preview_value']
+        : json['meta_max_video_preview_value'];
+    metaMaxImagePreview = fromGetProducts
+        ? json['max_image_preview']
+        : json['meta_max_image_preview'];
+    metaMaxImagePreviewValue = fromGetProducts
+        ? json['max_image_preview_value']
+        : json['meta_max_image_preview_value'];
+    metaImage = fromGetProducts ? json['meta_image'] : json['meta_image'];
+    imageFullUrl = json['image_full_url'] != null
+        ? ImageFullUrl.fromJson(json['image_full_url'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -992,13 +1022,12 @@ class Brand {
 
   Brand(
       {this.id,
-        this.name,
-        this.image,
-        this.imageStorageType,
-        this.status,
-        this.createdAt,
-        this.updatedAt
-      });
+      this.name,
+      this.image,
+      this.imageStorageType,
+      this.status,
+      this.createdAt,
+      this.updatedAt});
 
   Brand.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -1038,17 +1067,16 @@ class Category {
 
   Category(
       {this.id,
-        this.name,
-        this.slug,
-        this.icon,
-        this.iconStorageType,
-        this.parentId,
-        this.position,
-        this.createdAt,
-        this.updatedAt,
-        this.homeStatus,
-        this.priority
-      });
+      this.name,
+      this.slug,
+      this.icon,
+      this.iconStorageType,
+      this.parentId,
+      this.position,
+      this.createdAt,
+      this.updatedAt,
+      this.homeStatus,
+      this.priority});
 
   Category.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -1096,16 +1124,16 @@ class ClearanceSale {
 
   ClearanceSale(
       {this.id,
-        this.addedBy,
-        this.productId,
-        this.setupId,
-        this.userId,
-        this.shopId,
-        this.isActive,
-        this.discountType,
-        this.discountAmount,
-        this.createdAt,
-        this.updatedAt});
+      this.addedBy,
+      this.productId,
+      this.setupId,
+      this.userId,
+      this.shopId,
+      this.isActive,
+      this.discountType,
+      this.discountAmount,
+      this.createdAt,
+      this.updatedAt});
 
   ClearanceSale.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -1116,8 +1144,9 @@ class ClearanceSale {
     shopId = json['shop_id'];
     isActive = json['is_active'];
     discountType = json['discount_type'];
-    discountAmount = json['discount_amount'] != null ?
-    double.tryParse(json['discount_amount'].toString()) : null;
+    discountAmount = json['discount_amount'] != null
+        ? double.tryParse(json['discount_amount'].toString())
+        : null;
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }

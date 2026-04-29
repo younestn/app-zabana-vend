@@ -13,7 +13,6 @@ class RefundController extends ChangeNotifier {
   final RefundServiceInterface refundServiceInterface;
   RefundController({required this.refundServiceInterface});
 
-
   List<RefundModel>? _refundList;
   List<RefundModel>? get refundList => _refundList ?? _refundList;
 
@@ -29,7 +28,6 @@ class RefundController extends ChangeNotifier {
 
   RefundModel? _refundModel;
   RefundModel? get refundModel => _refundModel;
-
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -52,20 +50,22 @@ class RefundController extends ChangeNotifier {
   bool _showRejectButton = false;
   bool get showRejectButton => _showRejectButton;
 
-
-
-
-  Future<ApiResponse> updateRefundStatus(BuildContext context,int? id, String status, String note) async {
+  Future<ApiResponse> updateRefundStatus(
+      BuildContext context, int? id, String status, String note) async {
     _isLoading = true;
     notifyListeners();
     ApiResponse apiResponse;
     apiResponse = await refundServiceInterface.refundStatus(id, status, note);
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-      showCustomSnackBarWidget(getTranslated('successfully_updated_refund_status', Get.context!), Get.context!,isError: false);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      showCustomSnackBarWidget(
+          getTranslated('successfully_updated_refund_status', Get.context!),
+          Get.context!,
+          isError: false);
       _isLoading = false;
-      if(status == 'approved'){
+      if (status == 'approved') {
         _refundTypeIndex = 1;
-      } else if(status == 'rejected') {
+      } else if (status == 'rejected') {
         _refundTypeIndex = 2;
       }
     } else {
@@ -77,15 +77,19 @@ class RefundController extends ChangeNotifier {
     return apiResponse;
   }
 
-
-  Future<ApiResponse> getRefundReqInfo(BuildContext context, int? orderDetailId) async {
+  Future<ApiResponse> getRefundReqInfo(
+      BuildContext context, int? orderDetailId) async {
     _isLoading = true;
 
-    ApiResponse apiResponse = await refundServiceInterface.getRefundReqDetails(orderDetailId);
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-      _refundDetailsModel = RefundDetailsModel.fromJson(apiResponse.response!.data);
+    ApiResponse apiResponse =
+        await refundServiceInterface.getRefundReqDetails(orderDetailId);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      _refundDetailsModel =
+          RefundDetailsModel.fromJson(apiResponse.response!.data);
 
-      if(refundDetailsModel?.refundRequest != null && refundDetailsModel!.refundRequest!.isNotEmpty) {
+      if (refundDetailsModel?.refundRequest != null &&
+          refundDetailsModel!.refundRequest!.isNotEmpty) {
         setShowResetButton(refundDetailsModel?.refundRequest![0].refundStatus);
       }
       _isLoading = false;
@@ -97,8 +101,9 @@ class RefundController extends ChangeNotifier {
     return apiResponse;
   }
 
-  Future<void> getRefundList(BuildContext context, {bool isReload = false}) async {
-    if(isReload) {
+  Future<void> getRefundList(BuildContext context,
+      {bool isReload = false}) async {
+    if (isReload) {
       _refundList = null;
       _pendingList = null;
       _approvedList = null;
@@ -109,23 +114,23 @@ class RefundController extends ChangeNotifier {
     }
 
     ApiResponse apiResponse = await refundServiceInterface.getRefundList();
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       _refundList = [];
       _pendingList = [];
       _approvedList = [];
       _deniedList = [];
       _doneList = [];
       apiResponse.response!.data.forEach((refund) {
-
         RefundModel refundModel = RefundModel.fromJson(refund);
         _refundList!.add(refundModel);
         if (refundModel.status == AppConstants.pending) {
           _pendingList!.add(refundModel);
         } else if (refundModel.status == AppConstants.approved) {
           _approvedList!.add(refundModel);
-        }else if (refundModel.status == AppConstants.rejected) {
+        } else if (refundModel.status == AppConstants.rejected) {
           _deniedList!.add(refundModel);
-        }else if (refundModel.status == AppConstants.done) {
+        } else if (refundModel.status == AppConstants.done) {
           _doneList!.add(refundModel);
         }
       });
@@ -134,7 +139,6 @@ class RefundController extends ChangeNotifier {
     }
     notifyListeners();
   }
-
 
   void setIndex(int index) {
     _refundTypeIndex = index;
@@ -150,14 +154,14 @@ class RefundController extends ChangeNotifier {
     List<RefundStatus>? status = refundStatus;
 
     String changeBy = '';
-    for(RefundStatus action in status!){
-      if(action.changeBy == 'admin'){
+    for (RefundStatus action in status!) {
+      if (action.changeBy == 'admin') {
         changeBy = 'admin';
         _showRejectButton = false;
       }
     }
 
-    if(changeBy != 'admin'){
+    if (changeBy != 'admin') {
       _showRejectButton = true;
     }
   }
@@ -170,12 +174,14 @@ class RefundController extends ChangeNotifier {
     _refundModel = null;
   }
 
-
-  Future<ApiResponse> getSingleRefundModel(BuildContext context, int? refundId) async {
+  Future<ApiResponse> getSingleRefundModel(
+      BuildContext context, int? refundId) async {
     _isLoading = true;
 
-    ApiResponse apiResponse = await refundServiceInterface.getSingleRefundModel(refundId);
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    ApiResponse apiResponse =
+        await refundServiceInterface.getSingleRefundModel(refundId);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       _refundModel = RefundModel.fromJson(apiResponse.response!.data);
       _isLoading = false;
     } else {
@@ -189,5 +195,4 @@ class RefundController extends ChangeNotifier {
   void emptyRefundDetailsModel() {
     _refundDetailsModel = null;
   }
-
 }

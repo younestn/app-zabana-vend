@@ -12,7 +12,8 @@ class NoestSettingsCardWidget extends StatefulWidget {
   const NoestSettingsCardWidget({super.key});
 
   @override
-  State<NoestSettingsCardWidget> createState() => _NoestSettingsCardWidgetState();
+  State<NoestSettingsCardWidget> createState() =>
+      _NoestSettingsCardWidgetState();
 }
 
 class _NoestSettingsCardWidgetState extends State<NoestSettingsCardWidget> {
@@ -85,7 +86,8 @@ class _NoestSettingsCardWidgetState extends State<NoestSettingsCardWidget> {
         final noest = shipProv.noestSettingsModel;
         final isConnected = (noest?.isConnected ?? 0) == 1;
         final connectedSince = noest?.connectedSince;
-        final isBusy = shipProv.isNoestLoading || shipProv.isNoestConnectionLoading;
+        final isBusy =
+            shipProv.isNoestLoading || shipProv.isNoestConnectionLoading;
 
         return Padding(
           padding: const EdgeInsets.fromLTRB(
@@ -127,7 +129,8 @@ class _NoestSettingsCardWidgetState extends State<NoestSettingsCardWidget> {
                   children: [
                     Expanded(
                       child: Text(
-                        getTranslated('noest_shipping_settings', context) ?? 'NOEST Shipping Settings',
+                        getTranslated('noest_shipping_settings', context) ??
+                            'NOEST Shipping Settings',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: robotoMedium.copyWith(
@@ -144,14 +147,21 @@ class _NoestSettingsCardWidgetState extends State<NoestSettingsCardWidget> {
                       ),
                       decoration: BoxDecoration(
                         color: isConnected
-                            ? Theme.of(context).primaryColor.withValues(alpha: .12)
-                            : Theme.of(context).colorScheme.error.withValues(alpha: .12),
+                            ? Theme.of(context)
+                                .primaryColor
+                                .withValues(alpha: .12)
+                            : Theme.of(context)
+                                .colorScheme
+                                .error
+                                .withValues(alpha: .12),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
                         isConnected
-                            ? (getTranslated('connected', context) ?? 'Connected')
-                            : (getTranslated('not_connected', context) ?? 'Not Connected'),
+                            ? (getTranslated('connected', context) ??
+                                'Connected')
+                            : (getTranslated('not_connected', context) ??
+                                'Not Connected'),
                         style: robotoRegular.copyWith(
                           fontSize: 11,
                           color: isConnected
@@ -168,7 +178,8 @@ class _NoestSettingsCardWidgetState extends State<NoestSettingsCardWidget> {
                         child: Text(
                           _guidController.text.isNotEmpty
                               ? _guidController.text
-                              : (getTranslated('test_connection', context) ?? 'Tap to configure NOEST'),
+                              : (getTranslated('test_connection', context) ??
+                                  'Tap to configure NOEST'),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: robotoRegular.copyWith(
@@ -179,9 +190,11 @@ class _NoestSettingsCardWidgetState extends State<NoestSettingsCardWidget> {
                       )
                     : null,
                 children: [
-                  if (connectedSince != null && connectedSince.toString().isNotEmpty)
+                  if (connectedSince != null &&
+                      connectedSince.toString().isNotEmpty)
                     Padding(
-                      padding: const EdgeInsets.only(bottom: Dimensions.paddingSizeSmall),
+                      padding: const EdgeInsets.only(
+                          bottom: Dimensions.paddingSizeSmall),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
@@ -193,7 +206,6 @@ class _NoestSettingsCardWidgetState extends State<NoestSettingsCardWidget> {
                         ),
                       ),
                     ),
-
                   Text(
                     getTranslated(
                           'use_your_vendor_guid_and_api_token_to_connect_your_noest_account_from_the_app',
@@ -205,9 +217,7 @@ class _NoestSettingsCardWidgetState extends State<NoestSettingsCardWidget> {
                       fontSize: Dimensions.fontSizeSmall,
                     ),
                   ),
-
                   const SizedBox(height: Dimensions.paddingSizeDefault),
-
                   Text(
                     getTranslated('noest_guid', context) ?? 'NOEST GUID',
                     style: titilliumRegular.copyWith(
@@ -218,16 +228,16 @@ class _NoestSettingsCardWidgetState extends State<NoestSettingsCardWidget> {
                   const SizedBox(height: Dimensions.paddingSizeExtraSmall),
                   CustomTextFieldWidget(
                     controller: _guidController,
-                    hintText: getTranslated('enter_noest_guid', context) ?? 'Enter NOEST GUID',
+                    hintText: getTranslated('enter_noest_guid', context) ??
+                        'Enter NOEST GUID',
                     border: true,
                     textInputType: TextInputType.text,
                     textInputAction: TextInputAction.next,
                   ),
-
                   const SizedBox(height: Dimensions.paddingSizeDefault),
-
                   Text(
-                    getTranslated('noest_api_token', context) ?? 'NOEST API Token',
+                    getTranslated('noest_api_token', context) ??
+                        'NOEST API Token',
                     style: titilliumRegular.copyWith(
                       fontSize: Dimensions.fontSizeDefault,
                       color: Theme.of(context).hintColor,
@@ -236,14 +246,13 @@ class _NoestSettingsCardWidgetState extends State<NoestSettingsCardWidget> {
                   const SizedBox(height: Dimensions.paddingSizeExtraSmall),
                   CustomTextFieldWidget(
                     controller: _tokenController,
-                    hintText: getTranslated('enter_noest_api_token', context) ?? 'Enter NOEST API Token',
+                    hintText: getTranslated('enter_noest_api_token', context) ??
+                        'Enter NOEST API Token',
                     border: true,
                     textInputType: TextInputType.text,
                     textInputAction: TextInputAction.done,
                   ),
-
                   const SizedBox(height: Dimensions.paddingSizeDefault),
-
                   Row(
                     children: [
                       Expanded(
@@ -269,29 +278,27 @@ class _NoestSettingsCardWidgetState extends State<NoestSettingsCardWidget> {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: Dimensions.paddingSizeDefault),
-
                   Text(
-                    getTranslated('available_delivery_methods', context) ?? 'Available delivery methods',
+                    getTranslated('available_delivery_methods', context) ??
+                        'Available delivery methods',
                     style: robotoMedium.copyWith(
                       color: Theme.of(context).textTheme.bodyLarge?.color,
                     ),
                   ),
                   const SizedBox(height: Dimensions.paddingSizeSmall),
-
                   Wrap(
                     spacing: Dimensions.paddingSizeSmall,
                     runSpacing: Dimensions.paddingSizeSmall,
                     children: shipProv.noestDeliveryMethods.map((method) {
-                      final translatedName = getTranslated(method.title ?? method.name ?? '', context) ??
-                          (method.title ?? method.name ?? '').replaceAll('_', ' ');
+                      final translatedName = getTranslated(
+                              method.title ?? method.name ?? '', context) ??
+                          (method.title ?? method.name ?? '')
+                              .replaceAll('_', ' ');
                       return _buildMethodChip(context, translatedName);
                     }).toList(),
                   ),
-
                   const SizedBox(height: Dimensions.paddingSizeDefault),
-
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton(
@@ -304,7 +311,9 @@ class _NoestSettingsCardWidgetState extends State<NoestSettingsCardWidget> {
                               if (noestGuid.isEmpty) {
                                 _showMessage(
                                   false,
-                                  getTranslated('please_enter_noest_guid', context) ?? 'Please enter NOEST GUID',
+                                  getTranslated(
+                                          'please_enter_noest_guid', context) ??
+                                      'Please enter NOEST GUID',
                                 );
                                 return;
                               }
@@ -312,17 +321,22 @@ class _NoestSettingsCardWidgetState extends State<NoestSettingsCardWidget> {
                               if (apiToken.isEmpty) {
                                 _showMessage(
                                   false,
-                                  getTranslated('please_enter_noest_api_token', context) ?? 'Please enter NOEST API Token',
+                                  getTranslated('please_enter_noest_api_token',
+                                          context) ??
+                                      'Please enter NOEST API Token',
                                 );
                                 return;
                               }
 
-                              shipProv.testNoestConnection(noestGuid, apiToken, (bool isSuccess, String message) {
+                              shipProv.testNoestConnection(noestGuid, apiToken,
+                                  (bool isSuccess, String message) {
                                 _showMessage(
                                   isSuccess,
                                   message.isNotEmpty
                                       ? message
-                                      : (getTranslated('noest_connection_test_completed', context) ??
+                                      : (getTranslated(
+                                              'noest_connection_test_completed',
+                                              context) ??
                                           'NOEST connection test completed'),
                                 );
                               });
@@ -331,7 +345,8 @@ class _NoestSettingsCardWidgetState extends State<NoestSettingsCardWidget> {
                         padding: const EdgeInsets.symmetric(vertical: 13),
                         side: BorderSide(color: Theme.of(context).primaryColor),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(Dimensions.paddingSizeExtraSmall),
+                          borderRadius: BorderRadius.circular(
+                              Dimensions.paddingSizeExtraSmall),
                         ),
                       ),
                       child: shipProv.isNoestConnectionLoading
@@ -344,16 +359,15 @@ class _NoestSettingsCardWidgetState extends State<NoestSettingsCardWidget> {
                               ),
                             )
                           : Text(
-                              getTranslated('test_connection', context) ?? 'Test Connection',
+                              getTranslated('test_connection', context) ??
+                                  'Test Connection',
                               style: robotoMedium.copyWith(
                                 color: Theme.of(context).primaryColor,
                               ),
                             ),
                     ),
                   ),
-
                   const SizedBox(height: Dimensions.paddingSizeSmall),
-
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -366,7 +380,9 @@ class _NoestSettingsCardWidgetState extends State<NoestSettingsCardWidget> {
                               if (noestGuid.isEmpty) {
                                 _showMessage(
                                   false,
-                                  getTranslated('please_enter_noest_guid', context) ?? 'Please enter NOEST GUID',
+                                  getTranslated(
+                                          'please_enter_noest_guid', context) ??
+                                      'Please enter NOEST GUID',
                                 );
                                 return;
                               }
@@ -374,7 +390,9 @@ class _NoestSettingsCardWidgetState extends State<NoestSettingsCardWidget> {
                               if (apiToken.isEmpty) {
                                 _showMessage(
                                   false,
-                                  getTranslated('please_enter_noest_api_token', context) ?? 'Please enter NOEST API Token',
+                                  getTranslated('please_enter_noest_api_token',
+                                          context) ??
+                                      'Please enter NOEST API Token',
                                 );
                                 return;
                               }
@@ -388,7 +406,9 @@ class _NoestSettingsCardWidgetState extends State<NoestSettingsCardWidget> {
                                     isSuccess,
                                     message.isNotEmpty
                                         ? message
-                                        : (getTranslated('noest_settings_saved_successfully', context) ??
+                                        : (getTranslated(
+                                                'noest_settings_saved_successfully',
+                                                context) ??
                                             'NOEST settings saved successfully'),
                                   );
                                 },
@@ -399,7 +419,8 @@ class _NoestSettingsCardWidgetState extends State<NoestSettingsCardWidget> {
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 13),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(Dimensions.paddingSizeExtraSmall),
+                          borderRadius: BorderRadius.circular(
+                              Dimensions.paddingSizeExtraSmall),
                         ),
                         elevation: 0,
                       ),

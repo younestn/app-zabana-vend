@@ -9,9 +9,9 @@ class DeliveryManDetailsModel {
         ? DeliveryMan.fromJson(json['delivery_man'])
         : null;
 
-    if(json['withdrawbale_balance'] != null){
+    if (json['withdrawbale_balance'] != null) {
       withdrawbaleBalance = json['withdrawbale_balance'].toDouble();
-    }else{
+    } else {
       withdrawbaleBalance = 0;
     }
   }
@@ -43,25 +43,23 @@ class DeliveryMan {
   int? isOnline;
   Wallet? wallet;
 
-
-
-  DeliveryMan(
-      {this.id,
-        this.fName,
-        this.lName,
-        this.address,
-        this.countryCode,
-        this.phone,
-        this.email,
-        this.image,
-        this.bankName,
-        this.branch,
-        this.accountNo,
-        this.holderName,
-        this.isActive,
-        this.isOnline,
-        this.wallet,
-        });
+  DeliveryMan({
+    this.id,
+    this.fName,
+    this.lName,
+    this.address,
+    this.countryCode,
+    this.phone,
+    this.email,
+    this.image,
+    this.bankName,
+    this.branch,
+    this.accountNo,
+    this.holderName,
+    this.isActive,
+    this.isOnline,
+    this.wallet,
+  });
 
   DeliveryMan.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -79,9 +77,6 @@ class DeliveryMan {
     isActive = json['is_active'];
     isOnline = json['is_online'];
     wallet = json['wallet'] != null ? Wallet.fromJson(json['wallet']) : null;
-
-
-
   }
 
   Map<String, dynamic> toJson() {
@@ -119,13 +114,13 @@ class Wallet {
 
   Wallet(
       {this.id,
-        this.deliveryManId,
-        this.currentBalance,
-        this.cashInHand,
-        this.pendingWithdraw,
-        this.totalWithdraw,
-        this.createdAt,
-        this.updatedAt});
+      this.deliveryManId,
+      this.currentBalance,
+      this.cashInHand,
+      this.pendingWithdraw,
+      this.totalWithdraw,
+      this.createdAt,
+      this.updatedAt});
 
   Wallet.fromJson(Map<String, dynamic> json) {
     id = json['id'];

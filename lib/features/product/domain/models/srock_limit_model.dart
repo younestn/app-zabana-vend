@@ -11,7 +11,7 @@ class StockLimitStatus {
     status = json['status'];
     productCount = json['product_count'];
     product =
-    json['product'] != null ? Product.fromJson(json['product']) : null;
+        json['product'] != null ? Product.fromJson(json['product']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -24,5 +24,3 @@ class StockLimitStatus {
     return data;
   }
 }
-
-

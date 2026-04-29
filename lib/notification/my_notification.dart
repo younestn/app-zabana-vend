@@ -29,7 +29,6 @@ import 'package:sixvalley_vendor_app/features/order_details/screens/order_detail
 import '../main.dart';
 
 class MyNotification {
-
   static const AndroidNotificationChannel _channel = AndroidNotificationChannel(
     'high_importance_channel',
     'High Importance Notifications',
@@ -58,32 +57,33 @@ class MyNotification {
     NotificationBody? payload, {
     String? title,
   }) async {
-  if (payload?.type == 'chatting' || (title?.contains('chatting') ?? false)) {
-  final int chatIndex = _resolveChatIndex(payload);
+    if (payload?.type == 'chatting' || (title?.contains('chatting') ?? false)) {
+      final int chatIndex = _resolveChatIndex(payload);
 
-  Provider.of<ChatController>(Get.context!, listen: false)
-      .setUserTypeIndex(Get.context!, chatIndex, isUpdate: false);
+      Provider.of<ChatController>(Get.context!, listen: false)
+          .setUserTypeIndex(Get.context!, chatIndex, isUpdate: false);
 
-  if ((payload?.chatType?.toLowerCase() ?? '') == 'admin') {
-    Get.navigator!.push(
-      MaterialPageRoute(
-        builder: (context) => ChatScreen(
-          userId: payload?.chatTargetId ?? 0,
-          name: 'Admin',
-        ),
-      ),
-    );
-  } else {
-    Get.navigator!.push(
-      MaterialPageRoute(
-        builder: (context) => InboxScreen(
-          fromNotification: true,
-          initIndex: chatIndex,
-        ),
-      ),
-    );
-  }
-} else if (payload?.type == 'Theme' || (title?.contains('Theme') ?? false)) {
+      if ((payload?.chatType?.toLowerCase() ?? '') == 'admin') {
+        Get.navigator!.push(
+          MaterialPageRoute(
+            builder: (context) => ChatScreen(
+              userId: payload?.chatTargetId ?? 0,
+              name: 'Admin',
+            ),
+          ),
+        );
+      } else {
+        Get.navigator!.push(
+          MaterialPageRoute(
+            builder: (context) => InboxScreen(
+              fromNotification: true,
+              initIndex: chatIndex,
+            ),
+          ),
+        );
+      }
+    } else if (payload?.type == 'Theme' ||
+        (title?.contains('Theme') ?? false)) {
       Get.navigator!.push(
         MaterialPageRoute(builder: (context) => const NotificationScreen()),
       );
@@ -98,11 +98,14 @@ class MyNotification {
       );
     } else if (payload?.type == 'wallet_withdraw') {
       Get.navigator!.push(
-        MaterialPageRoute(builder: (context) => const WalletScreen(fromNotification: true)),
+        MaterialPageRoute(
+            builder: (context) => const WalletScreen(fromNotification: true)),
       );
     } else if (payload?.type == 'product_request_approved_message') {
       Get.navigator!.push(
-        MaterialPageRoute(builder: (context) => const ProductListMenuScreen(fromNotification: true)),
+        MaterialPageRoute(
+            builder: (context) =>
+                const ProductListMenuScreen(fromNotification: true)),
       );
     } else if (payload?.type == 'refund') {
       Get.navigator!.push(
@@ -121,7 +124,8 @@ class MyNotification {
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin, {
     bool withTapHandler = true,
   }) async {
-    const androidInitialize = AndroidInitializationSettings('notification_icon');
+    const androidInitialize =
+        AndroidInitializationSettings('notification_icon');
     const iOSInitialize = DarwinInitializationSettings();
     const initializationsSettings = InitializationSettings(
       android: androidInitialize,
@@ -154,208 +158,229 @@ class MyNotification {
             AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(_channel);
   }
-  static Future<void> initialize(FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
-  await _initializeLocalNotifications(flutterLocalNotificationsPlugin);
 
+  static Future<void> initialize(
+      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
+    await _initializeLocalNotifications(flutterLocalNotificationsPlugin);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-  if (kDebugMode) {
-    debugPrint(
-      "onMessage: ${message.notification?.title}/${message.notification?.body}/${message.data}",
-    );
-  }
-
-  if (message.data['type'] == 'maintenance_mode') {
-    final SplashController splashProvider =
-        Provider.of<SplashController>(Get.context!, listen: false);
-    await splashProvider.initConfig();
-
-    ConfigModel? config =
-        Provider.of<SplashController>(Get.context!, listen: false).configModel;
-
-    bool isMaintenanceRoute =
-        Provider.of<SplashController>(Get.context!, listen: false)
-            .isMaintenanceModeScreen();
-
-    if (config?.maintenanceModeData?.maintenanceStatus == 1 &&
-        (config?.maintenanceModeData?.selectedMaintenanceSystem?.vendorApp == 1)) {
-      Navigator.of(Get.context!).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => const MaintenanceScreen(),
-          settings: const RouteSettings(name: 'MaintenanceScreen'),
-        ),
-      );
-    } else if (config?.maintenanceModeData?.maintenanceStatus == 0 &&
-        isMaintenanceRoute) {
-      final AuthController authController =
-          Provider.of<AuthController>(Get.context!, listen: false);
-      if (authController.isLoggedIn()) {
-        Navigator.of(Get.context!).pushReplacement(
-          MaterialPageRoute(builder: (_) => const DashboardScreen()),
-        );
-      } else {
-        Navigator.of(Get.context!).pushReplacement(
-          MaterialPageRoute(builder: (_) => const LoginScreen()),
+      if (kDebugMode) {
+        debugPrint(
+          "onMessage: ${message.notification?.title}/${message.notification?.body}/${message.data}",
         );
       }
-    }
-    return;
-  }
 
-  await showNotification(message, flutterLocalNotificationsPlugin, false);
-});
+      if (message.data['type'] == 'maintenance_mode') {
+        final SplashController splashProvider =
+            Provider.of<SplashController>(Get.context!, listen: false);
+        await splashProvider.initConfig();
 
+        ConfigModel? config =
+            Provider.of<SplashController>(Get.context!, listen: false)
+                .configModel;
+
+        bool isMaintenanceRoute =
+            Provider.of<SplashController>(Get.context!, listen: false)
+                .isMaintenanceModeScreen();
+
+        if (config?.maintenanceModeData?.maintenanceStatus == 1 &&
+            (config?.maintenanceModeData?.selectedMaintenanceSystem
+                    ?.vendorApp ==
+                1)) {
+          Navigator.of(Get.context!).pushReplacement(
+            MaterialPageRoute(
+              builder: (_) => const MaintenanceScreen(),
+              settings: const RouteSettings(name: 'MaintenanceScreen'),
+            ),
+          );
+        } else if (config?.maintenanceModeData?.maintenanceStatus == 0 &&
+            isMaintenanceRoute) {
+          final AuthController authController =
+              Provider.of<AuthController>(Get.context!, listen: false);
+          if (authController.isLoggedIn()) {
+            Navigator.of(Get.context!).pushReplacement(
+              MaterialPageRoute(builder: (_) => const DashboardScreen()),
+            );
+          } else {
+            Navigator.of(Get.context!).pushReplacement(
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
+            );
+          }
+        }
+        return;
+      }
+
+      await showNotification(message, flutterLocalNotificationsPlugin, false);
+    });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
-  if (kDebugMode) {
-    debugPrint(
-      "onOpenApp: ${message.notification?.title}/${message.toMap()}/${message.notification?.titleLocKey}",
-    );
-  }
-
-  final NotificationBody? payload = _getPayload(message);
-  final String? title = _getTitle(message);
-
-  await _handleNotificationRouting(payload, title: title);
-
-  if (message.data['type'] == 'maintenance_mode') {
-    final SplashController splashProvider =
-        Provider.of<SplashController>(Get.context!, listen: false);
-    await splashProvider.initConfig();
-
-    ConfigModel? config =
-        Provider.of<SplashController>(Get.context!, listen: false).configModel;
-
-    bool isMaintenanceRoute =
-        Provider.of<SplashController>(Get.context!, listen: false)
-            .isMaintenanceModeScreen();
-
-    if (config?.maintenanceModeData?.maintenanceStatus == 1 &&
-        (config?.maintenanceModeData?.selectedMaintenanceSystem?.vendorApp == 1)) {
-      Navigator.of(Get.context!).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => const MaintenanceScreen(),
-          settings: const RouteSettings(name: 'MaintenanceScreen'),
-        ),
-      );
-    } else if (config?.maintenanceModeData?.maintenanceStatus == 0 &&
-        isMaintenanceRoute) {
-      final AuthController authController =
-          Provider.of<AuthController>(Get.context!, listen: false);
-      if (authController.isLoggedIn()) {
-        Navigator.of(Get.context!).pushReplacement(
-          MaterialPageRoute(builder: (_) => const DashboardScreen()),
-        );
-      } else {
-        Navigator.of(Get.context!).pushReplacement(
-          MaterialPageRoute(builder: (_) => const LoginScreen()),
+      if (kDebugMode) {
+        debugPrint(
+          "onOpenApp: ${message.notification?.title}/${message.toMap()}/${message.notification?.titleLocKey}",
         );
       }
+
+      final NotificationBody? payload = _getPayload(message);
+      final String? title = _getTitle(message);
+
+      await _handleNotificationRouting(payload, title: title);
+
+      if (message.data['type'] == 'maintenance_mode') {
+        final SplashController splashProvider =
+            Provider.of<SplashController>(Get.context!, listen: false);
+        await splashProvider.initConfig();
+
+        ConfigModel? config =
+            Provider.of<SplashController>(Get.context!, listen: false)
+                .configModel;
+
+        bool isMaintenanceRoute =
+            Provider.of<SplashController>(Get.context!, listen: false)
+                .isMaintenanceModeScreen();
+
+        if (config?.maintenanceModeData?.maintenanceStatus == 1 &&
+            (config?.maintenanceModeData?.selectedMaintenanceSystem
+                    ?.vendorApp ==
+                1)) {
+          Navigator.of(Get.context!).pushReplacement(
+            MaterialPageRoute(
+              builder: (_) => const MaintenanceScreen(),
+              settings: const RouteSettings(name: 'MaintenanceScreen'),
+            ),
+          );
+        } else if (config?.maintenanceModeData?.maintenanceStatus == 0 &&
+            isMaintenanceRoute) {
+          final AuthController authController =
+              Provider.of<AuthController>(Get.context!, listen: false);
+          if (authController.isLoggedIn()) {
+            Navigator.of(Get.context!).pushReplacement(
+              MaterialPageRoute(builder: (_) => const DashboardScreen()),
+            );
+          } else {
+            Navigator.of(Get.context!).pushReplacement(
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
+            );
+          }
+        }
+      }
+    });
+  }
+
+  static Future<void> showNotification(
+    RemoteMessage message,
+    FlutterLocalNotificationsPlugin fln,
+    bool data,
+  ) async {
+    String? title = _getTitle(message);
+    String? body = _getBody(message);
+
+    if ((title == null || title.isEmpty) && (body == null || body.isEmpty)) {
+      return;
     }
-  }
-});
-  }
 
-static Future<void> showNotification(
-  RemoteMessage message,
-  FlutterLocalNotificationsPlugin fln,
-  bool data,
-) async {
-  String? title = _getTitle(message);
-  String? body = _getBody(message);
+    String? image = (message.data['image'] != null &&
+            message.data['image'].toString().isNotEmpty)
+        ? (message.data['image'].toString().startsWith('http')
+            ? message.data['image'].toString()
+            : '${AppConstants.baseUrl}/storage/app/public/notification/${message.data['image']}')
+        : null;
 
-  if ((title == null || title.isEmpty) &&
-      (body == null || body.isEmpty)) {
-    return;
-  }
-
-  String? image =
-      (message.data['image'] != null &&
-              message.data['image'].toString().isNotEmpty)
-          ? (message.data['image'].toString().startsWith('http')
-              ? message.data['image'].toString()
-              : '${AppConstants.baseUrl}/storage/app/public/notification/${message.data['image']}')
-          : null;
-
-  if (image != null && image.isNotEmpty) {
-    try {
-      await showBigPictureNotificationHiddenLargeIcon(
-        title,
-        body,
-        message.data,
-        image,
-        fln,
-      );
-    } catch (e) {
+    if (image != null && image.isNotEmpty) {
+      try {
+        await showBigPictureNotificationHiddenLargeIcon(
+          title,
+          body,
+          message.data,
+          image,
+          fln,
+        );
+      } catch (e) {
+        await showBigTextNotification(title, body ?? '', message.data, fln);
+      }
+    } else {
       await showBigTextNotification(title, body ?? '', message.data, fln);
     }
-  } else {
-    await showBigTextNotification(title, body ?? '', message.data, fln);
   }
-}
 
-
-  static Future<void> showBigTextNotification(String? title, String body, Map<String, dynamic> data, FlutterLocalNotificationsPlugin fln) async {
+  static Future<void> showBigTextNotification(String? title, String body,
+      Map<String, dynamic> data, FlutterLocalNotificationsPlugin fln) async {
     BigTextStyleInformation bigTextStyleInformation = BigTextStyleInformation(
-      body, htmlFormatBigText: true,
-      contentTitle: title, htmlFormatContentTitle: true,
+      body,
+      htmlFormatBigText: true,
+      contentTitle: title,
+      htmlFormatContentTitle: true,
     );
     AndroidNotificationDetails androidPlatformChannelSpecifics =
-    AndroidNotificationDetails(
-  _channel.id,
-  _channel.name,
-  channelDescription: _channel.description,
-  importance: Importance.max,
-  styleInformation: bigTextStyleInformation,
-  priority: Priority.max,
-  playSound: true,
-  sound: const RawResourceAndroidNotificationSound('notification'),
-);
-    NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
-    await fln.show(0, title, body, platformChannelSpecifics, payload: jsonEncode(data));
+        AndroidNotificationDetails(
+      _channel.id,
+      _channel.name,
+      channelDescription: _channel.description,
+      importance: Importance.max,
+      styleInformation: bigTextStyleInformation,
+      priority: Priority.max,
+      playSound: true,
+      sound: const RawResourceAndroidNotificationSound('notification'),
+    );
+    NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+    await fln.show(0, title, body, platformChannelSpecifics,
+        payload: jsonEncode(data));
   }
 
-  static Future<void> showBigPictureNotificationHiddenLargeIcon(String? title, String? body, Map<String, dynamic> data, String image, FlutterLocalNotificationsPlugin fln) async {
+  static Future<void> showBigPictureNotificationHiddenLargeIcon(
+      String? title,
+      String? body,
+      Map<String, dynamic> data,
+      String image,
+      FlutterLocalNotificationsPlugin fln) async {
     final String largeIconPath = await _downloadAndSaveFile(image, 'largeIcon');
-    final String bigPicturePath = await _downloadAndSaveFile(image, 'bigPicture');
-    final BigPictureStyleInformation bigPictureStyleInformation = BigPictureStyleInformation(
-      FilePathAndroidBitmap(bigPicturePath), hideExpandedLargeIcon: true,
-      contentTitle: title, htmlFormatContentTitle: true,
-      summaryText: body, htmlFormatSummaryText: true,
+    final String bigPicturePath =
+        await _downloadAndSaveFile(image, 'bigPicture');
+    final BigPictureStyleInformation bigPictureStyleInformation =
+        BigPictureStyleInformation(
+      FilePathAndroidBitmap(bigPicturePath),
+      hideExpandedLargeIcon: true,
+      contentTitle: title,
+      htmlFormatContentTitle: true,
+      summaryText: body,
+      htmlFormatSummaryText: true,
     );
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
-    AndroidNotificationDetails(
-  _channel.id,
-  _channel.name,
-  channelDescription: _channel.description,
-  largeIcon: FilePathAndroidBitmap(largeIconPath),
-  priority: Priority.max,
-  playSound: true,
-  styleInformation: bigPictureStyleInformation,
-  importance: Importance.max,
-  sound: const RawResourceAndroidNotificationSound('notification'),
-);
-    final NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
-    await fln.show(0, title, body, platformChannelSpecifics, payload: jsonEncode(data));
+        AndroidNotificationDetails(
+      _channel.id,
+      _channel.name,
+      channelDescription: _channel.description,
+      largeIcon: FilePathAndroidBitmap(largeIconPath),
+      priority: Priority.max,
+      playSound: true,
+      styleInformation: bigPictureStyleInformation,
+      importance: Importance.max,
+      sound: const RawResourceAndroidNotificationSound('notification'),
+    );
+    final NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+    await fln.show(0, title, body, platformChannelSpecifics,
+        payload: jsonEncode(data));
   }
 
-  static Future<String> _downloadAndSaveFile(String url, String fileName) async {
+  static Future<String> _downloadAndSaveFile(
+      String url, String fileName) async {
     final Directory directory = await getApplicationDocumentsDirectory();
     final String filePath = '${directory.path}/$fileName';
-    final Response response = await Dio().get(url, options: Options(responseType: ResponseType.bytes));
+    final Response response = await Dio()
+        .get(url, options: Options(responseType: ResponseType.bytes));
     final File file = File(filePath);
     await file.writeAsBytes(response.data);
     return filePath;
   }
 
   static int _resolveChatIndex(NotificationBody? payload) {
-  final type = payload?.chatType?.toLowerCase();
+    final type = payload?.chatType?.toLowerCase();
 
-  if (type == 'admin') return 2;
-  if (type == 'delivery-man' || type == 'delivery_man') return 1;
-  return 0;
-}
-
+    if (type == 'admin') return 2;
+    if (type == 'delivery-man' || type == 'delivery_man') return 1;
+    return 0;
+  }
 }
 
 @pragma('vm:entry-point')

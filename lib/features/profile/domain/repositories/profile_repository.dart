@@ -10,7 +10,7 @@ import 'package:sixvalley_vendor_app/features/profile/domain/repositories/profil
 import 'package:sixvalley_vendor_app/utill/app_constants.dart';
 import 'package:http/http.dart' as http;
 
-class ProfileRepository implements ProfileRepositoryInterface{
+class ProfileRepository implements ProfileRepositoryInterface {
   final DioClient? dioClient;
   final SharedPreferences? sharedPreferences;
   ProfileRepository({required this.dioClient, required this.sharedPreferences});
@@ -26,17 +26,26 @@ class ProfileRepository implements ProfileRepositoryInterface{
   }
 
   @override
-  Future<http.StreamedResponse> updateProfile(ProfileInfoModel userInfoModel, ProfileBody seller,  File? file, String token, String password) async {
-    http.MultipartRequest request = http.MultipartRequest('POST', Uri.parse('${AppConstants.baseUrl}${AppConstants.sellerAndBankUpdate}'));
-    request.headers.addAll(<String,String>{'Authorization': 'Bearer $token'});
+  Future<http.StreamedResponse> updateProfile(ProfileInfoModel userInfoModel,
+      ProfileBody seller, File? file, String token, String password) async {
+    http.MultipartRequest request = http.MultipartRequest(
+        'POST',
+        Uri.parse(
+            '${AppConstants.baseUrl}${AppConstants.sellerAndBankUpdate}'));
+    request.headers.addAll(<String, String>{'Authorization': 'Bearer $token'});
     Map<String, String> fields = {};
-    if(file != null) {
-      request.files.add(http.MultipartFile('image', file.readAsBytes().asStream(), file.lengthSync(), filename: file.path.split('/').last));
+    if (file != null) {
+      request.files.add(http.MultipartFile(
+          'image', file.readAsBytes().asStream(), file.lengthSync(),
+          filename: file.path.split('/').last));
     }
     fields.addAll(<String, String>{
-      '_method': 'put', 'f_name': userInfoModel.fName!, 'l_name': userInfoModel.lName!, 'phone': userInfoModel.phone!,
+      '_method': 'put',
+      'f_name': userInfoModel.fName!,
+      'l_name': userInfoModel.lName!,
+      'phone': userInfoModel.phone!,
     });
-    if(password.isNotEmpty) {
+    if (password.isNotEmpty) {
       fields.addAll({'password': password});
     }
     if (kDebugMode) {
@@ -46,7 +55,6 @@ class ProfileRepository implements ProfileRepositoryInterface{
     http.StreamedResponse response = await request.send();
     return response;
   }
-
 
   @override
   Future<ApiResponse> deleteUserAccount() async {
@@ -87,7 +95,4 @@ class ProfileRepository implements ProfileRepositoryInterface{
     // TODO: implement update
     throw UnimplementedError();
   }
-
-
-
 }

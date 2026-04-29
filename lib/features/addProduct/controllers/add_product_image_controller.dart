@@ -16,7 +16,6 @@ import 'package:sixvalley_vendor_app/helper/api_checker.dart';
 import 'package:sixvalley_vendor_app/localization/language_constrants.dart';
 import 'package:sixvalley_vendor_app/main.dart';
 
-
 class AddProductImageController extends ChangeNotifier {
   final AddProductServiceInterface shopServiceInterface;
 
@@ -26,7 +25,7 @@ class AddProductImageController extends ChangeNotifier {
   XFile? _selectedCoverFile;
   XFile? _selectedMetaImageFile;
   XFile? _selectedCoveredImageFile;
-  List <XFile>_productImage = [];
+  List<XFile> _productImage = [];
   bool _isMultiply = false;
   bool get isMultiply => _isMultiply;
   XFile? get selectedLogoFile => _selectedLogoFile;
@@ -34,8 +33,6 @@ class AddProductImageController extends ChangeNotifier {
   XFile? get selectedMetaImageFile => _selectedMetaImageFile;
   XFile? get selectedCoveredImageFile => _selectedCoveredImageFile;
   List<XFile> get productImage => _productImage;
-
-
 
   late ImageModel thumbnailImageModel;
   late ImageModel metaImageModel;
@@ -47,135 +44,140 @@ class AddProductImageController extends ChangeNotifier {
   List<ColorImage> colorImageObject = [];
   int totalSelectedImages = 0;
 
-
   bool _isLoading = false;
   bool get isLoading => _isLoading;
-  List<Map<String, dynamic>>? productReturnImageList  = [];
+  List<Map<String, dynamic>>? productReturnImageList = [];
   List<String> imagesWithColorForUpdate = [];
   static const int _uploadImageQuality = 75;
-static const double _uploadMaxWidth = 1600;
-static const double _uploadMaxHeight = 1600;
+  static const double _uploadMaxWidth = 1600;
+  static const double _uploadMaxHeight = 1600;
 
-Future<XFile?> _pickOptimizedImage() async {
-  return await ImagePicker().pickImage(
-    source: ImageSource.gallery,
-    imageQuality: _uploadImageQuality,
-    maxWidth: _uploadMaxWidth,
-    maxHeight: _uploadMaxHeight,
-  );
-}
+  Future<XFile?> _pickOptimizedImage() async {
+    return await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      imageQuality: _uploadImageQuality,
+      maxWidth: _uploadMaxWidth,
+      maxHeight: _uploadMaxHeight,
+    );
+  }
 
-
-  void pickImage(bool isLogo,bool isMeta, bool isRemove, int? index, {bool update = false, bool isAddProduct = false}) async {
-    if(isRemove) {
+  void pickImage(bool isLogo, bool isMeta, bool isRemove, int? index,
+      {bool update = false, bool isAddProduct = false}) async {
+    if (isRemove) {
       totalSelectedImages--;
       _selectedLogoFile = null;
       _selectedCoverFile = null;
       _selectedMetaImageFile = null;
       _selectedCoveredImageFile = null;
       _productImage = [];
-      imagesWithColor =[];
-      withoutColor =[];
-    }else {
-      totalSelectedImages ++;
+      imagesWithColor = [];
+      withoutColor = [];
+    } else {
+      totalSelectedImages++;
       if (isLogo) {
         final XFile? pickedLogoFile = await _pickOptimizedImage();
-if (pickedLogoFile == null) {
-  totalSelectedImages--;
-  notifyListeners();
-  return;
-}
-_selectedLogoFile = pickedLogoFile;
-        if(_selectedLogoFile != null){
-          thumbnailImageModel = ImageModel(type: 'thumbnail', color: '', image: _selectedLogoFile);
-          if(isAddProduct){
-            metaImageModel = ImageModel(type: 'meta', color: '', image: _selectedLogoFile);
+        if (pickedLogoFile == null) {
+          totalSelectedImages--;
+          notifyListeners();
+          return;
+        }
+        _selectedLogoFile = pickedLogoFile;
+        if (_selectedLogoFile != null) {
+          thumbnailImageModel = ImageModel(
+              type: 'thumbnail', color: '', image: _selectedLogoFile);
+          if (isAddProduct) {
+            metaImageModel =
+                ImageModel(type: 'meta', color: '', image: _selectedLogoFile);
             _selectedMetaImageFile = selectedLogoFile;
           }
         }
-
-      } else if(isMeta){
+      } else if (isMeta) {
         final XFile? pickedMetaFile = await _pickOptimizedImage();
-if (pickedMetaFile == null) {
-  totalSelectedImages--;
-  notifyListeners();
-  return;
-}
-_selectedMetaImageFile = pickedMetaFile;
-        if(_selectedMetaImageFile != null){
-          metaImageModel = ImageModel(type: 'meta', color: '', image: _selectedMetaImageFile);
+        if (pickedMetaFile == null) {
+          totalSelectedImages--;
+          notifyListeners();
+          return;
         }
-
-      }else {
+        _selectedMetaImageFile = pickedMetaFile;
+        if (_selectedMetaImageFile != null) {
+          metaImageModel = ImageModel(
+              type: 'meta', color: '', image: _selectedMetaImageFile);
+        }
+      } else {
         final XFile? pickedProductFile = await _pickOptimizedImage();
-if (pickedProductFile == null) {
-  totalSelectedImages--;
-  notifyListeners();
-  return;
-}
-_selectedCoveredImageFile = pickedProductFile;
+        if (pickedProductFile == null) {
+          totalSelectedImages--;
+          notifyListeners();
+          return;
+        }
+        _selectedCoveredImageFile = pickedProductFile;
 
         if (_selectedCoveredImageFile != null && index != null) {
-          if(update) {
-            totalSelectedImages --;
+          if (update) {
+            totalSelectedImages--;
           }
-          imagesWithColor[index].image =  _selectedCoveredImageFile;
-          imagesWithColor[index].type =  'product';
-        }else if(_selectedCoveredImageFile != null) {
-          withoutColor.add(ImageModel(image: _selectedCoveredImageFile, type: 'product',color: ''));
+          imagesWithColor[index].image = _selectedCoveredImageFile;
+          imagesWithColor[index].type = 'product';
+        } else if (_selectedCoveredImageFile != null) {
+          withoutColor.add(ImageModel(
+              image: _selectedCoveredImageFile, type: 'product', color: ''));
         }
       }
     }
     notifyListeners();
   }
 
-
-
-  Future addProductImage(BuildContext context, ImageModel imageForUpload, Function callback, {bool update =false, int? index, int? productId}) async {
-
-    bool isColorVariationActive = Provider.of<VariationController>(context, listen: false).attributeList![0].active;
+  Future addProductImage(
+      BuildContext context, ImageModel imageForUpload, Function callback,
+      {bool update = false, int? index, int? productId}) async {
+    bool isColorVariationActive =
+        Provider.of<VariationController>(context, listen: false)
+            .attributeList![0]
+            .active;
 
     _isLoading = true;
     notifyListeners();
 
-    ApiResponse response = await shopServiceInterface.addImage(context, imageForUpload, isColorVariationActive);
+    ApiResponse response = await shopServiceInterface.addImage(
+        context, imageForUpload, isColorVariationActive);
 
-
-    if(response.response != null && response.response!.statusCode == 200) {
-      totalUploaded ++;
+    if (response.response != null && response.response!.statusCode == 200) {
+      totalUploaded++;
       _isLoading = false;
       Map map = jsonDecode(response.response!.data);
 
-
       String? name = map["image_name"];
       String? type = map["type"];
-      if(type == 'product'){
-        if(map["image_name"] != null && map["image_name"] != "null"){
+      if (type == 'product') {
+        if (map["image_name"] != null && map["image_name"] != "null") {
           productReturnImageList?.add({
-            "image_name" : name,
-            "storage" : map['storage'] ?? "public",
+            "image_name": name,
+            "storage": map['storage'] ?? "public",
           });
         }
 
-        if(isColorVariationActive){
-
-          if(update && map["color_image"]['color'] != null && index != null && (index < imagesWithColorForUpdate.length )){
-
-
+        if (isColorVariationActive) {
+          if (update &&
+              map["color_image"]['color'] != null &&
+              index != null &&
+              (index < imagesWithColorForUpdate.length)) {
             String? previousColor = map["color_image"]['color'];
 
-            int imageIndex = colorImageObject.indexWhere((v) => v.color == previousColor);
+            int imageIndex =
+                colorImageObject.indexWhere((v) => v.color == previousColor);
 
-            if(imageIndex != -1) {
+            if (imageIndex != -1) {
               colorImageObject[imageIndex] = ColorImage(
                 color: previousColor,
                 imageName: ImageFullUrl(key: name),
                 storage: map['storage'],
               );
-            }else {
-              int i = imagesWithColor.indexWhere((v) => v.color == previousColor);
+            } else {
+              int i =
+                  imagesWithColor.indexWhere((v) => v.color == previousColor);
+
               ///if previous color remove form previous screen and add new that time it will return -1
-              if(i == -1) {
+              if (i == -1) {
                 colorImageObject.add(ColorImage(
                   color: previousColor,
                   imageName: ImageFullUrl(key: name),
@@ -183,98 +185,105 @@ _selectedCoveredImageFile = pickedProductFile;
                 ));
               }
             }
-
-          }else{
-            colorImageObject.add(ColorImage(color:  map['color_image'] != null ? map['color_image']['color'] : null, imageName: ImageFullUrl(key: name), storage: map['storage']));
+          } else {
+            colorImageObject.add(ColorImage(
+                color: map['color_image'] != null
+                    ? map['color_image']['color']
+                    : null,
+                imageName: ImageFullUrl(key: name),
+                storage: map['storage']));
           }
         }
       }
 
-      callback(true, name, type, map['color_image'] != null ? map['color_image']['color'] : null);
+      callback(true, name, type,
+          map['color_image'] != null ? map['color_image']['color'] : null);
       notifyListeners();
-    }else {
+    } else {
       _isLoading = false;
-      ApiChecker.
-      checkApi( response);
-      showCustomSnackBarWidget(getTranslated('image_upload_failed', Get.context!), Get.context!);
+      ApiChecker.checkApi(response);
+      showCustomSnackBarWidget(
+          getTranslated('image_upload_failed', Get.context!), Get.context!);
     }
     notifyListeners();
   }
 
-
-
   int totalUploaded = 0;
-  void initUpload(){
+  void initUpload() {
     totalUploaded = 0;
     notifyListeners();
   }
 
-  void removeImage(int index,bool fromColor){
-    if(fromColor){
+  void removeImage(int index, bool fromColor) {
+    if (fromColor) {
       if (kDebugMode) {
-        debugPrint('==$index/${imagesWithColor[index].image}/${imagesWithColor[index].color}');
+        debugPrint(
+            '==$index/${imagesWithColor[index].image}/${imagesWithColor[index].color}');
       }
       imagesWithColor[index].image = null;
-    }else{
+    } else {
       withoutColor.removeAt(index);
     }
     notifyListeners();
   }
 
-
   List<String> imagesWithoutColor = [];
   ProductImagesModel? productImagesModel;
 
-  Future<void> getProductImage(String id, {bool isStorePreviousImage = false}) async {
+  Future<void> getProductImage(String id,
+      {bool isStorePreviousImage = false}) async {
     imagesWithoutColor = [];
     productReturnImageList = [];
     colorImageObject = [];
-    imagesWithColorForUpdate =[];
+    imagesWithColorForUpdate = [];
     imageKeysWithColor = [];
     imageKeysWithoutColor = [];
     _isLoading = true;
     notifyListeners();
     ApiResponse apiResponse = await shopServiceInterface.getProductImage(id);
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       imagesWithoutColor = [];
       productReturnImageList = [];
-      imagesWithColorForUpdate =[];
+      imagesWithColorForUpdate = [];
       colorImageObject.clear();
       _isLoading = false;
-      productImagesModel = ProductImagesModel.fromJson(apiResponse.response?.data);
+      productImagesModel =
+          ProductImagesModel.fromJson(apiResponse.response?.data);
 
-      if(productImagesModel!.colorImage!.isNotEmpty) {
+      if (productImagesModel!.colorImage!.isNotEmpty) {
         colorImageObject = productImagesModel?.colorImage ?? [];
 
-        if(isStorePreviousImage) {
+        if (isStorePreviousImage) {
           previousColorImage = [];
           previousColorImage.addAll(productImagesModel?.colorImage ?? []);
           // previousColorImage = productImagesModel?.colorImage ?? [];
           for (var v in previousColorImage) {
-            debugPrint('-----------previous image value------${v.imageName?.key} || ${v.imageName?.path} || ${v.color} || ${v.storage}');
+            debugPrint(
+                '-----------previous image value------${v.imageName?.key} || ${v.imageName?.path} || ${v.color} || ${v.storage}');
           }
         }
 
-        for(int i = 0; i<productImagesModel!.colorImage!.length; i++) {
+        for (int i = 0; i < productImagesModel!.colorImage!.length; i++) {
           ColorImage img = productImagesModel!.colorImage![i];
 
-          if(img.color != null){
-            imagesWithColorForUpdate.add(img.imageName?.key ??'');
+          if (img.color != null) {
+            imagesWithColorForUpdate.add(img.imageName?.key ?? '');
             log("===>vai response ==> ${img.color}");
           }
 
-
-          if(imagesWithColor.isNotEmpty) {
-            for(int index=0; index<imagesWithColor.length; index++) {
+          if (imagesWithColor.isNotEmpty) {
+            for (int index = 0; index < imagesWithColor.length; index++) {
               log("withcolor==> ${imagesWithColor[index].color}----> ${img.color}");
               String retColor = imagesWithColor[index].color!;
               String? bb;
-              if(retColor.contains('#')){
+              if (retColor.contains('#')) {
                 bb = retColor.replaceAll('#', '');
               }
               log("withcolor==>chk $bb----> ${img.color}");
-              if(bb == img.color) {
-                setStringImage(index, img.imageName?.key  ?? '', img.color ?? '', path: img.imageName?.path);
+              if (bb == img.color) {
+                setStringImage(index, img.imageName?.key ?? '', img.color ?? '',
+                    path: img.imageName?.path);
                 imageKeysWithColor.add(img.imageName?.key ?? '');
               }
             }
@@ -290,35 +299,30 @@ _selectedCoveredImageFile = pickedProductFile;
       List<Map<String, dynamic>> keyList = [];
       final Set<String> colorImagesPaths = {};
 
-      for(final imageModel in imagesWithColor) {
-        if(imageModel.colorImage?.imageName?.path != null) {
+      for (final imageModel in imagesWithColor) {
+        if (imageModel.colorImage?.imageName?.path != null) {
           colorImagesPaths.add(imageModel.colorImage!.imageName!.path!);
-
         }
       }
 
-
-      for(int i = 0; i < (productImagesModel?.images?.length ?? 0); i++) {
-        if(productImagesModel?.images?[i].path != '') {
-
-          if(!colorImagesPaths.contains(productImagesModel?.images?[i].path)) {
+      for (int i = 0; i < (productImagesModel?.images?.length ?? 0); i++) {
+        if (productImagesModel?.images?[i].path != '') {
+          if (!colorImagesPaths.contains(productImagesModel?.images?[i].path)) {
             pathList.add(productImagesModel?.images![i].path ?? '');
-
           }
 
           keyList.add({
-            "image_name" : productImagesModel?.images![i].key ?? '',
-            "storage" : productImagesModel?.imagesStorage![i].storage ?? 'public',
+            "image_name": productImagesModel?.images![i].key ?? '',
+            "storage":
+                productImagesModel?.imagesStorage![i].storage ?? 'public',
           });
 
           imageKeysWithoutColor.add(productImagesModel?.images![i].key ?? '');
-
         }
       }
 
       imagesWithoutColor.addAll(pathList);
       productReturnImageList?.addAll(keyList);
-
     } else {
       _isLoading = false;
       ApiChecker.checkApi(apiResponse);
@@ -328,14 +332,14 @@ _selectedCoveredImageFile = pickedProductFile;
     notifyListeners();
   }
 
-  void setStringImage(int index, String image, String colorCode, {String? path}) {
+  void setStringImage(int index, String image, String colorCode,
+      {String? path}) {
     imagesWithColor[index].imageString = image;
-    imagesWithColor[index].colorImage = ColorImage(color: colorCode, imageName: ImageFullUrl(key: image, path: path));
+    imagesWithColor[index].colorImage = ColorImage(
+        color: colorCode, imageName: ImageFullUrl(key: image, path: path));
   }
 
-
-
-  void removeProductImage ({bool isUpdate = false}) {
+  void removeProductImage({bool isUpdate = false}) {
     _selectedLogoFile = null;
     _selectedCoverFile = null;
     _selectedMetaImageFile = null;
@@ -347,22 +351,24 @@ _selectedCoveredImageFile = pickedProductFile;
     imagesWithColor = [];
     _productImage = [];
 
-    if(isUpdate) {
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
-  Future<void> deleteProductImage(String id, String name, String? color, {bool updateProductImage = true, bool isCheckError = true}) async {
+  Future<void> deleteProductImage(String id, String name, String? color,
+      {bool updateProductImage = true, bool isCheckError = true}) async {
     //_isLoading = true;
-    ApiResponse apiResponse = await shopServiceInterface.deleteProductImage(id, name, color);
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-      if(updateProductImage) {
+    ApiResponse apiResponse =
+        await shopServiceInterface.deleteProductImage(id, name, color);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      if (updateProductImage) {
         getProductImage(id);
       }
     } else {
-      if(isCheckError) {
+      if (isCheckError) {
         ApiChecker.checkApi(apiResponse);
-
       }
     }
     notifyListeners();
@@ -371,45 +377,49 @@ _selectedCoveredImageFile = pickedProductFile;
   void addWithColorImage(String? colorCode, {bool isUpdate = false}) {
     imagesWithColor.add(ImageModel(color: colorCode));
 
-    if(isUpdate) {
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
-  void removeWithColorImage(int index){
+  void removeWithColorImage(int index) {
     imagesWithColor.removeAt(index);
     notifyListeners();
   }
-
 
   void emptyWithColorImage() {
     imagesWithColor = [];
   }
 
-
-
   final List<ColorImage> _deletedColorImageList = [];
 
-  Future<void> onUploadColorImages({required BuildContext context, required bool isUpdate, required int? productId, required Function callBack}) async {
+  Future<void> onUploadColorImages(
+      {required BuildContext context,
+      required bool isUpdate,
+      required int? productId,
+      required Function callBack}) async {
     _deletedColorImageList.clear();
 
-    if(imagesWithColor.isNotEmpty){
-      for(int i = 0; i < imagesWithColor.length; i++) {
-
+    if (imagesWithColor.isNotEmpty) {
+      for (int i = 0; i < imagesWithColor.length; i++) {
         ///get delete productImages before update new Color image
         await onDeleteAllProductImage(isUpdate, productId, i);
 
-        if(imagesWithColor[i].image != null && context.mounted){
-          await addProductImage(context, imagesWithColor[i], callBack, index: i, update: isUpdate);
+        if (imagesWithColor[i].image != null && context.mounted) {
+          await addProductImage(context, imagesWithColor[i], callBack,
+              index: i, update: isUpdate);
         }
-
       }
     }
   }
 
-  Future<void> onDeleteAllProductImage(bool update, int? productId, int? index) async {
+  Future<void> onDeleteAllProductImage(
+      bool update, int? productId, int? index) async {
     // Exit early if conditions aren't met
-    if (!update || productId == null || previousColorImage.isEmpty || index != 0) {
+    if (!update ||
+        productId == null ||
+        previousColorImage.isEmpty ||
+        index != 0) {
       return;
     }
 
@@ -423,7 +433,9 @@ _selectedCoveredImageFile = pickedProductFile;
       int i = previousColorImage.indexWhere((v) => v.color == imgColor);
 
       // Ensure valid index and both image and key are present
-      if (i != -1 && previousColorImage[i].imageName?.key != null && element.image != null) {
+      if (i != -1 &&
+          previousColorImage[i].imageName?.key != null &&
+          element.image != null) {
         isImageDeleted = true;
       }
     }
@@ -441,7 +453,9 @@ _selectedCoveredImageFile = pickedProductFile;
 
         int i = previousColorImage.indexWhere((v) => v.color == imgColor);
 
-        if (i != -1 && previousColorImage[i].imageName?.key != null && element.image != null) {
+        if (i != -1 &&
+            previousColorImage[i].imageName?.key != null &&
+            element.image != null) {
           _deletedColorImageList.add(previousColorImage[i]);
         }
       });
@@ -451,18 +465,16 @@ _selectedCoveredImageFile = pickedProductFile;
     }
   }
 
-
   Future<void> onDeleteColorImages(Product product) async {
-    if(_deletedColorImageList.isNotEmpty){
+    if (_deletedColorImageList.isNotEmpty) {
       await Future.forEach(_deletedColorImageList, (image) async {
-        await deleteProductImage(product.id.toString(), image.imageName!.key!, null, isCheckError: true);
-
+        await deleteProductImage(
+            product.id.toString(), image.imageName!.key!, null,
+            isCheckError: true);
       });
       await getProductImage(product.id.toString());
 
       _deletedColorImageList.clear();
     }
   }
-
-
 }

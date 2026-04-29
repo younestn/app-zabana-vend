@@ -10,11 +10,11 @@ class ProductReviewModel {
 
   ProductReviewModel(
       {this.totalSize,
-        this.limit,
-        this.offset,
-        this.groupWiseRating,
-        this.averageRating,
-        this.reviews});
+      this.limit,
+      this.offset,
+      this.groupWiseRating,
+      this.averageRating,
+      this.reviews});
 
   ProductReviewModel.fromJson(Map<String, dynamic> json) {
     totalSize = json['total_size'];
@@ -26,9 +26,9 @@ class ProductReviewModel {
         groupWiseRating!.add(GroupWiseRating.fromJson(v));
       });
     }
-    if(json['average_rating'] != null){
+    if (json['average_rating'] != null) {
       averageRating = json['average_rating'].toString();
-    }else{
+    } else {
       averageRating = "0";
     }
 

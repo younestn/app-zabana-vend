@@ -22,7 +22,6 @@ class UpdateScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-
             Image.asset(
               color: Theme.of(context).primaryColor,
               Images.update,
@@ -30,36 +29,51 @@ class UpdateScreen extends StatelessWidget {
               height: MediaQuery.of(context).size.height * 0.4,
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-
             Text(
               getTranslated('update', context)!,
-              style: robotoBold.copyWith(fontSize: MediaQuery.of(context).size.height * 0.023, color: Theme.of(context).primaryColor),
+              style: robotoBold.copyWith(
+                  fontSize: MediaQuery.of(context).size.height * 0.023,
+                  color: Theme.of(context).primaryColor),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-
             Text(
               getTranslated('your_app_is_deprecated', context)!,
-              style: robotoRegular.copyWith(fontSize: MediaQuery.of(context).size.height * 0.0175, color: Theme.of(context).disabledColor),
+              style: robotoRegular.copyWith(
+                  fontSize: MediaQuery.of(context).size.height * 0.0175,
+                  color: Theme.of(context).disabledColor),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.04),
+            CustomButtonWidget(
+                btnTxt: getTranslated('update_now', context)!,
+                onTap: () async {
+                  String? appUrl = 'https://google.com';
+                  if (Platform.isAndroid) {
+                    appUrl =
+                        Provider.of<SplashController>(context, listen: false)
+                            .configModel
+                            ?.sellerAppVersionControl
+                            ?.forAndroid
+                            ?.link;
+                  } else if (Platform.isIOS) {
+                    appUrl =
+                        Provider.of<SplashController>(context, listen: false)
+                            .configModel
+                            ?.sellerAppVersionControl
+                            ?.forIos
+                            ?.link;
+                  }
 
-            CustomButtonWidget(btnTxt: getTranslated('update_now', context)!, onTap: () async {
-              String? appUrl = 'https://google.com';
-              if(Platform.isAndroid) {
-                appUrl = Provider.of<SplashController>(context, listen: false).configModel?.sellerAppVersionControl?.forAndroid?.link;
-              }else if(Platform.isIOS) {
-                appUrl = Provider.of<SplashController>(context, listen: false).configModel?.sellerAppVersionControl?.forIos?.link;
-              }
-
-              if(appUrl?.isNotEmpty ?? false) {
-                launchUrlString(appUrl!, mode: LaunchMode.externalApplication);
-              }else {
-                showCustomSnackBarWidget('${getTranslated('can_not_launch', Get.context!)!}  $appUrl', Get.context!);
-              }
-
-            }),
+                  if (appUrl?.isNotEmpty ?? false) {
+                    launchUrlString(appUrl!,
+                        mode: LaunchMode.externalApplication);
+                  } else {
+                    showCustomSnackBarWidget(
+                        '${getTranslated('can_not_launch', Get.context!)!}  $appUrl',
+                        Get.context!);
+                  }
+                }),
           ]),
         ),
       ),

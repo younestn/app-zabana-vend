@@ -23,20 +23,20 @@ class ProfileController with ChangeNotifier {
   ProfileInfoModel? _userInfoModel;
   ProfileInfoModel? get userInfoModel => _userInfoModel;
   int? _userId;
-  int? get userId =>_userId;
+  int? get userId => _userId;
   String? _profileImage;
-  String? get profileImage =>_profileImage;
+  String? get profileImage => _profileImage;
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
   String? _countryDialCode = '+880';
   String? get countryDialCode => _countryDialCode;
 
-
   Future<ResponseModel> getSellerInfo() async {
     ResponseModel responseModel;
     ApiResponse apiResponse = await profileServiceInterface.getSellerInfo();
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       _userInfoModel = ProfileInfoModel.fromJson(apiResponse.response!.data);
       _userId = _userInfoModel!.id;
       _profileImage = _userInfoModel!.image;
@@ -58,31 +58,29 @@ class ProfileController with ChangeNotifier {
     return responseModel;
   }
 
-  void setFreeDeliveryStatus(String val){
+  void setFreeDeliveryStatus(String val) {
     _userInfoModel?.freeOverDeliveryAmountStatus = int.parse(val);
     notifyListeners();
   }
 
-
-
-
-  Future<void> updateUserInfo(ProfileInfoModel updateUserModel, ProfileBody seller, File? file, String token, String password) async {
+  Future<void> updateUserInfo(ProfileInfoModel updateUserModel,
+      ProfileBody seller, File? file, String token, String password) async {
     _isLoading = true;
     notifyListeners();
 
-    http.StreamedResponse response = await profileServiceInterface.updateProfile(updateUserModel, seller, file, token, password);
+    http.StreamedResponse response = await profileServiceInterface
+        .updateProfile(updateUserModel, seller, file, token, password);
     _isLoading = false;
     if (response.statusCode == 200) {
       _userInfoModel = updateUserModel;
       getSellerInfo();
-      showCustomSnackBarWidget(getTranslated('updated_successfully', Get.context!) ?? "", Get.context!, isError: false);
+      showCustomSnackBarWidget(
+          getTranslated('updated_successfully', Get.context!) ?? "",
+          Get.context!,
+          isError: false);
     }
     notifyListeners();
   }
-
-
-
-
 
   Future<ApiResponse> deleteCustomerAccount(BuildContext context) async {
     _isLoading = true;
@@ -93,22 +91,27 @@ class ProfileController with ChangeNotifier {
     return apiResponse;
   }
 
-  void setCountryDialCode (String? setValue){
-    if(setValue != null && setValue.trim() != '') {
+  void setCountryDialCode(String? setValue) {
+    if (setValue != null && setValue.trim() != '') {
       _countryDialCode = setValue;
     } else {
-      _countryDialCode = CountryCodeHelper.getCountryCodebyCode(Provider.of<SplashController>(Get.context!, listen: false).configModel!.countryCode)!;
+      _countryDialCode = CountryCodeHelper.getCountryCodebyCode(
+          Provider.of<SplashController>(Get.context!, listen: false)
+              .configModel!
+              .countryCode)!;
     }
   }
 
   void updateWalletAmount(String balance) {
-    if( _userInfoModel!.wallet!.totalEarning != null){
-      _userInfoModel!.wallet!.totalEarning = (_userInfoModel?.wallet?.totalEarning ?? 0) + double.parse(balance);
-      if(_userInfoModel?.wallet?.pendingWithdraw != null) {
-        _userInfoModel!.wallet!.pendingWithdraw = (_userInfoModel?.wallet?.pendingWithdraw ?? 0) - double.parse(balance);
+    if (_userInfoModel!.wallet!.totalEarning != null) {
+      _userInfoModel!.wallet!.totalEarning =
+          (_userInfoModel?.wallet?.totalEarning ?? 0) + double.parse(balance);
+      if (_userInfoModel?.wallet?.pendingWithdraw != null) {
+        _userInfoModel!.wallet!.pendingWithdraw =
+            (_userInfoModel?.wallet?.pendingWithdraw ?? 0) -
+                double.parse(balance);
       }
       notifyListeners();
     }
   }
-
 }

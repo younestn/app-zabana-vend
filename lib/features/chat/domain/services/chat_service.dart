@@ -4,17 +4,17 @@ import 'package:sixvalley_vendor_app/features/chat/domain/models/message_body.da
 import 'package:sixvalley_vendor_app/features/chat/domain/repositories/chat_repository_interface.dart';
 import 'package:sixvalley_vendor_app/features/chat/domain/services/chat_service_interface.dart';
 
-class ChatService implements ChatServiceInterface{
+class ChatService implements ChatServiceInterface {
   ChatRepositoryInterface chatRepoInterface;
   ChatService({required this.chatRepoInterface});
 
   @override
-  Future getChatList(String type, int offset) async{
+  Future getChatList(String type, int offset) async {
     return await chatRepoInterface.getChatList(type, offset);
   }
 
   @override
-  Future getMessageList(String type, int offset, int? id) async{
+  Future getMessageList(String type, int offset, int? id) async {
     return await chatRepoInterface.getMessageList(type, offset, id);
   }
 
@@ -24,12 +24,14 @@ class ChatService implements ChatServiceInterface{
   }
 
   @override
-  Future sendMessage(MessageBody messageBody, String type, List<XFile?> files, List<PlatformFile>? platformFile) {
-    return chatRepoInterface.sendMessage(messageBody, type, files, platformFile);
+  Future sendMessage(MessageBody messageBody, String type, List<XFile?> files,
+      List<PlatformFile>? platformFile) {
+    return chatRepoInterface.sendMessage(
+        messageBody, type, files, platformFile);
   }
 
   @override
-  Future seenMessage(int id, String type) async{
+  Future seenMessage(int id, String type) async {
     return chatRepoInterface.seenMessage(id, type);
   }
 }

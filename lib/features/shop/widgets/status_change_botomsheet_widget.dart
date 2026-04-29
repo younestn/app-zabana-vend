@@ -12,13 +12,21 @@ class StatusChangeBottomSheetWidget extends StatefulWidget {
   final Function onYesPressed;
   final Function onNoPressed;
   final bool? isLoading;
-  const StatusChangeBottomSheetWidget({super.key, required this.title, this.subtitle, required this.onYesPressed, required this.onNoPressed, this.isLoading = false});
+  const StatusChangeBottomSheetWidget(
+      {super.key,
+      required this.title,
+      this.subtitle,
+      required this.onYesPressed,
+      required this.onNoPressed,
+      this.isLoading = false});
 
   @override
-  State<StatusChangeBottomSheetWidget> createState() => _StatusChangeBottomSheetWidgetState();
+  State<StatusChangeBottomSheetWidget> createState() =>
+      _StatusChangeBottomSheetWidgetState();
 }
 
-class _StatusChangeBottomSheetWidgetState extends State<StatusChangeBottomSheetWidget> {
+class _StatusChangeBottomSheetWidgetState
+    extends State<StatusChangeBottomSheetWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,60 +50,54 @@ class _StatusChangeBottomSheetWidgetState extends State<StatusChangeBottomSheetW
                 onTap: () {
                   Navigator.pop(context);
                 },
-                child: const CustomAssetImageWidget(Images.closeIcon, width: 20, height: 20),
+                child: const CustomAssetImageWidget(Images.closeIcon,
+                    width: 20, height: 20),
               ),
             ),
           ),
-
-          
           Padding(
             padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
             child: Column(
               children: [
-                const CustomAssetImageWidget(Images.powerIcons, width: 50, height: 50),
-            
-                Text(widget.title, style: robotoBold.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color, fontSize: Dimensions.fontSizeLarge)),
+                const CustomAssetImageWidget(Images.powerIcons,
+                    width: 50, height: 50),
+                Text(widget.title,
+                    style: robotoBold.copyWith(
+                        color: Theme.of(context).textTheme.bodyLarge?.color,
+                        fontSize: Dimensions.fontSizeLarge)),
                 const SizedBox(height: Dimensions.paddingSizeDefault),
-            
-                Text(
-                  widget.subtitle ?? '',
-                  style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color, fontSize: Dimensions.fontSizeSmall),
-                  textAlign: TextAlign.center
-                ),
+                Text(widget.subtitle ?? '',
+                    style: robotoRegular.copyWith(
+                        color: Theme.of(context).textTheme.bodyLarge?.color,
+                        fontSize: Dimensions.fontSizeSmall),
+                    textAlign: TextAlign.center),
                 const SizedBox(height: Dimensions.paddingSizeLarge),
-
                 Row(
                   children: [
                     Expanded(
                       child: CustomButtonWidget(
-                        backgroundColor: Theme.of(context).hintColor,
-                        btnTxt: getTranslated('no', context),
-                        onTap: () {
-                          Navigator.pop(context);
-                        }
-                      ),
+                          backgroundColor: Theme.of(context).hintColor,
+                          btnTxt: getTranslated('no', context),
+                          onTap: () {
+                            Navigator.pop(context);
+                          }),
                     ),
                     const SizedBox(width: Dimensions.paddingSizeSmall),
-
                     Expanded(
-                      child: (widget.isLoading ?? false) ?
-                      const Center(child: CircularProgressIndicator())
-                        : CustomButtonWidget(
-                        btnTxt: getTranslated('yes', context),
-                        onTap: widget.onYesPressed,
-                      ),
+                      child: (widget.isLoading ?? false)
+                          ? const Center(child: CircularProgressIndicator())
+                          : CustomButtonWidget(
+                              btnTxt: getTranslated('yes', context),
+                              onTap: widget.onYesPressed,
+                            ),
                     )
                   ],
                 ),
-                
               ],
             ),
           ),
-
-
         ],
       ),
-
     );
   }
 }

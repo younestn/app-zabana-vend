@@ -10,13 +10,13 @@ class TransactionModel {
 
   TransactionModel(
       {int? id,
-        int? sellerId,
-        int? adminId,
-        double? amount,
-        String? transactionNote,
-        int? approved,
-        String? createdAt,
-        String? updatedAt}) {
+      int? sellerId,
+      int? adminId,
+      double? amount,
+      String? transactionNote,
+      int? approved,
+      String? createdAt,
+      String? updatedAt}) {
     _id = id;
     _sellerId = sellerId;
     _adminId = adminId;

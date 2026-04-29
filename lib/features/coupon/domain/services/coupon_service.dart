@@ -3,7 +3,7 @@ import 'package:sixvalley_vendor_app/features/coupon/domain/models/coupon_model.
 import 'package:sixvalley_vendor_app/features/coupon/domain/repositories/coupon_repository_interface.dart';
 import 'package:sixvalley_vendor_app/features/coupon/domain/services/coupon_service_interface.dart';
 
-class CouponService implements CouponServiceInterface{
+class CouponService implements CouponServiceInterface {
   CouponRepositoryInterface couponRepoInterface;
   CouponService({required this.couponRepoInterface});
 
@@ -13,7 +13,7 @@ class CouponService implements CouponServiceInterface{
   }
 
   @override
-  Future<ApiResponse> deleteCoupon(int? id) async{
+  Future<ApiResponse> deleteCoupon(int? id) async {
     ApiResponse apiResponse = await couponRepoInterface.delete(id!);
     return apiResponse;
   }
@@ -24,7 +24,7 @@ class CouponService implements CouponServiceInterface{
   }
 
   @override
-  Future getCouponList(int offset) async{
+  Future getCouponList(int offset) async {
     return await couponRepoInterface.getList(offset: offset);
   }
 

@@ -32,13 +32,12 @@ class Customers {
 
   Customers(
       {this.id,
-        this.fName,
-        this.lName,
-        this.phone,
-        this.image,
-        this.email,
-        this.walletBalance
-      });
+      this.fName,
+      this.lName,
+      this.phone,
+      this.image,
+      this.email,
+      this.walletBalance});
 
   Customers.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -47,7 +46,7 @@ class Customers {
     phone = json['phone'];
     image = json['image'];
     email = json['email'];
-    if(json['wallet_balance'] != null) {
+    if (json['wallet_balance'] != null) {
       walletBalance = double.tryParse(json['wallet_balance'].toString());
     } else {
       walletBalance = 0;

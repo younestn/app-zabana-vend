@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class CustomDividerWidget extends StatelessWidget {
   final double height;
   final Color color;
-  const CustomDividerWidget({super.key, this.height = 1, this.color = Colors.grey});
+  const CustomDividerWidget(
+      {super.key, this.height = 1, this.color = Colors.grey});
 
   @override
   Widget build(BuildContext context) {
@@ -13,12 +14,15 @@ class CustomDividerWidget extends StatelessWidget {
         const dashWidth = 5.0;
         final dashHeight = height;
         final dashCount = (boxWidth / (2 * dashWidth)).floor();
-        return Flex( mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        return Flex(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           direction: Axis.horizontal,
           children: List.generate(dashCount, (_) {
-            return SizedBox( width: dashWidth, height: dashHeight,
-               child: DecoratedBox(
-                 decoration: BoxDecoration(color: color),
+            return SizedBox(
+              width: dashWidth,
+              height: dashHeight,
+              child: DecoratedBox(
+                decoration: BoxDecoration(color: color),
               ),
             );
           }),

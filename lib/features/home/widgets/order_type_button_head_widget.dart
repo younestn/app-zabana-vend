@@ -12,52 +12,85 @@ class OrderTypeButtonHeadWidget extends StatelessWidget {
   final int index;
   final Function? callback;
   final int? numberOfOrder;
-  const OrderTypeButtonHeadWidget({super.key, required this.text,this.subText,this.color ,required this.index, required this.callback, required this.numberOfOrder});
+  const OrderTypeButtonHeadWidget(
+      {super.key,
+      required this.text,
+      this.subText,
+      this.color,
+      required this.index,
+      required this.callback,
+      required this.numberOfOrder});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Provider.of<OrderController>(context, listen: false).setIndex(context, index);
+        Provider.of<OrderController>(context, listen: false)
+            .setIndex(context, index);
         callback!();
       },
       child: Card(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(Dimensions.paddingSizeSmall),),
+          borderRadius: BorderRadius.circular(Dimensions.paddingSizeSmall),
+        ),
         color: color,
         child: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
-              child: Container(alignment: Alignment.center,
-                child: Center(
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Dimensions.paddingSizeLarge),
+              child: Container(
+                  alignment: Alignment.center,
+                  child: Center(
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(numberOfOrder.toString(),
-                          style: robotoBold.copyWith(color: Theme.of(context).colorScheme.secondaryContainer,
+                          style: robotoBold.copyWith(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .secondaryContainer,
                               fontSize: Dimensions.fontSizeHeaderLarge)),
-
-                      Row(children: [
-                          Text(text!, style: robotoRegular.copyWith(color: Theme.of(context).colorScheme.secondaryContainer,
-                              fontSize: Dimensions.fontSizeSmall)),
-                          const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-
-                          Text(subText!, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).colorScheme.secondaryContainer)),
+                      Row(
+                        children: [
+                          Text(text!,
+                              style: robotoRegular.copyWith(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .secondaryContainer,
+                                  fontSize: Dimensions.fontSizeSmall)),
+                          const SizedBox(
+                              width: Dimensions.paddingSizeExtraSmall),
+                          Text(subText!,
+                              style: robotoRegular.copyWith(
+                                  fontSize: Dimensions.fontSizeSmall,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .secondaryContainer)),
                         ],
                       ),
-                    ],))),
+                    ],
+                  ))),
             ),
             Row(
               children: [
-                Provider.of<LocalizationController>(context,listen: false).isLtr?const SizedBox.shrink():const Spacer(),
-                Container(width: MediaQuery.of(context).size.width/4,
-                  height:MediaQuery.of(context).size.width/4,
+                Provider.of<LocalizationController>(context, listen: false)
+                        .isLtr
+                    ? const SizedBox.shrink()
+                    : const Spacer(),
+                Container(
+                  width: MediaQuery.of(context).size.width / 4,
+                  height: MediaQuery.of(context).size.width / 4,
                   decoration: BoxDecoration(
-                      color: Theme.of(context).cardColor.withValues(alpha:.10),
-                      borderRadius: const BorderRadius.only(bottomRight: Radius.circular(100))
-                  ),),
-                Provider.of<LocalizationController>(context,listen: false).isLtr?const Spacer():const SizedBox.shrink(),
+                      color: Theme.of(context).cardColor.withValues(alpha: .10),
+                      borderRadius: const BorderRadius.only(
+                          bottomRight: Radius.circular(100))),
+                ),
+                Provider.of<LocalizationController>(context, listen: false)
+                        .isLtr
+                    ? const Spacer()
+                    : const SizedBox.shrink(),
               ],
             )
           ],

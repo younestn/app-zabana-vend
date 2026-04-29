@@ -19,12 +19,14 @@ class OrderDetailsService implements OrderDetailsServiceInterface {
   }
 
   @override
-  Future uploadAfterSellDigitalProduct(File? filePath, String token, String orderId) {
-    return orderDetailsRepositoryInterface.uploadAfterSellDigitalProduct(filePath, token, orderId);
+  Future uploadAfterSellDigitalProduct(
+      File? filePath, String token, String orderId) {
+    return orderDetailsRepositoryInterface.uploadAfterSellDigitalProduct(
+        filePath, token, orderId);
   }
 
   @override
-  Future<HttpClientResponse> productDownload(String url) async{
+  Future<HttpClientResponse> productDownload(String url) async {
     return await orderDetailsRepositoryInterface.productDownload(url);
   }
 
@@ -32,5 +34,4 @@ class OrderDetailsService implements OrderDetailsServiceInterface {
   Future setUpOrder(OrderSetupModel orderSetUpModel) {
     return orderDetailsRepositoryInterface.setUpOrder(orderSetUpModel);
   }
-
 }

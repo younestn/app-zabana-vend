@@ -8,15 +8,31 @@ class CustomImageWidget extends StatelessWidget {
   final double? width;
   final BoxFit fit;
   final String? placeholder;
-  const CustomImageWidget({super.key, required this.image, this.height, this.width, this.fit = BoxFit.cover, this.placeholder = Images.placeholderImage});
+  const CustomImageWidget(
+      {super.key,
+      required this.image,
+      this.height,
+      this.width,
+      this.fit = BoxFit.cover,
+      this.placeholder = Images.placeholderImage});
 
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      placeholder: (context, url) => Image.asset(placeholder?? Images.placeholderImage, height: height, width: width, fit: BoxFit.cover),
-      imageUrl: image, fit: fit,
-      height: height,width: width,
-      errorWidget: (c, o, s) => Image.asset(placeholder?? Images.placeholderImage, height: height, width: width, fit: BoxFit.cover),
+      placeholder: (context, url) => Image.asset(
+          placeholder ?? Images.placeholderImage,
+          height: height,
+          width: width,
+          fit: BoxFit.cover),
+      imageUrl: image,
+      fit: fit,
+      height: height,
+      width: width,
+      errorWidget: (c, o, s) => Image.asset(
+          placeholder ?? Images.placeholderImage,
+          height: height,
+          width: width,
+          fit: BoxFit.cover),
     );
   }
 }

@@ -12,15 +12,15 @@ class BusinessPageModel {
 
   BusinessPageModel(
       {this.id,
-        this.title,
-        this.slug,
-        this.description,
-        this.status,
-        this.defaultStatus,
-        this.createdAt,
-        this.updatedAt,
-        this.bannerFullUrl,
-        this.banner});
+      this.title,
+      this.slug,
+      this.description,
+      this.status,
+      this.defaultStatus,
+      this.createdAt,
+      this.updatedAt,
+      this.bannerFullUrl,
+      this.banner});
 
   BusinessPageModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -34,8 +34,7 @@ class BusinessPageModel {
     bannerFullUrl = json['banner_full_url'] != null
         ? BannerFullUrl.fromJson(json['banner_full_url'])
         : null;
-    banner =
-    json['banner'] != null ? Banner.fromJson(json['banner']) : null;
+    banner = json['banner'] != null ? Banner.fromJson(json['banner']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -92,13 +91,13 @@ class Banner {
 
   Banner(
       {this.id,
-        this.attachableType,
-        this.attachableId,
-        this.fileType,
-        this.fileName,
-        this.storageDisk,
-        this.createdAt,
-        this.updatedAt});
+      this.attachableType,
+      this.attachableId,
+      this.fileType,
+      this.fileName,
+      this.storageDisk,
+      this.createdAt,
+      this.updatedAt});
 
   Banner.fromJson(Map<String, dynamic> json) {
     id = json['id'];

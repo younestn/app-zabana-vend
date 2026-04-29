@@ -12,19 +12,19 @@ class DeliveryManReviewListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<DeliveryManController>(
-        builder: (context, review, _) {
-          List<DeliveryManReview> reviewList = [];
-          reviewList = review.deliveryManReviewList;
-          return reviewList.isNotEmpty?
-          ListView.builder(
+    return Consumer<DeliveryManController>(builder: (context, review, _) {
+      List<DeliveryManReview> reviewList = [];
+      reviewList = review.deliveryManReviewList;
+      return reviewList.isNotEmpty
+          ? ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: reviewList.length,
-              itemBuilder: (context, index){
-                return DeliveryManReviewCardWidget(reviewModel: reviewList[index]);
-              }):const NoDataScreen(padding: EdgeInsets.only(top: 100));
-        }
-    );
+              itemBuilder: (context, index) {
+                return DeliveryManReviewCardWidget(
+                    reviewModel: reviewList[index]);
+              })
+          : const NoDataScreen(padding: EdgeInsets.only(top: 100));
+    });
   }
 }

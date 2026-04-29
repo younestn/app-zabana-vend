@@ -1,12 +1,10 @@
-
-
 import 'package:sixvalley_vendor_app/features/pos/domain/models/customer_body.dart';
 import 'package:sixvalley_vendor_app/features/pos/domain/models/place_order_body.dart';
 import 'package:sixvalley_vendor_app/features/pos/domain/models/temporary_cart_for_customer_model.dart';
 import 'package:sixvalley_vendor_app/features/pos/domain/repository/cart_repository_interface.dart';
 import 'package:sixvalley_vendor_app/features/pos/domain/services/cart_service_interface.dart';
 
-class CartService implements CartServiceInterface{
+class CartService implements CartServiceInterface {
   final CartRepositoryInterface cartRepositoryInterface;
   CartService({required this.cartRepositoryInterface});
 
@@ -22,7 +20,8 @@ class CartService implements CartServiceInterface{
 
   @override
   Future getCouponDiscount(String couponCode, int? userId, double orderAmount) {
-    return cartRepositoryInterface.getCouponDiscount(couponCode, userId, orderAmount);
+    return cartRepositoryInterface.getCouponDiscount(
+        couponCode, userId, orderAmount);
   }
 
   @override
@@ -51,14 +50,15 @@ class CartService implements CartServiceInterface{
   }
 
   @override
-  String? getBluetoothAddress() => cartRepositoryInterface.getBluetoothAddress();
+  String? getBluetoothAddress() =>
+      cartRepositoryInterface.getBluetoothAddress();
 
   @override
-  List<TemporaryCartListModel> getCartList() => cartRepositoryInterface.getCartList();
+  List<TemporaryCartListModel> getCartList() =>
+      cartRepositoryInterface.getCartList();
 
   @override
   void addToCartList(List<TemporaryCartListModel> cartProductList) {
-   return cartRepositoryInterface.addToCartList(cartProductList);
+    return cartRepositoryInterface.addToCartList(cartProductList);
   }
-
 }

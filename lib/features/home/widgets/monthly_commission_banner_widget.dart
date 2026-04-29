@@ -50,7 +50,8 @@ class MonthlyCommissionBannerWidget extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => CommissionInvoiceDetailsScreen(invoice: invoice),
+                builder: (_) =>
+                    CommissionInvoiceDetailsScreen(invoice: invoice),
               ),
             );
           },
@@ -79,44 +80,56 @@ class MonthlyCommissionBannerWidget extends StatelessWidget {
                             Text(
                               'فاتورة العمولة الشهرية',
                               style: robotoBold.copyWith(
-                                color: Theme.of(context).colorScheme.secondaryContainer,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .secondaryContainer,
                                 fontSize: Dimensions.fontSizeDefault,
                               ),
                             ),
-                            const SizedBox(height: Dimensions.paddingSizeExtraSmall),
+                            const SizedBox(
+                                height: Dimensions.paddingSizeExtraSmall),
                             Text(
                               'من ${invoice.periodStart ?? '-'} إلى ${invoice.periodEnd ?? '-'}',
                               style: robotoRegular.copyWith(
-                                color: Theme.of(context).colorScheme.secondaryContainer,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .secondaryContainer,
                                 fontSize: Dimensions.fontSizeSmall,
                               ),
                             ),
-                            const SizedBox(height: Dimensions.paddingSizeExtraSmall),
+                            const SizedBox(
+                                height: Dimensions.paddingSizeExtraSmall),
                             Text(
-                              invoice.paymentStatus == 'paid' ? 'مدفوعة' : 'غير مدفوعة',
+                              invoice.paymentStatus == 'paid'
+                                  ? 'مدفوعة'
+                                  : 'غير مدفوعة',
                               style: robotoMedium.copyWith(
-                                color: Theme.of(context).colorScheme.secondaryContainer,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .secondaryContainer,
                                 fontSize: Dimensions.fontSizeSmall,
                               ),
                             ),
                           ],
                         ),
                       ),
-
                       const SizedBox(width: Dimensions.paddingSizeSmall),
-
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            PriceConverter.convertPrice(context, invoice.totalCommission),
+                            PriceConverter.convertPrice(
+                                context, invoice.totalCommission),
                             style: robotoBold.copyWith(
-                              color: Theme.of(context).colorScheme.secondaryContainer,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .secondaryContainer,
                               fontSize: Dimensions.fontSizeOverlarge,
                             ),
                           ),
-                          const SizedBox(height: Dimensions.paddingSizeExtraSmall),
+                          const SizedBox(
+                              height: Dimensions.paddingSizeExtraSmall),
                           Text(
                             'اضغط للتفاصيل',
                             style: robotoRegular.copyWith(
@@ -132,7 +145,6 @@ class MonthlyCommissionBannerWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 Row(
                   children: [
                     isLtr ? const SizedBox.shrink() : const Spacer(),
@@ -140,7 +152,8 @@ class MonthlyCommissionBannerWidget extends StatelessWidget {
                       width: MediaQuery.of(context).size.width / 3.2,
                       height: 120,
                       decoration: BoxDecoration(
-                        color: Theme.of(context).cardColor.withValues(alpha: .10),
+                        color:
+                            Theme.of(context).cardColor.withValues(alpha: .10),
                         borderRadius: const BorderRadius.only(
                           bottomRight: Radius.circular(120),
                         ),

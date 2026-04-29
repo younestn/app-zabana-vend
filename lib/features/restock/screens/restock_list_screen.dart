@@ -27,10 +27,14 @@ class _RestockListScreenState extends State<RestockListScreen> {
 
   @override
   void initState() {
-    Provider.of<RestockController>(context,listen: false).getRestockBrandList();
-    Provider.of<RestockController>(context, listen: false).setIndex(0, null, notify: false);
-    Provider.of<RestockController>(context, listen: false).setSearching(false, isUpdate: false);
-    Provider.of<RestockController>(context, listen: false).getRestockProductList(1);
+    Provider.of<RestockController>(context, listen: false)
+        .getRestockBrandList();
+    Provider.of<RestockController>(context, listen: false)
+        .setIndex(0, null, notify: false);
+    Provider.of<RestockController>(context, listen: false)
+        .setSearching(false, isUpdate: false);
+    Provider.of<RestockController>(context, listen: false)
+        .getRestockProductList(1);
 
     super.initState();
   }
@@ -45,19 +49,31 @@ class _RestockListScreenState extends State<RestockListScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: Navigator.of(context).canPop(),
-
-      onPopInvokedWithResult: (didPop, result) async{
-        if( Provider.of<RestockController>(context, listen: false).restockProductModel != null && Provider.of<RestockController>(context, listen: false).restockProductModel?.data == [] ){
-          Provider.of<RestockController>(context, listen: false).emptyReStockData();
+      onPopInvokedWithResult: (didPop, result) async {
+        if (Provider.of<RestockController>(context, listen: false)
+                    .restockProductModel !=
+                null &&
+            Provider.of<RestockController>(context, listen: false)
+                    .restockProductModel
+                    ?.data ==
+                []) {
+          Provider.of<RestockController>(context, listen: false)
+              .emptyReStockData();
         }
       },
-
       child: Scaffold(
         appBar: CustomAppBarWidget(
           title: getTranslated('request_restock_request', context),
           onBackPressed: () {
-            if( Provider.of<RestockController>(context, listen: false).restockProductModel != null && Provider.of<RestockController>(context, listen: false).restockProductModel?.data == [] ){
-              Provider.of<RestockController>(context, listen: false).emptyReStockData();
+            if (Provider.of<RestockController>(context, listen: false)
+                        .restockProductModel !=
+                    null &&
+                Provider.of<RestockController>(context, listen: false)
+                        .restockProductModel
+                        ?.data ==
+                    []) {
+              Provider.of<RestockController>(context, listen: false)
+                  .emptyReStockData();
             }
             Navigator.pop(context);
           },
@@ -65,107 +81,170 @@ class _RestockListScreenState extends State<RestockListScreen> {
           isTooltip: true,
           widget: Consumer<RestockController>(
               builder: (context, restockController, child) {
-                return (restockController.restockProductModel != null && restockController.restockProductModel!.data!.isNotEmpty) ? Padding(
-                  padding: const EdgeInsets.only(right: Dimensions.paddingSizeRevenueBottom),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeVeryTiny, horizontal: Dimensions.paddingSizeSmall),
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.error.withValues(alpha:0.30),
-                        borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
-                        border: Border.all(color: Theme.of(context).primaryColor.withValues(alpha:.10), width: 0.5)
+            return (restockController.restockProductModel != null &&
+                    restockController.restockProductModel!.data!.isNotEmpty)
+                ? Padding(
+                    padding: const EdgeInsets.only(
+                        right: Dimensions.paddingSizeRevenueBottom),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: Dimensions.paddingSizeVeryTiny,
+                          horizontal: Dimensions.paddingSizeSmall),
+                      decoration: BoxDecoration(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .error
+                              .withValues(alpha: 0.30),
+                          borderRadius: BorderRadius.circular(
+                              Dimensions.radiusExtraLarge),
+                          border: Border.all(
+                              color: Theme.of(context)
+                                  .primaryColor
+                                  .withValues(alpha: .10),
+                              width: 0.5)),
+                      child: Text(
+                          restockController.restockProductModel?.totalSize
+                                  .toString() ??
+                              '',
+                          style: titilliumBold.copyWith(
+                              fontSize: Dimensions.fontSizeSmall,
+                              color: Theme.of(context).colorScheme.error)),
                     ),
-                    child: Text(restockController.restockProductModel?.totalSize.toString() ?? '',
-                        style: titilliumBold.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).colorScheme.error)
-                    ),
-                  ),
-                ) : const SizedBox();
-              }
-          ),
+                  )
+                : const SizedBox();
+          }),
         ),
-
         body: Consumer<RestockController>(
           builder: (context, restockController, child) {
             return RefreshIndicator(
               onRefresh: () async {
-                Provider.of<RestockController>(context,listen: false).getRestockBrandList();
-                Provider.of<RestockController>(context, listen: false).setIndex(0, null, notify: false);
-                Provider.of<RestockController>(context, listen: false).setSearching(false, isUpdate: false);
-                Provider.of<RestockController>(context, listen: false).getRestockProductList(1);
+                Provider.of<RestockController>(context, listen: false)
+                    .getRestockBrandList();
+                Provider.of<RestockController>(context, listen: false)
+                    .setIndex(0, null, notify: false);
+                Provider.of<RestockController>(context, listen: false)
+                    .setSearching(false, isUpdate: false);
+                Provider.of<RestockController>(context, listen: false)
+                    .getRestockProductList(1);
               },
               backgroundColor: Theme.of(context).secondaryHeaderColor,
               child: Column(children: [
-                Consumer<CategoryController> (
+                Consumer<CategoryController>(
                     builder: (context, addProductController, child) {
-                      return addProductController.categoryList != null?  Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeSmall),
-                        child: SizedBox(
-                          height: 40,
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: addProductController.categoryList!.isEmpty ? 1 : addProductController.categoryList!.length +1,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Padding(
-                                padding: const EdgeInsets.only(right: Dimensions.paddingSizeExtraSmall),
-                                child: CategoryButtonWidget(
-                                  text: index == 0 ? getTranslated('all', context): addProductController.categoryList![index-1].name,
-                                  index: index,
-                                  categoryId: index == 0 ? null : addProductController.categoryList![index-1].id,
-                                ),
-                              );
-                            },
+                  return addProductController.categoryList != null
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: Dimensions.paddingSizeSmall,
+                              vertical: Dimensions.paddingSizeSmall),
+                          child: SizedBox(
+                            height: 40,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: addProductController
+                                      .categoryList!.isEmpty
+                                  ? 1
+                                  : addProductController.categoryList!.length +
+                                      1,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: Dimensions.paddingSizeExtraSmall),
+                                  child: CategoryButtonWidget(
+                                    text: index == 0
+                                        ? getTranslated('all', context)
+                                        : addProductController
+                                            .categoryList![index - 1].name,
+                                    index: index,
+                                    categoryId: index == 0
+                                        ? null
+                                        : addProductController
+                                            .categoryList![index - 1].id,
+                                  ),
+                                );
+                              },
+                            ),
                           ),
-                        ),
-                      ) : const SizedBox();
-                    }
-                ),
-
-                (((restockController.isSearching && restockController.restockProductModel != null)  ||
-                    ((restockController.startDate != null && restockController.endDate != null) ||  restockController.selectedBrandIds.isNotEmpty))
-                    && (restockController.restockProductModel?.data?.isEmpty ?? false)) ?
-                SizedBox(height: 65, child: SearchBarWidget(
-                  showFilter: true,
-                  controller: _searchController,
-                )) : const SizedBox(),
-
-                restockController.restockProductModel != null ? (restockController.restockProductModel?.data?.isNotEmpty ?? false) ?
-                Expanded(child: Column(children: [
-
-                  SizedBox(height: 65, child:
-                  SearchBarWidget(
-                    showFilter: true,
-                    controller: _searchController,
-                  )
-                  ),
-
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: PaginatedListViewWidget(
-                        scrollController: scrollController,
-                        onPaginate: (int? offset) async => await restockController.getRestockProductList(offset!),
-                        totalSize: restockController.restockProductModel?.totalSize,
-                        offset: restockController.restockProductModel!.offset!,
-                        itemView: ListView.builder(padding: const EdgeInsets.all(0),
-                          itemCount: restockController.restockProductModel?.data?.length ?? 0,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            Product? product = restockController.restockProductModel?.data![index].product;
-                            double ratting = (product?.rating?.isNotEmpty ?? false) ?  double.parse('${product?.rating?[0].average}') : 0;
-                            Data? data = restockController.restockProductModel?.data![index];
-                            return RestockListItemWidget(
-                                product: product,
-                                ratting: ratting,
-                                data: data,
-                                index: index
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: Dimensions.paddingSizeSmall),
-                ])) : const Expanded(child: NoDataScreen(title: 'product_not_found')) : const Expanded(child: OrderShimmer()),
+                        )
+                      : const SizedBox();
+                }),
+                (((restockController.isSearching &&
+                                restockController.restockProductModel !=
+                                    null) ||
+                            ((restockController.startDate != null &&
+                                    restockController.endDate != null) ||
+                                restockController
+                                    .selectedBrandIds.isNotEmpty)) &&
+                        (restockController.restockProductModel?.data?.isEmpty ??
+                            false))
+                    ? SizedBox(
+                        height: 65,
+                        child: SearchBarWidget(
+                          showFilter: true,
+                          controller: _searchController,
+                        ))
+                    : const SizedBox(),
+                restockController.restockProductModel != null
+                    ? (restockController
+                                .restockProductModel?.data?.isNotEmpty ??
+                            false)
+                        ? Expanded(
+                            child: Column(children: [
+                            SizedBox(
+                                height: 65,
+                                child: SearchBarWidget(
+                                  showFilter: true,
+                                  controller: _searchController,
+                                )),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: PaginatedListViewWidget(
+                                  scrollController: scrollController,
+                                  onPaginate: (int? offset) async =>
+                                      await restockController
+                                          .getRestockProductList(offset!),
+                                  totalSize: restockController
+                                      .restockProductModel?.totalSize,
+                                  offset: restockController
+                                      .restockProductModel!.offset!,
+                                  itemView: ListView.builder(
+                                    padding: const EdgeInsets.all(0),
+                                    itemCount: restockController
+                                            .restockProductModel
+                                            ?.data
+                                            ?.length ??
+                                        0,
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      Product? product = restockController
+                                          .restockProductModel
+                                          ?.data![index]
+                                          .product;
+                                      double ratting = (product
+                                                  ?.rating?.isNotEmpty ??
+                                              false)
+                                          ? double.parse(
+                                              '${product?.rating?[0].average}')
+                                          : 0;
+                                      Data? data = restockController
+                                          .restockProductModel?.data![index];
+                                      return RestockListItemWidget(
+                                          product: product,
+                                          ratting: ratting,
+                                          data: data,
+                                          index: index);
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: Dimensions.paddingSizeSmall),
+                          ]))
+                        : const Expanded(
+                            child: NoDataScreen(title: 'product_not_found'))
+                    : const Expanded(child: OrderShimmer()),
               ]),
             );
           },

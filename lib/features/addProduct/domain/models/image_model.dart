@@ -8,7 +8,8 @@ class ImageModel {
   String? imageString;
   ColorImage? colorImage;
 
-  ImageModel({this.type, this.color, this.image, this.imageString,this.colorImage});
+  ImageModel(
+      {this.type, this.color, this.image, this.imageString, this.colorImage});
 
   ImageModel.fromJson(Map<String, dynamic> json) {
     type = json['type'];
@@ -43,8 +44,8 @@ class ColorImage {
   ColorImage.fromJson(Map<String, dynamic> json) {
     color = json['color'];
     imageName = json['image_name'] != null
-      ? ImageFullUrl.fromJson(json['image_name'])
-      : null;
+        ? ImageFullUrl.fromJson(json['image_name'])
+        : null;
     storage = json['storage'];
   }
 

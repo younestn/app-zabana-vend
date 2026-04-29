@@ -1,4 +1,3 @@
-
 import 'package:sixvalley_vendor_app/features/delivery_man/domain/model/delivery_man_detail_model.dart';
 
 class DeliveryManEarningModel {
@@ -12,35 +11,37 @@ class DeliveryManEarningModel {
 
   DeliveryManEarningModel(
       {this.totalSize,
-        this.limit,
-        this.offset,
-        this.totalEarn,
-        this.withdrawableBalance,
-        this.deliveryMan,
-        this.orders});
+      this.limit,
+      this.offset,
+      this.totalEarn,
+      this.withdrawableBalance,
+      this.deliveryMan,
+      this.orders});
 
   DeliveryManEarningModel.fromJson(Map<String, dynamic> json) {
     totalSize = json['total_size'];
     limit = json['limit'];
     offset = json['offset'];
-    if(json['total_earn'] != null){
-      try{
+    if (json['total_earn'] != null) {
+      try {
         totalEarn = json['total_earn'].toDouble;
-      }catch(e){
+      } catch (e) {
         totalEarn = double.parse(json['total_earn'].toString());
       }
     }
 
-    if(json['withdrawable_balance'] != null){
-      try{
+    if (json['withdrawable_balance'] != null) {
+      try {
         withdrawableBalance = json['withdrawable_balance'].toDouble();
-      }catch(e){
-        withdrawableBalance = double.parse(json['withdrawable_balance'].toString());
+      } catch (e) {
+        withdrawableBalance =
+            double.parse(json['withdrawable_balance'].toString());
       }
     }
 
-
-    deliveryMan = json['delivery_man'] != null ? DeliveryMan.fromJson(json['delivery_man']) : null;
+    deliveryMan = json['delivery_man'] != null
+        ? DeliveryMan.fromJson(json['delivery_man'])
+        : null;
     if (json['orders'] != null) {
       orders = <Earning>[];
       json['orders'].forEach((v) {
@@ -66,8 +67,6 @@ class DeliveryManEarningModel {
   }
 }
 
-
-
 class Earning {
   int? id;
   double? deliverymanCharge;
@@ -77,20 +76,19 @@ class Earning {
 
   Earning(
       {this.id,
-        this.deliverymanCharge,
-        this.orderStatus,
-        this.deliveryManId,
-        this.updatedAt});
+      this.deliverymanCharge,
+      this.orderStatus,
+      this.deliveryManId,
+      this.updatedAt});
 
   Earning.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    if(json['deliveryman_charge'] != null){
-      try{
+    if (json['deliveryman_charge'] != null) {
+      try {
         deliverymanCharge = json['deliveryman_charge'].toDouble();
-      }catch(e){
+      } catch (e) {
         deliverymanCharge = double.parse(json['deliveryman_charge'].toString());
       }
-
     }
 
     orderStatus = json['order_status'];

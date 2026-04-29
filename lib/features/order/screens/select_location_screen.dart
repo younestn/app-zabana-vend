@@ -24,10 +24,8 @@ class SelectLocationScreenState extends State<SelectLocationScreen> {
 
   @override
   void initState() {
-
     super.initState();
   }
-
 
   @override
   void dispose() {
@@ -35,77 +33,119 @@ class SelectLocationScreenState extends State<SelectLocationScreen> {
     _controller!.dispose();
   }
 
-  void _openSearchDialog(BuildContext context, GoogleMapController? mapController) async {
-    showDialog(context: context, builder: (context) => LocationSearchDialogWidget(mapController: mapController));
+  void _openSearchDialog(
+      BuildContext context, GoogleMapController? mapController) async {
+    showDialog(
+        context: context,
+        builder: (context) =>
+            LocationSearchDialogWidget(mapController: mapController));
   }
 
   @override
   Widget build(BuildContext context) {
-    _locationController.text = Provider.of<LocationController>(context).address ?? '';
+    _locationController.text =
+        Provider.of<LocationController>(context).address ?? '';
 
     return Scaffold(
-      appBar: CustomAppBarWidget(title: getTranslated('update_address', context)),
+      appBar:
+          CustomAppBarWidget(title: getTranslated('update_address', context)),
       body: Consumer<LocationController>(
-        builder: (context, locationProvider, child) {
-          return Stack(
-            clipBehavior: Clip.none, children: [
-            GoogleMap(mapType: MapType.normal,
+          builder: (context, locationProvider, child) {
+        return Stack(
+          clipBehavior: Clip.none,
+          children: [
+            GoogleMap(
+              mapType: MapType.normal,
               initialCameraPosition: CameraPosition(
-                target: LatLng(locationProvider.position.latitude, locationProvider.position.longitude),
-                zoom: 16),
+                  target: LatLng(locationProvider.position.latitude,
+                      locationProvider.position.longitude),
+                  zoom: 16),
               zoomControlsEnabled: false,
               compassEnabled: false,
               indoorViewEnabled: true,
               mapToolbarEnabled: true,
               onCameraIdle: () {
-                locationProvider.updatePosition(_cameraPosition, true, null, context);
+                locationProvider.updatePosition(
+                    _cameraPosition, true, null, context);
               },
               onCameraMove: ((position) => _cameraPosition = position),
               onMapCreated: (GoogleMapController controller) {
                 _controller = controller;
               },
             ),
-
-            InkWell(onTap: () => _openSearchDialog(context, _controller),
-              child: Container(width: MediaQuery.of(context).size.width, height: 55,
-                padding:  const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge, vertical: 18.0),
-                margin: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeSmall),
-                decoration: BoxDecoration(color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.paddingSizeExtraSmall)),
+            InkWell(
+              onTap: () => _openSearchDialog(context, _controller),
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 55,
+                padding: const EdgeInsets.symmetric(
+                    horizontal: Dimensions.paddingSizeLarge, vertical: 18.0),
+                margin: const EdgeInsets.symmetric(
+                    horizontal: Dimensions.paddingSizeSmall,
+                    vertical: Dimensions.paddingSizeSmall),
+                decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.circular(
+                        Dimensions.paddingSizeExtraSmall)),
                 child: Row(children: [
-                  Expanded(child: Text(locationProvider.locationTextEditingController.text.trim(), maxLines: 1, overflow: TextOverflow.ellipsis)),
-                   Image.asset(Images.iconsSearch),
+                  Expanded(
+                      child: Text(
+                          locationProvider.locationTextEditingController.text
+                              .trim(),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis)),
+                  Image.asset(Images.iconsSearch),
                 ]),
               ),
             ),
-
-            Positioned(bottom: 0, right: 0, left: 0,
-              child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-
-                SizedBox(width: double.infinity,
-                  child: Padding(padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
-                    child: CustomButtonWidget(btnTxt: getTranslated('select_location', context),
-                      onTap: () {
-                        if(widget.googleMapController != null) {
-                          widget.googleMapController!.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(
-                            locationProvider.pickPosition.latitude, locationProvider.pickPosition.longitude,
-                          ), zoom: 16)));
-                          locationProvider.setAddAddressData();
-                        }
-                        Navigator.of(context).pop();},
+            Positioned(
+              bottom: 0,
+              right: 0,
+              left: 0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.all(Dimensions.paddingSizeLarge),
+                      child: CustomButtonWidget(
+                        btnTxt: getTranslated('select_location', context),
+                        onTap: () {
+                          if (widget.googleMapController != null) {
+                            widget.googleMapController!.moveCamera(
+                                CameraUpdate.newCameraPosition(CameraPosition(
+                                    target: LatLng(
+                                      locationProvider.pickPosition.latitude,
+                                      locationProvider.pickPosition.longitude,
+                                    ),
+                                    zoom: 16)));
+                            locationProvider.setAddAddressData();
+                          }
+                          Navigator.of(context).pop();
+                        },
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
               ),
             ),
-            Center(child: Icon(Icons.location_on, color: Theme.of(context).primaryColor, size: 50,)),
-            locationProvider.loading ?
-            Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor))) : const SizedBox(),
-
+            Center(
+                child: Icon(
+              Icons.location_on,
+              color: Theme.of(context).primaryColor,
+              size: 50,
+            )),
+            locationProvider.loading
+                ? Center(
+                    child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            Theme.of(context).primaryColor)))
+                : const SizedBox(),
           ],
-          );
-        }
-      ),
+        );
+      }),
     );
   }
 }

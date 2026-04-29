@@ -11,19 +11,18 @@ class CategoryModel {
 
   bool? _checked;
 
-  CategoryModel(
-      {int? id,
-        String? name,
-        String? slug,
-        String? icon,
-        int? parentId,
-        int? position,
-        String? createdAt,
-        String? updatedAt,
-        List<SubCategory>? subCategories,
-
-        bool checked = false,
-      }) {
+  CategoryModel({
+    int? id,
+    String? name,
+    String? slug,
+    String? icon,
+    int? parentId,
+    int? position,
+    String? createdAt,
+    String? updatedAt,
+    List<SubCategory>? subCategories,
+    bool checked = false,
+  }) {
     _id = id;
     _name = name;
     _slug = slug;
@@ -35,7 +34,6 @@ class CategoryModel {
     _subCategories = subCategories;
 
     _checked = checked;
-
   }
 
   int? get id => _id;
@@ -48,14 +46,10 @@ class CategoryModel {
   String? get updatedAt => _updatedAt;
   List<SubCategory>? get subCategories => _subCategories;
 
-
-
   bool? get checked => _checked;
-  void toggleChecked(){
+  void toggleChecked() {
     _checked = !_checked!;
   }
-
-
 
   CategoryModel.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
@@ -72,7 +66,6 @@ class CategoryModel {
         _subCategories!.add(SubCategory.fromJson(v));
       });
     }
-
 
     _checked = false;
   }
@@ -107,14 +100,14 @@ class SubCategory {
 
   SubCategory(
       {int? id,
-        String? name,
-        String? slug,
-        String? icon,
-        int? parentId,
-        int? position,
-        String? createdAt,
-        String? updatedAt,
-        List<SubSubCategory>? subSubCategories}) {
+      String? name,
+      String? slug,
+      String? icon,
+      int? parentId,
+      int? position,
+      String? createdAt,
+      String? updatedAt,
+      List<SubSubCategory>? subSubCategories}) {
     _id = id;
     _name = name;
     _slug = slug;
@@ -182,13 +175,13 @@ class SubSubCategory {
 
   SubSubCategory(
       {int? id,
-        String? name,
-        String? slug,
-        String? icon,
-        int? parentId,
-        int? position,
-        String? createdAt,
-        String? updatedAt}) {
+      String? name,
+      String? slug,
+      String? icon,
+      int? parentId,
+      int? position,
+      String? createdAt,
+      String? updatedAt}) {
     _id = id;
     _name = name;
     _slug = slug;

@@ -8,5 +8,4 @@ class TutorialController extends ChangeNotifier {
     _isVisible = isVisible;
     notifyListeners();
   }
-
 }

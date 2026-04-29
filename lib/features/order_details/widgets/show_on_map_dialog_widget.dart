@@ -7,15 +7,15 @@ import 'package:sixvalley_vendor_app/utill/dimensions.dart';
 
 class ShowOnMapDialogWidget extends StatelessWidget {
   final BillingAddressData? billingAddressData;
-  const ShowOnMapDialogWidget({super.key,required this.billingAddressData});
+  const ShowOnMapDialogWidget({super.key, required this.billingAddressData});
 
   @override
   Widget build(BuildContext context) {
-    return  Consumer<OrderDetailsController>(
-        builder:  (context, resProvider, child) {
-          Set<Marker> markers = resProvider.markers;
-          return  Dialog(
-          child: SizedBox(
+    return Consumer<OrderDetailsController>(
+        builder: (context, resProvider, child) {
+      Set<Marker> markers = resProvider.markers;
+      return Dialog(
+        child: SizedBox(
             height: 300,
             width: MediaQuery.of(context).size.width,
             child: ClipRRect(
@@ -23,7 +23,9 @@ class ShowOnMapDialogWidget extends StatelessWidget {
               child: GoogleMap(
                 mapType: MapType.normal,
                 initialCameraPosition: CameraPosition(
-                  target: LatLng(double.parse(billingAddressData?.latitude ?? ''), double.parse(billingAddressData?.longitude ?? '')),
+                  target: LatLng(
+                      double.parse(billingAddressData?.latitude ?? ''),
+                      double.parse(billingAddressData?.longitude ?? '')),
                   zoom: 15,
                 ),
                 markers: markers,
@@ -32,10 +34,8 @@ class ShowOnMapDialogWidget extends StatelessWidget {
                 indoorViewEnabled: true,
                 mapToolbarEnabled: false,
               ),
-            )
-          ),
-        );
-      }
-    );
+            )),
+      );
+    });
   }
 }

@@ -1,11 +1,9 @@
-
 import 'package:sixvalley_vendor_app/features/product/domain/repositories/product_repository_interface.dart';
 import 'package:sixvalley_vendor_app/features/product/domain/services/product_service_interface.dart';
 
-class ProductService implements ProductServiceInterface{
+class ProductService implements ProductServiceInterface {
   final ProductRepositoryInterface productRepoInterface;
   ProductService({required this.productRepoInterface});
-
 
   @override
   Future getMostPopularProductList(int offset, String languageCode) {
@@ -42,19 +40,28 @@ class ProductService implements ProductServiceInterface{
     List<int>? categoryIds,
     List<int>? publishingHouseIds,
     List<int>? authorIds,
-}) {
+  }) {
     return productRepoInterface.getSellerProductList(
-      sellerId: sellerId, offset: offset, languageCode: languageCode,
-      search: search, productType: productType, minPrice: minPrice,
-      maxPrice: maxPrice, startDate: startDate, endDate: endDate,
-      categoryIds: categoryIds, brandIds: brandIds,
-      authorIds: authorIds, publishingHouseIds: publishingHouseIds,
+      sellerId: sellerId,
+      offset: offset,
+      languageCode: languageCode,
+      search: search,
+      productType: productType,
+      minPrice: minPrice,
+      maxPrice: maxPrice,
+      startDate: startDate,
+      endDate: endDate,
+      categoryIds: categoryIds,
+      brandIds: brandIds,
+      authorIds: authorIds,
+      publishingHouseIds: publishingHouseIds,
     );
   }
 
   @override
   Future getStockLimitedProductList(int offset, String languageCode) {
-   return productRepoInterface.getStockLimitedProductList(offset, languageCode);
+    return productRepoInterface.getStockLimitedProductList(
+        offset, languageCode);
   }
 
   @override
@@ -86,5 +93,4 @@ class ProductService implements ProductServiceInterface{
   Future getBrandList(String languageCode) {
     return productRepoInterface.getBrandList(languageCode);
   }
-
 }

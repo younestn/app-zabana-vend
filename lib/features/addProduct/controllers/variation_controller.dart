@@ -25,42 +25,45 @@ class VariationController extends ChangeNotifier {
   List<AttributeModel>? get attributeList => _attributeList;
 
   List<int> _selectedColor = [];
-  List<int> get selectedColor =>_selectedColor;
+  List<int> get selectedColor => _selectedColor;
 
-  List<VariantTypeModel> _variantTypeList =[];
+  List<VariantTypeModel> _variantTypeList = [];
   List<VariantTypeModel> get variantTypeList => _variantTypeList;
 
   int _totalVariationQuantity = 0;
-  int get totalVariationQuantity  => _totalVariationQuantity;
+  int get totalVariationQuantity => _totalVariationQuantity;
 
-  final TextEditingController _totalQuantityController = TextEditingController(text: '1');
+  final TextEditingController _totalQuantityController =
+      TextEditingController(text: '1');
   TextEditingController get totalQuantityController => _totalQuantityController;
 
-  List<String?> _colorCodeList =[];
+  List<String?> _colorCodeList = [];
   List<String?> get colorCodeList => _colorCodeList;
 
-
-  Future<void> getAttributeList(BuildContext context, Product? product, String language) async {
+  Future<void> getAttributeList(
+      BuildContext context, Product? product, String language) async {
     _attributeList = null;
     _totalVariationQuantity = 0;
     _selectedColor = [];
     _variantTypeList = [];
 
-    Provider.of<AddProductImageController>(Get.context!, listen: false).removeProductImage();
-    Provider.of<AddProductController>(context,listen: false).resetDiscountTypeIndex();
+    Provider.of<AddProductImageController>(Get.context!, listen: false)
+        .removeProductImage();
+    Provider.of<AddProductController>(context, listen: false)
+        .resetDiscountTypeIndex();
 
-    ApiResponse response = await addProductServiceInterface.getAttributeList(language);
+    ApiResponse response =
+        await addProductServiceInterface.getAttributeList(language);
 
     if (response.response != null || response.response!.statusCode != 200) {
-
       _attributeList = _initializeAttributeList();
 
-      Provider.of<AddProductImageController>(Get.context!, listen: false).emptyWithColorImage();
+      Provider.of<AddProductImageController>(Get.context!, listen: false)
+          .emptyWithColorImage();
 
       for (var attribute in response.response!.data) {
         _addAttribute(attribute, product);
       }
-
     } else {
       ApiChecker.checkApi(response);
     }
@@ -83,7 +86,9 @@ class VariationController extends ChangeNotifier {
     bool active = product?.attributes?.contains(attr.id) ?? false;
 
     List<String> options = [];
-    if (active && product?.choiceOptions != null && product!.choiceOptions!.isNotEmpty) {
+    if (active &&
+        product?.choiceOptions != null &&
+        product!.choiceOptions!.isNotEmpty) {
       int index = product.attributes!.indexOf(attr.id);
       options = product.choiceOptions![index].options ?? [];
     }
@@ -100,14 +105,12 @@ class VariationController extends ChangeNotifier {
     }
   }
 
-
-
-
   void calculateVariationQuantity() {
-    if(_variantTypeList.isNotEmpty) {
+    if (_variantTypeList.isNotEmpty) {
       _totalVariationQuantity = 0;
-      for(int i=0; i<_variantTypeList.length; i++) {
-        _totalVariationQuantity = _totalVariationQuantity + int.parse(_variantTypeList[i].qtyController.text);
+      for (int i = 0; i < _variantTypeList.length; i++) {
+        _totalVariationQuantity = _totalVariationQuantity +
+            int.parse(_variantTypeList[i].qtyController.text);
       }
     }
     _totalQuantityController.text = _totalVariationQuantity.toString();
@@ -118,25 +121,27 @@ class VariationController extends ChangeNotifier {
     _attributeList![0].active = true;
   }
 
-  void setCurrentStock(String stock){
+  void setCurrentStock(String stock) {
     _totalQuantityController.text = stock;
   }
 
-  void toggleAttribute(BuildContext context,int index, Product? product) {
+  void toggleAttribute(BuildContext context, int index, Product? product) {
     _attributeList![index].active = !_attributeList![index].active;
-    generateVariantTypes(context,product);
+    generateVariantTypes(context, product);
     notifyListeners();
   }
 
-  void addVariant(BuildContext context, int index, String? variant, Product? product, bool notify) {
+  void addVariant(BuildContext context, int index, String? variant,
+      Product? product, bool notify) {
     _attributeList![index].variants.add(variant);
-    generateVariantTypes(context,product);
-    if(notify) {
+    generateVariantTypes(context, product);
+    if (notify) {
       notifyListeners();
     }
   }
 
-  void removeVariant(BuildContext context,int mainIndex, int index, Product? product) {
+  void removeVariant(
+      BuildContext context, int mainIndex, int index, Product? product) {
     _attributeList![mainIndex].variants.removeAt(index);
     generateVariantTypes(context, product);
     notifyListeners();
@@ -144,17 +149,14 @@ class VariationController extends ChangeNotifier {
 
   bool hasAttribute() {
     bool hasData = false;
-    for(AttributeModel attribute in _attributeList!) {
-      if(attribute.active) {
+    for (AttributeModel attribute in _attributeList!) {
+      if (attribute.active) {
         hasData = true;
         break;
       }
     }
     return hasData;
   }
-
-
-
 
   void generateVariantTypes(BuildContext context, Product? product) {
     List<List<String?>> mainList = [];
@@ -164,46 +166,61 @@ class VariationController extends ChangeNotifier {
     _variantTypeList = [];
 
     for (var attribute in _attributeList!) {
-      if(attribute.active) {
+      if (attribute.active) {
         hasData = true;
         mainList.add(attribute.variants);
         length = length * attribute.variants.length;
         indexList.add(0);
       }
     }
-    if(!hasData) {
+    if (!hasData) {
       length = 0;
     }
-    for(int i=0; i<length; i++) {
+    for (int i = 0; i < length; i++) {
       String value = '';
-      for(int j=0; j<mainList.length; j++) {
-        value = value + (value.isEmpty ? '' : '-') + mainList[j][indexList[j]]!.trim();
+      for (int j = 0; j < mainList.length; j++) {
+        value = value +
+            (value.isEmpty ? '' : '-') +
+            mainList[j][indexList[j]]!.trim();
       }
-      if(product != null) {
+      if (product != null) {
         double? price = 0;
         int? quantity = 0;
-        for(Variation variation in product.variation!) {
-          if(variation.type == value) {
+        for (Variation variation in product.variation!) {
+          if (variation.type == value) {
             price = variation.price;
             quantity = variation.qty;
             break;
           }
         }
         _variantTypeList.add(VariantTypeModel(
-          variantType: value, controller: TextEditingController(text: price! > 0 ? PriceConverter.convertPriceWithoutSymbol(context,price) : ''), node: FocusNode(),
-          qtyController: TextEditingController(text: quantity.toString()), qtyNode: FocusNode(),
+          variantType: value,
+          controller: TextEditingController(
+              text: price! > 0
+                  ? PriceConverter.convertPriceWithoutSymbol(context, price)
+                  : ''),
+          node: FocusNode(),
+          qtyController: TextEditingController(text: quantity.toString()),
+          qtyNode: FocusNode(),
         ));
         // _variationTotalQuantity
-      }else {
-        _variantTypeList.add(VariantTypeModel(variantType: value, controller: TextEditingController(), node: FocusNode(),qtyController: TextEditingController(),qtyNode: FocusNode()));
+      } else {
+        _variantTypeList.add(VariantTypeModel(
+            variantType: value,
+            controller: TextEditingController(),
+            node: FocusNode(),
+            qtyController: TextEditingController(),
+            qtyNode: FocusNode()));
       }
 
-      for(int j=0; j<mainList.length; j++) {
-        if(indexList[indexList.length-(1+j)] < mainList[mainList.length-(1+j)].length-1) {
-          indexList[indexList.length-(1+j)] = indexList[indexList.length-(1+j)] + 1;
+      for (int j = 0; j < mainList.length; j++) {
+        if (indexList[indexList.length - (1 + j)] <
+            mainList[mainList.length - (1 + j)].length - 1) {
+          indexList[indexList.length - (1 + j)] =
+              indexList[indexList.length - (1 + j)] + 1;
           break;
-        }else {
-          indexList[indexList.length-(1+j)] = 0;
+        } else {
+          indexList[indexList.length - (1 + j)] = 0;
         }
       }
     }
@@ -217,31 +234,32 @@ class VariationController extends ChangeNotifier {
     // debugPrint("====TotalVariationCount=====>${_variationTotalQuantity}");
   }
 
-
-  void addColorCode(String? colorCode, {int? index}){
-    if(index == 0){
+  void addColorCode(String? colorCode, {int? index}) {
+    if (index == 0) {
       _colorCodeList = [];
-      Provider.of<AddProductImageController>(Get.context!, listen: false).emptyWithColorImage();
+      Provider.of<AddProductImageController>(Get.context!, listen: false)
+          .emptyWithColorImage();
     }
     _colorCodeList.add(colorCode);
-    Provider.of<AddProductImageController>(Get.context!, listen: false).addWithColorImage(colorCode, isUpdate: true);
+    Provider.of<AddProductImageController>(Get.context!, listen: false)
+        .addWithColorImage(colorCode, isUpdate: true);
     notifyListeners();
   }
 
-  void removeColorCode(int index){
+  void removeColorCode(int index) {
     _colorCodeList.removeAt(index);
-    Provider.of<AddProductImageController>(Get.context!, listen: false).removeWithColorImage(index);
+    Provider.of<AddProductImageController>(Get.context!, listen: false)
+        .removeWithColorImage(index);
     notifyListeners();
   }
 
-  void initColorCode(){
+  void initColorCode() {
     _colorCodeList = [];
-    Provider.of<AddProductImageController>(Get.context!,listen: false).emptyWithColorImage();
+    Provider.of<AddProductImageController>(Get.context!, listen: false)
+        .emptyWithColorImage();
   }
 
-
-
-  Map<String, dynamic> processVariantData (BuildContext context) {
+  Map<String, dynamic> processVariantData(BuildContext context) {
     Map<String, dynamic> fields = {};
     int totalQuantity = 0;
 
@@ -280,17 +298,18 @@ class VariationController extends ChangeNotifier {
       // Process variant type list
       for (int index = 0; index < _variantTypeList.length; index++) {
         fields.addAll(<String, dynamic>{
-          'price_${_variantTypeList[index].variantType}': PriceConverter
-              .systemCurrencyToDefaultCurrency(
-              double.parse(_variantTypeList[index].controller.text), context),
+          'price_${_variantTypeList[index].variantType}':
+              PriceConverter.systemCurrencyToDefaultCurrency(
+                  double.parse(_variantTypeList[index].controller.text),
+                  context),
         });
         fields.addAll(<String, dynamic>{
           'qty_${_variantTypeList[index].variantType}':
-          int.parse(_variantTypeList[index].qtyController.text),
+              int.parse(_variantTypeList[index].qtyController.text),
         });
         fields.addAll(<String, dynamic>{
           'sku_${_variantTypeList[index].variantType}':
-          "sku_${_variantTypeList[index].variantType}",
+              "sku_${_variantTypeList[index].variantType}",
         });
 
         // Update total quantity
@@ -306,14 +325,11 @@ class VariationController extends ChangeNotifier {
     return fields;
   }
 
-void onClearColorVariations(AddProductModel addProduct) {
-
-  if(_attributeList?.isNotEmpty ?? false) {
-    if(!(_attributeList?.first.active ?? false)) {
-      addProduct.colorCodeList = [];
+  void onClearColorVariations(AddProductModel addProduct) {
+    if (_attributeList?.isNotEmpty ?? false) {
+      if (!(_attributeList?.first.active ?? false)) {
+        addProduct.colorCodeList = [];
+      }
     }
   }
-}
-
-
 }

@@ -74,20 +74,18 @@ class Cart {
   int? _quantity;
   double? _taxAmount;
 
-
   Cart(
-      String productId,
-      String price,
-      double discountAmount,
-      int quantity,
-      double taxAmount,
-      ) {
+    String productId,
+    String price,
+    double discountAmount,
+    int quantity,
+    double taxAmount,
+  ) {
     _productId = productId;
     _price = price;
     _discountAmount = discountAmount;
     _quantity = quantity;
     _taxAmount = taxAmount;
-
   }
 
   String? get productId => _productId;
@@ -96,14 +94,12 @@ class Cart {
   int? get quantity => _quantity;
   double? get taxAmount => _taxAmount;
 
-
   Cart.fromJson(Map<String, dynamic> json) {
     _productId = json['id'];
     _price = json['price'];
     _discountAmount = json['discount'];
     _quantity = json['quantity'];
     _taxAmount = json['tax'];
-
   }
 
   Map<String, dynamic> toJson() {
@@ -116,6 +112,3 @@ class Cart {
     return data;
   }
 }
-
-
-

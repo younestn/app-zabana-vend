@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sixvalley_vendor_app/common/basewidgets/custom_snackbar_widget.dart';
@@ -28,7 +27,7 @@ class ProductController extends ChangeNotifier {
   bool get isLoading => _isLoading;
   int get offset => _offset;
   final List<bool> _isOn = [];
-  List<bool> get isOn=>_isOn;
+  List<bool> get isOn => _isOn;
   bool get isPaginationLoading => _isPaginationLoading;
 
   List<Product>? _stockOutProductList;
@@ -67,7 +66,6 @@ class ProductController extends ChangeNotifier {
   bool _showCookies = true;
   bool get showCookies => _showCookies;
 
-
   ProductTypeEnum? _selectedProductType;
   ProductTypeEnum? get selectedProductType => _selectedProductType;
 
@@ -76,9 +74,6 @@ class ProductController extends ChangeNotifier {
 
   DateTime? _endDate;
   DateTime? get endDate => _endDate;
-
-
-
 
   double? _minPrice;
   double? get minPrice => _minPrice;
@@ -124,13 +119,12 @@ class ProductController extends ChangeNotifier {
   bool _isUpdateQuantity = true;
   bool get isUpdateQuantity => _isUpdateQuantity;
 
-
-
-  void initData(Product product, int? minimumOrderQuantity, BuildContext context) {
+  void initData(
+      Product product, int? minimumOrderQuantity, BuildContext context) {
     _variantIndex = 0;
     _quantity = 1;
     _variationIndex = [];
-    for (int i= 0; i<= product.choiceOptions!.length; i++) {
+    for (int i = 0; i <= product.choiceOptions!.length; i++) {
       _variationIndex!.add(0);
     }
   }
@@ -138,27 +132,32 @@ class ProductController extends ChangeNotifier {
   void setQuantity(int value, {bool isUpdate = true}) async {
     _quantity = value;
 
-    if(isUpdate) {
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
-  void setCartVariantIndex(int? minimumOrderQuantity,int index, BuildContext context) {
+  void setCartVariantIndex(
+      int? minimumOrderQuantity, int index, BuildContext context) {
     _variantIndex = index;
     _quantity = 1;
     _isUpdateQuantity = true;
     notifyListeners();
   }
 
-  void setCartVariationIndex(int? minimumOrderQuantity, int index, int i, BuildContext context) {
+  void setCartVariationIndex(
+      int? minimumOrderQuantity, int index, int i, BuildContext context) {
     _variationIndex![index] = i;
     _quantity = 1;
     _isUpdateQuantity = true;
     notifyListeners();
   }
 
-
-  Future <void> getSellerProductList(String sellerId, int offset, String languageCode,String search, {
+  Future<void> getSellerProductList(
+    String sellerId,
+    int offset,
+    String languageCode,
+    String search, {
     bool reload = true,
     String? productType,
     double? minPrice,
@@ -170,227 +169,258 @@ class ProductController extends ChangeNotifier {
     bool isUpdate = false,
     List<int>? publishingHouseIds,
     List<int>? authorIds,
-
   }) async {
-    if(reload || offset == 1) {
+    if (reload || offset == 1) {
       _sellerProductModel = null;
 
-      if(isUpdate) {
+      if (isUpdate) {
         notifyListeners();
-
       }
-
     }
-      ApiResponse apiResponse = await productServiceInterface.getSellerProductList(
-        sellerId: sellerId,  offset: offset,
-        languageCode: languageCode, search: search,
-        brandIds: brandIds,
-        categoryIds: categoryIds,
-        startDate: startDate,
-        endDate: endDate,
-        minPrice: minPrice,
-        maxPrice: minPrice == null ? null : maxPrice,
-        productType: productType,
-        authorIds: authorIds,
-        publishingHouseIds: publishingHouseIds,
-      );
+    ApiResponse apiResponse =
+        await productServiceInterface.getSellerProductList(
+      sellerId: sellerId,
+      offset: offset,
+      languageCode: languageCode,
+      search: search,
+      brandIds: brandIds,
+      categoryIds: categoryIds,
+      startDate: startDate,
+      endDate: endDate,
+      minPrice: minPrice,
+      maxPrice: minPrice == null ? null : maxPrice,
+      productType: productType,
+      authorIds: authorIds,
+      publishingHouseIds: publishingHouseIds,
+    );
 
-      if(apiResponse.response?.statusCode == 200) {
-
-        if(offset == 1){
-          _sellerProductModel = ProductModel.fromJson(apiResponse.response?.data, fromGetProducts: true);
-
-        }else{
-          _sellerProductModel?.products?.addAll(ProductModel.fromJson(apiResponse.response?.data, fromGetProducts: true).products ?? []);
-          _sellerProductModel?.offset = ProductModel.fromJson(apiResponse.response?.data).offset;
-          _sellerProductModel?.totalSize = ProductModel.fromJson(apiResponse.response?.data).totalSize;
-        }
-
+    if (apiResponse.response?.statusCode == 200) {
+      if (offset == 1) {
+        _sellerProductModel = ProductModel.fromJson(apiResponse.response?.data,
+            fromGetProducts: true);
       } else {
-        ApiChecker.checkApi(apiResponse);
-
+        _sellerProductModel?.products?.addAll(ProductModel.fromJson(
+                    apiResponse.response?.data,
+                    fromGetProducts: true)
+                .products ??
+            []);
+        _sellerProductModel?.offset =
+            ProductModel.fromJson(apiResponse.response?.data).offset;
+        _sellerProductModel?.totalSize =
+            ProductModel.fromJson(apiResponse.response?.data).totalSize;
       }
+    } else {
+      ApiChecker.checkApi(apiResponse);
+    }
 
-      _isLoading = false;
-      notifyListeners();
-
+    _isLoading = false;
+    notifyListeners();
   }
 
   List<int?> _cartQuantity = [];
   List<int?> get cartQuantity => _cartQuantity;
 
-  Future <void> getPosProductList(int offset, BuildContext context,List <String> id, {bool reload = true}) async {
+  Future<void> getPosProductList(
+      int offset, BuildContext context, List<String> id,
+      {bool reload = true}) async {
     _isLoading = true;
-      ApiResponse apiResponse = await productServiceInterface.getPosProductList(offset, id);
-      if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-        if(offset == 1 ){
-          _cartQuantity = [];
-          _posProductModel = ProductModel.fromJson(apiResponse.response!.data);
-        }else{
-          _posProductModel!.totalSize =  ProductModel.fromJson(apiResponse.response!.data).totalSize;
-          _posProductModel!.offset =  ProductModel.fromJson(apiResponse.response!.data).offset;
-          _posProductModel!.products!.addAll(ProductModel.fromJson(apiResponse.response!.data).products!)  ;
-        }
-        for(int i = 0; i< _posProductModel!.products!.length; i++){
-          _cartQuantity.add(0);
-        }
-        _isLoading = false;
+    ApiResponse apiResponse =
+        await productServiceInterface.getPosProductList(offset, id);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      if (offset == 1) {
+        _cartQuantity = [];
+        _posProductModel = ProductModel.fromJson(apiResponse.response!.data);
       } else {
-        _isLoading = false;
-        ApiChecker.checkApi(apiResponse);
+        _posProductModel!.totalSize =
+            ProductModel.fromJson(apiResponse.response!.data).totalSize;
+        _posProductModel!.offset =
+            ProductModel.fromJson(apiResponse.response!.data).offset;
+        _posProductModel!.products!.addAll(
+            ProductModel.fromJson(apiResponse.response!.data).products!);
       }
-      notifyListeners();
-
+      for (int i = 0; i < _posProductModel!.products!.length; i++) {
+        _cartQuantity.add(0);
+      }
+      _isLoading = false;
+    } else {
+      _isLoading = false;
+      ApiChecker.checkApi(apiResponse);
+    }
+    notifyListeners();
   }
 
-  void setCartQuantity(int? quantity, int index){
+  void setCartQuantity(int? quantity, int index) {
     _cartQuantity[index] = quantity;
   }
 
   bool _showDialog = false;
-  bool get showDialog=> _showDialog;
+  bool get showDialog => _showDialog;
 
-  void shoHideDialog(bool showDialog, {bool notify = true}){
+  void shoHideDialog(bool showDialog, {bool notify = true}) {
     _showDialog = showDialog;
-    if(notify){
+    if (notify) {
       notifyListeners();
     }
   }
 
-  Future <void> getSearchedPosProductList(BuildContext context, String search, List<String> ids, {bool filter = false}) async {
-    if(!filter){
+  Future<void> getSearchedPosProductList(
+      BuildContext context, String search, List<String> ids,
+      {bool filter = false}) async {
+    if (!filter) {
       shoHideDialog(true);
     }
 
-      ApiResponse apiResponse = await productServiceInterface.getSearchedPosProductList(search, ids);
-      if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-        _posProductList = [];
-        _posProductList.addAll(ProductModel.fromJson(apiResponse.response!.data).products!);
-
-      } else {
-        ApiChecker.checkApi(apiResponse);
-      }
-      notifyListeners();
+    ApiResponse apiResponse =
+        await productServiceInterface.getSearchedPosProductList(search, ids);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      _posProductList = [];
+      _posProductList
+          .addAll(ProductModel.fromJson(apiResponse.response!.data).products!);
+    } else {
+      ApiChecker.checkApi(apiResponse);
+    }
+    notifyListeners();
   }
 
-  Future<void> getStockOutProductList(int offset, String languageCode, {bool reload = false}) async {
-    if(reload || offset == 1) {
+  Future<void> getStockOutProductList(int offset, String languageCode,
+      {bool reload = false}) async {
+    if (reload || offset == 1) {
       _offset = 1;
       _offsetList = [];
       _isLoading = true;
     }
-    if(reload){
+    if (reload) {
       _stockOutProductList = null;
       notifyListeners();
     }
 
-    if(!_offsetList.contains(offset)) {
+    if (!_offsetList.contains(offset)) {
       _offsetList.add(offset);
-      ApiResponse apiResponse = await productServiceInterface.getStockLimitedProductList(offset,languageCode);
-      if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-        if(_offset == 1) {
+      ApiResponse apiResponse = await productServiceInterface
+          .getStockLimitedProductList(offset, languageCode);
+      if (apiResponse.response != null &&
+          apiResponse.response!.statusCode == 200) {
+        if (_offset == 1) {
           _stockOutProductList = [];
         }
-        _stockOutProductList!.addAll(ProductModel.fromJson(apiResponse.response!.data).products!);
-        _stockOutProductPageSize = ProductModel.fromJson(apiResponse.response!.data).totalSize;
+        _stockOutProductList!.addAll(
+            ProductModel.fromJson(apiResponse.response!.data).products!);
+        _stockOutProductPageSize =
+            ProductModel.fromJson(apiResponse.response!.data).totalSize;
         _isLoading = false;
         _isPaginationLoading = false;
       } else {
         ApiChecker.checkApi(apiResponse);
       }
       notifyListeners();
-    }else{
-      if(_isLoading || _isPaginationLoading) {
+    } else {
+      if (_isLoading || _isPaginationLoading) {
         _isPaginationLoading = false;
         _isLoading = false;
       }
     }
   }
 
-  Future<void> getMostPopularProductList(int offset, BuildContext context, String languageCode, {bool reload = false}) async {
-    if(reload || offset == 1) {
+  Future<void> getMostPopularProductList(
+      int offset, BuildContext context, String languageCode,
+      {bool reload = false}) async {
+    if (reload || offset == 1) {
       _offset = 1;
       _offsetList = [];
     }
-    if(reload){
+    if (reload) {
       _mostPopularProductList = null;
       notifyListeners();
     }
-    if(!_offsetList.contains(offset)){
+    if (!_offsetList.contains(offset)) {
       _offsetList.add(offset);
-      ApiResponse apiResponse = await productServiceInterface.getMostPopularProductList(offset,languageCode);
-      if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-        if(reload || offset == 1){
+      ApiResponse apiResponse = await productServiceInterface
+          .getMostPopularProductList(offset, languageCode);
+      if (apiResponse.response != null &&
+          apiResponse.response!.statusCode == 200) {
+        if (reload || offset == 1) {
           _mostPopularProductList = [];
         }
-        _mostPopularProductList?.addAll(ProductModel.fromJson(apiResponse.response!.data).products!);
+        _mostPopularProductList?.addAll(
+            ProductModel.fromJson(apiResponse.response!.data).products!);
         // _stockOutProductPageSize = ProductModel.fromJson(apiResponse.response!.data).totalSize;
         _isLoading = false;
       } else {
         ApiChecker.checkApi(apiResponse);
       }
       notifyListeners();
-
-    }else{
-      if(_isLoading) {
+    } else {
+      if (_isLoading) {
         _isLoading = false;
       }
     }
-
   }
 
-  Future<void> getTopSellingProductList(int offset, BuildContext context, String languageCode, {bool reload = false}) async {
-    if(reload) {
+  Future<void> getTopSellingProductList(
+      int offset, BuildContext context, String languageCode,
+      {bool reload = false}) async {
+    if (reload) {
       _topSellingProductModel = null;
       notifyListeners();
     }
 
-      ApiResponse apiResponse = await productServiceInterface.getTopSellingProductList(offset,languageCode);
-      if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-        if(offset == 1 ){
-          _topSellingProductModel = TopSellingProductModel.fromJson(apiResponse.response!.data);
-        }else{
-          _topSellingProductModel!.totalSize =  TopSellingProductModel.fromJson(apiResponse.response!.data).totalSize;
-          _topSellingProductModel!.offset =  TopSellingProductModel.fromJson(apiResponse.response!.data).offset;
-          _topSellingProductModel!.products!.addAll(TopSellingProductModel.fromJson(apiResponse.response!.data).products!)  ;
-        }
-        _isLoading = false;
+    ApiResponse apiResponse = await productServiceInterface
+        .getTopSellingProductList(offset, languageCode);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      if (offset == 1) {
+        _topSellingProductModel =
+            TopSellingProductModel.fromJson(apiResponse.response!.data);
       } else {
-        ApiChecker.checkApi(apiResponse);
+        _topSellingProductModel!.totalSize =
+            TopSellingProductModel.fromJson(apiResponse.response!.data)
+                .totalSize;
+        _topSellingProductModel!.offset =
+            TopSellingProductModel.fromJson(apiResponse.response!.data).offset;
+        _topSellingProductModel!.products!.addAll(
+            TopSellingProductModel.fromJson(apiResponse.response!.data)
+                .products!);
       }
-      notifyListeners();
+      _isLoading = false;
+    } else {
+      ApiChecker.checkApi(apiResponse);
+    }
+    notifyListeners();
   }
 
   Future<void> deleteProduct(BuildContext context, int? productID) async {
     _isLoading = true;
     notifyListeners();
-    ApiResponse response = await productServiceInterface.deleteProduct(productID);
-    if(response.response!.statusCode == 200) {
+    ApiResponse response =
+        await productServiceInterface.deleteProduct(productID);
+    if (response.response!.statusCode == 200) {
       Navigator.pop(Get.context!);
-      showCustomSnackBarWidget(getTranslated('product_deleted_successfully', Get.context!),Get.context!, isError: false);
-    }else {
+      showCustomSnackBarWidget(
+          getTranslated('product_deleted_successfully', Get.context!),
+          Get.context!,
+          isError: false);
+    } else {
       ApiChecker.checkApi(response);
     }
     notifyListeners();
   }
 
-
   void setOffset(int offset) {
     _offset = offset;
   }
-
 
   void showBottomLoader() {
     _isPaginationLoading = true;
     notifyListeners();
   }
 
-
   Future<void> getStockLimitStatus(BuildContext context) async {
     ApiResponse response = await productServiceInterface.getStockLimitStatus();
-    if(response.response?.statusCode == 200) {
+    if (response.response?.statusCode == 200) {
       _stockLimitStatus = StockLimitStatus.fromJson(response.response!.data);
-    }else {
+    } else {
       ApiChecker.checkApi(response);
     }
     notifyListeners();
@@ -400,17 +430,15 @@ class ProductController extends ChangeNotifier {
     return productServiceInterface.isShowCookies();
   }
 
-
   Future<void> setShowCookies() {
     _showCookies = false;
     notifyListeners();
     return productServiceInterface.setIsShowCookies();
   }
 
-
-  void setShowCookie(bool isShow,{bool notify = false}) {
+  void setShowCookie(bool isShow, {bool notify = false}) {
     _showCookies = isShow;
-    if(notify){
+    if (notify) {
       notifyListeners();
     }
   }
@@ -419,7 +447,8 @@ class ProductController extends ChangeNotifier {
     return productServiceInterface.removeShowCookies();
   }
 
-  void setDigitalVariationIndex(int? minimumOrderQuantity, int index, int subIndex, BuildContext context) {
+  void setDigitalVariationIndex(int? minimumOrderQuantity, int index,
+      int subIndex, BuildContext context) {
     _quantity = 1;
     _digitalVariationIndex = index;
     _digitalVariationSubindex = subIndex;
@@ -432,64 +461,66 @@ class ProductController extends ChangeNotifier {
     _digitalVariationSubindex = 0;
   }
 
-
   void emptySellerProduct() {
     _sellerProductModel = null;
   }
 
-
-  void setSelectedProductType({ProductTypeEnum? type, bool isUpdate = true}){
+  void setSelectedProductType({ProductTypeEnum? type, bool isUpdate = true}) {
     _selectedProductType = type;
 
-    if(isUpdate){
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
-
-  Future <void> selectDate(DateTime? startDate, DateTime? endDate) async {
+  Future<void> selectDate(DateTime? startDate, DateTime? endDate) async {
     _startDate = startDate;
     _endDate = endDate;
     notifyListeners();
   }
 
-
-  void setPriceRange(double? min, double? max, {bool isUpdate = true}){
-
+  void setPriceRange(double? min, double? max, {bool isUpdate = true}) {
     _minPrice = min;
     _maxPrice = max;
 
     setPriceRangeValidity(isValid: true, isUpdate: isUpdate);
 
-    if(isUpdate){
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
-
-  void toggleBrandSeeMore(){
+  void toggleBrandSeeMore() {
     _brandSeeMore = !_brandSeeMore;
     notifyListeners();
   }
 
-  void toggleCategorySeeMore(){
+  void toggleCategorySeeMore() {
     _categorySeeMore = !_categorySeeMore;
     notifyListeners();
   }
 
-  void onToggleAuthorSeeMore(){
+  void onToggleAuthorSeeMore() {
     _authorSeeMore = !_authorSeeMore;
     notifyListeners();
   }
-  void onTogglePublishingHouseSeeMore(){
+
+  void onTogglePublishingHouseSeeMore() {
     _publishingHouseSeeMore = !_publishingHouseSeeMore;
     notifyListeners();
   }
 
-  void initFilterData(BuildContext context){
+  void initFilterData(BuildContext context) {
     _selectedProductType = _sellerProductModel?.productType;
-    final double systemMaxPrice = PriceConverter.convertAmount(Provider.of<SplashController>(context, listen: false).configModel?.productMaxPriceRange ?? 0, context);
-    setPriceRange(_sellerProductModel?.minPrice, _sellerProductModel?.maxPrice ?? systemMaxPrice, isUpdate: false);
+    final double systemMaxPrice = PriceConverter.convertAmount(
+        Provider.of<SplashController>(context, listen: false)
+                .configModel
+                ?.productMaxPriceRange ??
+            0,
+        context);
+    setPriceRange(_sellerProductModel?.minPrice,
+        _sellerProductModel?.maxPrice ?? systemMaxPrice,
+        isUpdate: false);
 
     // _initBrandCheck();
     _initCategoryCheck();
@@ -498,90 +529,87 @@ class ProductController extends ChangeNotifier {
     _endDate = _sellerProductModel?.endDate;
 
     onClearPublisherIds();
-    _selectedPublishingHouseIds.addAll(_sellerProductModel?.publishHouseIds ?? {});
+    _selectedPublishingHouseIds
+        .addAll(_sellerProductModel?.publishHouseIds ?? {});
 
     onClearAuthorIds();
     _selectedAuthorIds.addAll(_sellerProductModel?.authorIds ?? {});
 
     onClearBrandIds();
     _selectedBrandIds.addAll(_sellerProductModel?.brandIds ?? {});
-
-
   }
 
-
-
   void _initCategoryCheck() {
-    final categoryController = Provider.of<CategoryController>(Get.context!, listen: false);
-    final List<CategoryModel> categoryList = categoryController.categoryList ?? [];
-    final Set<int> categoryIds = Set<int>.from( _sellerProductModel?.categoryIds ?? []);
+    final categoryController =
+        Provider.of<CategoryController>(Get.context!, listen: false);
+    final List<CategoryModel> categoryList =
+        categoryController.categoryList ?? [];
+    final Set<int> categoryIds =
+        Set<int>.from(_sellerProductModel?.categoryIds ?? []);
 
     // Uncheck all categories and check matching categories in a single loop
     for (var category in categoryList) {
-      if (category.checked == true) category.toggleChecked(); // Ensure unchecked
+      if (category.checked == true)
+        category.toggleChecked(); // Ensure unchecked
       if (categoryIds.contains(category.id)) {
         category.toggleChecked(); // Check if ID matches
       }
     }
   }
 
-  void onChangePublisherIds(int id, {bool isUpdate = true}){
-
-    if(_selectedPublishingHouseIds.contains(id)){
+  void onChangePublisherIds(int id, {bool isUpdate = true}) {
+    if (_selectedPublishingHouseIds.contains(id)) {
       _selectedPublishingHouseIds.remove(id);
-
-    }else {
+    } else {
       _selectedPublishingHouseIds.add(id);
     }
 
-    if(isUpdate) {
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
-  void onChangeAuthorIds(int id, {bool isUpdate = true}){
-
-    if(_selectedAuthorIds.contains(id)){
+  void onChangeAuthorIds(int id, {bool isUpdate = true}) {
+    if (_selectedAuthorIds.contains(id)) {
       _selectedAuthorIds.remove(id);
-
-    }else {
+    } else {
       _selectedAuthorIds.add(id);
     }
 
-    if(isUpdate) {
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
-  void onChangeBrandIds(int id, {bool isUpdate = true}){
-
-    if(_selectedBrandIds.contains(id)){
+  void onChangeBrandIds(int id, {bool isUpdate = true}) {
+    if (_selectedBrandIds.contains(id)) {
       _selectedBrandIds.remove(id);
-
-    }else {
+    } else {
       _selectedBrandIds.add(id);
     }
 
-    if(isUpdate) {
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
-  void onClearAuthorIds()=> _selectedAuthorIds.clear();
-  void onClearPublisherIds()=> _selectedPublishingHouseIds.clear();
-  void onClearBrandIds()=> _selectedBrandIds.clear();
+  void onClearAuthorIds() => _selectedAuthorIds.clear();
+  void onClearPublisherIds() => _selectedPublishingHouseIds.clear();
+  void onClearBrandIds() => _selectedBrandIds.clear();
 
-
-  void setPriceRangeValidity({double? minPrice, double? maxPrice, bool isValid = true, bool isUpdate = true}){
-
-    if(!isValid){
+  void setPriceRangeValidity(
+      {double? minPrice,
+      double? maxPrice,
+      bool isValid = true,
+      bool isUpdate = true}) {
+    if (!isValid) {
       _invalidMaxPrice = maxPrice;
       _invalidMinPrice = minPrice;
     }
 
     _isPriceRangeValid = isValid;
 
-    if(isUpdate){
+    if (isUpdate) {
       notifyListeners();
     }
   }
@@ -591,7 +619,8 @@ class ProductController extends ChangeNotifier {
     ApiResponse response = await productServiceInterface.getBrandList(language);
     if (response.response?.statusCode == 200) {
       _brandList = [];
-      response.response!.data.forEach((brand) => _brandList!.add(BrandModel.fromJson(brand)));
+      response.response!.data
+          .forEach((brand) => _brandList!.add(BrandModel.fromJson(brand)));
     } else {
       ApiChecker.checkApi(response);
     }
@@ -599,21 +628,17 @@ class ProductController extends ChangeNotifier {
     notifyListeners();
   }
 
-
   void setBrandIndex(int? index, bool notify) {
     _brandIndex = index;
-    if(notify) {
+    if (notify) {
       notifyListeners();
     }
   }
-
 
   void updateQuantity(bool value, {bool isUpdate = true}) {
     _isUpdateQuantity = value;
-    if(isUpdate){
+    if (isUpdate) {
       notifyListeners();
     }
   }
-
-
 }

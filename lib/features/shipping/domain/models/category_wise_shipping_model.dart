@@ -34,26 +34,25 @@ class AllCategoryShippingCost {
 
   AllCategoryShippingCost(
       {this.id,
-        this.sellerId,
-        this.categoryId,
-        this.cost,
-        this.multiplyQty,
-        this.createdAt,
-        this.updatedAt,
-        this.category});
+      this.sellerId,
+      this.categoryId,
+      this.cost,
+      this.multiplyQty,
+      this.createdAt,
+      this.updatedAt,
+      this.category});
 
   AllCategoryShippingCost.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     sellerId = json['seller_id'];
     categoryId = json['category_id'];
     cost = json['cost'].toDouble();
-    multiplyQty = json['multiply_qty']??false;
+    multiplyQty = json['multiply_qty'] ?? false;
 
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    category = json['category'] != null
-        ? Category.fromJson(json['category'])
-        : null;
+    category =
+        json['category'] != null ? Category.fromJson(json['category']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -84,26 +83,25 @@ class Category {
   int? homeStatus;
   int? priority;
 
-
-  Category(
-      {this.id,
-        this.name,
-        this.slug,
-        this.icon,
-        this.parentId,
-        this.position,
-        this.createdAt,
-        this.updatedAt,
-        this.homeStatus,
-        this.priority,
-        });
+  Category({
+    this.id,
+    this.name,
+    this.slug,
+    this.icon,
+    this.parentId,
+    this.position,
+    this.createdAt,
+    this.updatedAt,
+    this.homeStatus,
+    this.priority,
+  });
 
   Category.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
-    if(json['name']!=null){
+    if (json['name'] != null) {
       name = json['name'];
-    }else{
+    } else {
       name = '';
     }
     slug = json['slug'];
@@ -114,7 +112,6 @@ class Category {
     updatedAt = json['updated_at'];
     homeStatus = json['home_status'];
     priority = json['priority'];
-
   }
 
   Map<String, dynamic> toJson() {

@@ -6,16 +6,17 @@ import 'package:sixvalley_vendor_app/data/model/response/base/api_response.dart'
 import 'package:sixvalley_vendor_app/features/product/domain/repositories/category_repository_interface.dart';
 import 'package:sixvalley_vendor_app/utill/app_constants.dart';
 
-
-class CategoryRepository implements CategoryRepositoryInterface{
+class CategoryRepository implements CategoryRepositoryInterface {
   final DioClient? dioClient;
   final SharedPreferences? sharedPreferences;
-  CategoryRepository({required this.sharedPreferences, required this.dioClient});
+  CategoryRepository(
+      {required this.sharedPreferences, required this.dioClient});
 
   @override
   Future<ApiResponse> getCategoryList(String languageCode) async {
     try {
-      final response = await dioClient!.get(AppConstants.categoryUri,
+      final response = await dioClient!.get(
+        AppConstants.categoryUri,
         options: Options(headers: {AppConstants.langKey: languageCode}),
       );
       return ApiResponse.withSuccess(response);
@@ -53,6 +54,4 @@ class CategoryRepository implements CategoryRepositoryInterface{
     // TODO: implement update
     throw UnimplementedError();
   }
-
 }
-

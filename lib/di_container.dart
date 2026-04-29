@@ -152,12 +152,12 @@ import 'features/review/domain/repositories/product_review_repository.dart';
 import 'package:sixvalley_vendor_app/common/controller/tutorial_controller.dart';
 import 'common/controller/show_bottom_sheet_controller.dart';
 
-
 final sl = GetIt.instance;
 
 Future<void> init() async {
   // Core
-  sl.registerLazySingleton(() => DioClient(AppConstants.baseUrl, sl(), loggingInterceptor: sl(), sharedPreferences: sl()));
+  sl.registerLazySingleton(() => DioClient(AppConstants.baseUrl, sl(),
+      loggingInterceptor: sl(), sharedPreferences: sl()));
 
   // External
   final sharedPreferences = await SharedPreferences.getInstance();
@@ -166,170 +166,238 @@ Future<void> init() async {
   sl.registerLazySingleton(() => LoggingInterceptor());
 
   //interface
-  AuthRepositoryInterface authRepoInterface = AuthRepository(dioClient: sl(), sharedPreferences: sl());
+  AuthRepositoryInterface authRepoInterface =
+      AuthRepository(dioClient: sl(), sharedPreferences: sl());
   sl.registerLazySingleton(() => authRepoInterface);
-  BankInfoRepositoryInterface bankInfoRepoInterface = BankInfoRepository(dioClient: sl(), sharedPreferences: sl());
+  BankInfoRepositoryInterface bankInfoRepoInterface =
+      BankInfoRepository(dioClient: sl(), sharedPreferences: sl());
   sl.registerLazySingleton(() => bankInfoRepoInterface);
   ChatRepositoryInterface chatRepoInterface = ChatRepository(dioClient: sl());
   sl.registerLazySingleton(() => chatRepoInterface);
-  CouponRepositoryInterface couponRepoInterface = CouponRepository(dioClient: sl(), sharedPreferences: sl());
+  CouponRepositoryInterface couponRepoInterface =
+      CouponRepository(dioClient: sl(), sharedPreferences: sl());
   sl.registerLazySingleton(() => couponRepoInterface);
-  DeliveryManRepositoryInterface deliveryManRepoInterface = DeliveryManRepository(dioClient: sl());
+  DeliveryManRepositoryInterface deliveryManRepoInterface =
+      DeliveryManRepository(dioClient: sl());
   sl.registerLazySingleton(() => deliveryManRepoInterface);
-  EmergencyContractRepositoryInterface emergencyContractRepoInterface = EmergencyContactRepository(dioClient: sl());
+  EmergencyContractRepositoryInterface emergencyContractRepoInterface =
+      EmergencyContactRepository(dioClient: sl());
   sl.registerLazySingleton(() => emergencyContractRepoInterface);
-  OrderRepositoryInterface orderRepoInterface = OrderRepository(dioClient: sl());
+  OrderRepositoryInterface orderRepoInterface =
+      OrderRepository(dioClient: sl());
   sl.registerLazySingleton(() => orderRepoInterface);
-  ProductRepositoryInterface productRepoInterface = ProductRepository(dioClient: sl(), sharedPreferences: sl());
+  ProductRepositoryInterface productRepoInterface =
+      ProductRepository(dioClient: sl(), sharedPreferences: sl());
   sl.registerLazySingleton(() => productRepoInterface);
-  ProfileRepositoryInterface profileRepoInterface = ProfileRepository(dioClient: sl(), sharedPreferences: sl());
+  ProfileRepositoryInterface profileRepoInterface =
+      ProfileRepository(dioClient: sl(), sharedPreferences: sl());
   sl.registerLazySingleton(() => profileRepoInterface);
-  RefundRepositoryInterface refundRepoInterface = RefundRepository(dioClient: sl());
+  RefundRepositoryInterface refundRepoInterface =
+      RefundRepository(dioClient: sl());
   sl.registerLazySingleton(() => refundRepoInterface);
-  ProductReviewRepositoryInterface productReviewRepoInterface = ProductReviewRepository(dioClient: sl());
+  ProductReviewRepositoryInterface productReviewRepoInterface =
+      ProductReviewRepository(dioClient: sl());
   sl.registerLazySingleton(() => productReviewRepoInterface);
   BusinessRepositoryInterface businessRepoInterface = BusinessRepository();
   sl.registerLazySingleton(() => businessRepoInterface);
-  ShippingRepositoryInterface shippingRepoInterface = ShippingRepository(dioClient: sl());
+  ShippingRepositoryInterface shippingRepoInterface =
+      ShippingRepository(dioClient: sl());
   sl.registerLazySingleton(() => shippingRepoInterface);
-  AddProductRepositoryInterface addProductRepositoryInterface = AddProductRepository(dioClient: sl());
+  AddProductRepositoryInterface addProductRepositoryInterface =
+      AddProductRepository(dioClient: sl());
   sl.registerLazySingleton(() => addProductRepositoryInterface);
-  SplashRepositoryInterface splashRepoInterface = SplashRepository(dioClient: sl(), sharedPreferences: sl());
+  SplashRepositoryInterface splashRepoInterface =
+      SplashRepository(dioClient: sl(), sharedPreferences: sl());
   sl.registerLazySingleton(() => splashRepoInterface);
-  TransactionRepositoryInterface transactionRepoInterface = TransactionRepository(dioClient: sl());
+  TransactionRepositoryInterface transactionRepoInterface =
+      TransactionRepository(dioClient: sl());
   sl.registerLazySingleton(() => transactionRepoInterface);
-  NotificationRepositoryInterface notificationRepoInterface = NotificationRepository(dioClient: sl());
+  NotificationRepositoryInterface notificationRepoInterface =
+      NotificationRepository(dioClient: sl());
   sl.registerLazySingleton(() => notificationRepoInterface);
-  WalletRepositoryInterface walletRepoInterface = WalletRepository(dioClient: sl());
+  WalletRepositoryInterface walletRepoInterface =
+      WalletRepository(dioClient: sl());
   sl.registerLazySingleton(() => walletRepoInterface);
-  LocationRepositoryInterface locationRepositoryInterface = LocationRepository(dioClient: sl());
+  LocationRepositoryInterface locationRepositoryInterface =
+      LocationRepository(dioClient: sl());
   sl.registerLazySingleton(() => locationRepositoryInterface);
-  CartRepositoryInterface cartRepositoryInterface = CartRepository(dioClient: sl(), sharedPreferences: sl());
+  CartRepositoryInterface cartRepositoryInterface =
+      CartRepository(dioClient: sl(), sharedPreferences: sl());
   sl.registerLazySingleton(() => cartRepositoryInterface);
-  ShopRepositoryInterface shopRepositoryInterface = ShopRepository(dioClient: sl(), sharedPreferences: sl());
+  ShopRepositoryInterface shopRepositoryInterface =
+      ShopRepository(dioClient: sl(), sharedPreferences: sl());
   sl.registerLazySingleton(() => shopRepositoryInterface);
-  OrderDetailsRepositoryInterface orderDetailsRepositoryInterface = OrderDetailsRepository(dioClient: sl());
+  OrderDetailsRepositoryInterface orderDetailsRepositoryInterface =
+      OrderDetailsRepository(dioClient: sl());
   sl.registerLazySingleton(() => orderDetailsRepositoryInterface);
-  ProductDetailsRepositoryInterface productDetailsRepositoryInterface = ProductDetailsRepository(dioClient: sl());
+  ProductDetailsRepositoryInterface productDetailsRepositoryInterface =
+      ProductDetailsRepository(dioClient: sl());
   sl.registerLazySingleton(() => productDetailsRepositoryInterface);
-  BarcodeRepositoryInterface barcodeRepositoryInterface = BarcodeRepository(dioClient: sl());
+  BarcodeRepositoryInterface barcodeRepositoryInterface =
+      BarcodeRepository(dioClient: sl());
   sl.registerLazySingleton(() => barcodeRepositoryInterface);
-  RestockRepositoryInterface restockRepositoryInterface = RestockRepository(dioClient: sl());
+  RestockRepositoryInterface restockRepositoryInterface =
+      RestockRepository(dioClient: sl());
   sl.registerLazySingleton(() => restockRepositoryInterface);
-  ClearanceSaleRepositoryInterface clearanceSaleRepositoryInterface = ClearanceSaleRepository(dioClient: sl());
+  ClearanceSaleRepositoryInterface clearanceSaleRepositoryInterface =
+      ClearanceSaleRepository(dioClient: sl());
   sl.registerLazySingleton(() => clearanceSaleRepositoryInterface);
 
-  CategoryRepositoryInterface categoryRepositoryInterface = CategoryRepository(dioClient: sl(), sharedPreferences: sl());
+  CategoryRepositoryInterface categoryRepositoryInterface =
+      CategoryRepository(dioClient: sl(), sharedPreferences: sl());
   sl.registerLazySingleton(() => categoryRepositoryInterface);
 
-
-  AuthServiceInterface authServiceInterface = AuthService(authRepoInterface: sl());
+  AuthServiceInterface authServiceInterface =
+      AuthService(authRepoInterface: sl());
   sl.registerLazySingleton(() => authServiceInterface);
-  BankInfoServiceInterface bankInfoServiceInterface = BankInfoService(bankInfoRepoInterface: sl());
+  BankInfoServiceInterface bankInfoServiceInterface =
+      BankInfoService(bankInfoRepoInterface: sl());
   sl.registerLazySingleton(() => bankInfoServiceInterface);
-  ChatServiceInterface chatServiceInterface = ChatService(chatRepoInterface: sl());
+  ChatServiceInterface chatServiceInterface =
+      ChatService(chatRepoInterface: sl());
   sl.registerLazySingleton(() => chatServiceInterface);
-  CouponServiceInterface couponServiceInterface = CouponService(couponRepoInterface: sl());
+  CouponServiceInterface couponServiceInterface =
+      CouponService(couponRepoInterface: sl());
   sl.registerLazySingleton(() => couponServiceInterface);
-  DeliveryServiceInterface deliveryServiceInterface = DeliveryService(deliveryManRepoInterface: sl());
+  DeliveryServiceInterface deliveryServiceInterface =
+      DeliveryService(deliveryManRepoInterface: sl());
   sl.registerLazySingleton(() => deliveryServiceInterface);
-  EmergencyServiceInterface emergencyServiceInterface = EmergencyService(emergencyContractRepoInterface: sl());
+  EmergencyServiceInterface emergencyServiceInterface =
+      EmergencyService(emergencyContractRepoInterface: sl());
   sl.registerLazySingleton(() => emergencyServiceInterface);
-  OrderServiceInterface orderServiceInterface = OrderService(orderRepoInterface: sl());
+  OrderServiceInterface orderServiceInterface =
+      OrderService(orderRepoInterface: sl());
   sl.registerLazySingleton(() => orderServiceInterface);
-  ProductServiceInterface productServiceInterface = ProductService(productRepoInterface: sl());
+  ProductServiceInterface productServiceInterface =
+      ProductService(productRepoInterface: sl());
   sl.registerLazySingleton(() => productServiceInterface);
-  ProfileServiceInterface profileServiceInterface = ProfileService(profileRepoInterface: sl());
+  ProfileServiceInterface profileServiceInterface =
+      ProfileService(profileRepoInterface: sl());
   sl.registerLazySingleton(() => profileServiceInterface);
-  RefundServiceInterface refundServiceInterface = RefundService(refundRepoInterface: sl());
+  RefundServiceInterface refundServiceInterface =
+      RefundService(refundRepoInterface: sl());
   sl.registerLazySingleton(() => refundServiceInterface);
-  ReviewServiceInterface reviewServiceInterface = ReviewService(productReviewRepoInterface: sl());
+  ReviewServiceInterface reviewServiceInterface =
+      ReviewService(productReviewRepoInterface: sl());
   sl.registerLazySingleton(() => reviewServiceInterface);
-  BusinessServiceInterface businessServiceInterface = BusinessService(businessRepoInterface: sl());
+  BusinessServiceInterface businessServiceInterface =
+      BusinessService(businessRepoInterface: sl());
   sl.registerLazySingleton(() => businessServiceInterface);
-  ShippingServiceInterface shippingServiceInterface = ShippingService(shippingRepoInterface: sl());
+  ShippingServiceInterface shippingServiceInterface =
+      ShippingService(shippingRepoInterface: sl());
   sl.registerLazySingleton(() => shippingServiceInterface);
-  AddProductServiceInterface addProductServiceInterface = AddProductService(shopRepoInterface: sl());
+  AddProductServiceInterface addProductServiceInterface =
+      AddProductService(shopRepoInterface: sl());
   sl.registerLazySingleton(() => addProductServiceInterface);
-  SplashServiceInterface splashServiceInterface = SplashService(splashRepoInterface: sl());
+  SplashServiceInterface splashServiceInterface =
+      SplashService(splashRepoInterface: sl());
   sl.registerLazySingleton(() => splashServiceInterface);
-  TransactionServiceInterface transactionServiceInterface = TransactionService(transactionRepoInterface: sl());
+  TransactionServiceInterface transactionServiceInterface =
+      TransactionService(transactionRepoInterface: sl());
   sl.registerLazySingleton(() => transactionServiceInterface);
-  NotificationServiceInterface notificationServiceInterface = NotificationService(notificationRepoInterface: sl());
+  NotificationServiceInterface notificationServiceInterface =
+      NotificationService(notificationRepoInterface: sl());
   sl.registerLazySingleton(() => notificationServiceInterface);
-  WalletServiceInterface walletServiceInterface = WalletService(walletRepoInterface: sl());
+  WalletServiceInterface walletServiceInterface =
+      WalletService(walletRepoInterface: sl());
   sl.registerLazySingleton(() => walletServiceInterface);
-  LocationServiceInterface locationServiceInterface = LocationService(locationRepositoryInterface: sl());
+  LocationServiceInterface locationServiceInterface =
+      LocationService(locationRepositoryInterface: sl());
   sl.registerLazySingleton(() => locationServiceInterface);
-  CartServiceInterface cartServiceInterface = CartService(cartRepositoryInterface: sl());
+  CartServiceInterface cartServiceInterface =
+      CartService(cartRepositoryInterface: sl());
   sl.registerLazySingleton(() => cartServiceInterface);
-  ShopServiceInterface shopServiceInterface = ShopService(shopRepositoryInterface: sl());
+  ShopServiceInterface shopServiceInterface =
+      ShopService(shopRepositoryInterface: sl());
   sl.registerLazySingleton(() => shopServiceInterface);
-  OrderDetailsServiceInterface orderDetailsServiceInterface = OrderDetailsService(orderDetailsRepositoryInterface: sl());
+  OrderDetailsServiceInterface orderDetailsServiceInterface =
+      OrderDetailsService(orderDetailsRepositoryInterface: sl());
   sl.registerLazySingleton(() => orderDetailsServiceInterface);
-  ProductDetailsServiceInterface productDetailsServiceInterface = ProductDetailsService(productDetailsRepositoryInterface: sl());
+  ProductDetailsServiceInterface productDetailsServiceInterface =
+      ProductDetailsService(productDetailsRepositoryInterface: sl());
   sl.registerLazySingleton(() => productDetailsServiceInterface);
-  BarcodeServiceInterface barcodeServiceInterface = BarcodeService(barcodeRepositoryInterface: sl());
+  BarcodeServiceInterface barcodeServiceInterface =
+      BarcodeService(barcodeRepositoryInterface: sl());
   sl.registerLazySingleton(() => barcodeServiceInterface);
-  RestockServiceInterface restockServiceInterface = RestockService(restockRepositoryInterface: sl());
+  RestockServiceInterface restockServiceInterface =
+      RestockService(restockRepositoryInterface: sl());
   sl.registerLazySingleton(() => restockServiceInterface);
-  ClearanceSaleServiceInterface clearanceSaleServiceInterface = ClearanceSaleService(clearanceSaleRepositoryInterface: sl());
+  ClearanceSaleServiceInterface clearanceSaleServiceInterface =
+      ClearanceSaleService(clearanceSaleRepositoryInterface: sl());
   sl.registerLazySingleton(() => clearanceSaleServiceInterface);
-  CategoryServiceInterface categoryServiceInterface = CategoryService(categoryRepositoryInterface: sl());
+  CategoryServiceInterface categoryServiceInterface =
+      CategoryService(categoryRepositoryInterface: sl());
   sl.registerLazySingleton(() => categoryServiceInterface);
-
-
 
   //services
   sl.registerLazySingleton(() => AuthService(authRepoInterface: sl()));
   sl.registerLazySingleton(() => BankInfoService(bankInfoRepoInterface: sl()));
   sl.registerLazySingleton(() => ChatService(chatRepoInterface: sl()));
   sl.registerLazySingleton(() => CouponService(couponRepoInterface: sl()));
-  sl.registerLazySingleton(() => DeliveryService(deliveryManRepoInterface: sl()));
-  sl.registerLazySingleton(() => EmergencyService(emergencyContractRepoInterface: sl()));
+  sl.registerLazySingleton(
+      () => DeliveryService(deliveryManRepoInterface: sl()));
+  sl.registerLazySingleton(
+      () => EmergencyService(emergencyContractRepoInterface: sl()));
   sl.registerLazySingleton(() => OrderService(orderRepoInterface: sl()));
   sl.registerLazySingleton(() => ProductService(productRepoInterface: sl()));
   sl.registerLazySingleton(() => ProfileService(profileRepoInterface: sl()));
   sl.registerLazySingleton(() => RefundService(refundRepoInterface: sl()));
-  sl.registerLazySingleton(() => ReviewService(productReviewRepoInterface: sl()));
+  sl.registerLazySingleton(
+      () => ReviewService(productReviewRepoInterface: sl()));
   sl.registerLazySingleton(() => BusinessService(businessRepoInterface: sl()));
   sl.registerLazySingleton(() => ShippingService(shippingRepoInterface: sl()));
   sl.registerLazySingleton(() => AddProductService(shopRepoInterface: sl()));
   sl.registerLazySingleton(() => SplashService(splashRepoInterface: sl()));
-  sl.registerLazySingleton(() => TransactionService(transactionRepoInterface: sl()));
-  sl.registerLazySingleton(() => NotificationService(notificationRepoInterface: sl()));
+  sl.registerLazySingleton(
+      () => TransactionService(transactionRepoInterface: sl()));
+  sl.registerLazySingleton(
+      () => NotificationService(notificationRepoInterface: sl()));
   sl.registerLazySingleton(() => WalletService(walletRepoInterface: sl()));
-  sl.registerLazySingleton(() => LocationService(locationRepositoryInterface: sl()));
+  sl.registerLazySingleton(
+      () => LocationService(locationRepositoryInterface: sl()));
   sl.registerLazySingleton(() => CartService(cartRepositoryInterface: sl()));
   sl.registerLazySingleton(() => ShopService(shopRepositoryInterface: sl()));
-  sl.registerLazySingleton(() => OrderDetailsService(orderDetailsRepositoryInterface: sl()));
-  sl.registerLazySingleton(() => ProductDetailsService(productDetailsRepositoryInterface: sl()));
-  sl.registerLazySingleton(() => BarcodeService(barcodeRepositoryInterface: sl()));
-  sl.registerLazySingleton(() => RestockService(restockRepositoryInterface : sl()));
-  sl.registerLazySingleton(() => ClearanceSaleService(clearanceSaleRepositoryInterface : sl()));
-  sl.registerLazySingleton(() => CategoryService(categoryRepositoryInterface : sl()));
-
+  sl.registerLazySingleton(
+      () => OrderDetailsService(orderDetailsRepositoryInterface: sl()));
+  sl.registerLazySingleton(
+      () => ProductDetailsService(productDetailsRepositoryInterface: sl()));
+  sl.registerLazySingleton(
+      () => BarcodeService(barcodeRepositoryInterface: sl()));
+  sl.registerLazySingleton(
+      () => RestockService(restockRepositoryInterface: sl()));
+  sl.registerLazySingleton(
+      () => ClearanceSaleService(clearanceSaleRepositoryInterface: sl()));
+  sl.registerLazySingleton(
+      () => CategoryService(categoryRepositoryInterface: sl()));
 
   // Repository
-  sl.registerLazySingleton(() => AuthRepository(sharedPreferences: sl(), dioClient: sl()));
-  sl.registerLazySingleton(() => SplashRepository(sharedPreferences: sl(), dioClient: sl()));
-  sl.registerLazySingleton(() => ProfileRepository(dioClient: sl(), sharedPreferences: sl()));
-  sl.registerLazySingleton(() => ShopRepository(dioClient: sl(), sharedPreferences: sl()));
+  sl.registerLazySingleton(
+      () => AuthRepository(sharedPreferences: sl(), dioClient: sl()));
+  sl.registerLazySingleton(
+      () => SplashRepository(sharedPreferences: sl(), dioClient: sl()));
+  sl.registerLazySingleton(
+      () => ProfileRepository(dioClient: sl(), sharedPreferences: sl()));
+  sl.registerLazySingleton(
+      () => ShopRepository(dioClient: sl(), sharedPreferences: sl()));
   sl.registerLazySingleton(() => OrderRepository(dioClient: sl()));
-  sl.registerLazySingleton(() => BankInfoRepository(dioClient: sl(), sharedPreferences: sl()));
+  sl.registerLazySingleton(
+      () => BankInfoRepository(dioClient: sl(), sharedPreferences: sl()));
   sl.registerLazySingleton(() => ChatRepository(dioClient: sl()));
   sl.registerLazySingleton(() => BusinessRepository());
   sl.registerLazySingleton(() => TransactionRepository(dioClient: sl()));
   sl.registerLazySingleton(() => AddProductRepository(dioClient: sl()));
-  sl.registerLazySingleton(() => ProductRepository(dioClient: sl(), sharedPreferences: sl()));
+  sl.registerLazySingleton(
+      () => ProductRepository(dioClient: sl(), sharedPreferences: sl()));
   sl.registerLazySingleton(() => ProductReviewRepository(dioClient: sl()));
   sl.registerLazySingleton(() => ShippingRepository(dioClient: sl()));
   sl.registerLazySingleton(() => DeliveryManRepository(dioClient: sl()));
   sl.registerLazySingleton(() => RefundRepository(dioClient: sl()));
-  sl.registerLazySingleton(() => CartRepository(dioClient: sl(),sharedPreferences: sl()));
+  sl.registerLazySingleton(
+      () => CartRepository(dioClient: sl(), sharedPreferences: sl()));
   sl.registerLazySingleton(() => EmergencyContactRepository(dioClient: sl()));
   sl.registerLazySingleton(() => LocationRepository(dioClient: sl()));
-  sl.registerLazySingleton(() => CouponRepository(dioClient: sl(), sharedPreferences: sl()));
+  sl.registerLazySingleton(
+      () => CouponRepository(dioClient: sl(), sharedPreferences: sl()));
   sl.registerLazySingleton(() => NotificationRepository(dioClient: sl()));
   sl.registerLazySingleton(() => WalletRepository(dioClient: sl()));
   sl.registerLazySingleton(() => OrderDetailsRepository(dioClient: sl()));
@@ -337,29 +405,37 @@ Future<void> init() async {
   sl.registerLazySingleton(() => BarcodeRepository(dioClient: sl()));
   sl.registerLazySingleton(() => RestockRepository(dioClient: sl()));
   sl.registerLazySingleton(() => ClearanceSaleRepository(dioClient: sl()));
-  sl.registerLazySingleton(() => CategoryRepository(dioClient: sl(), sharedPreferences: sl()));
+  sl.registerLazySingleton(
+      () => CategoryRepository(dioClient: sl(), sharedPreferences: sl()));
 
   // Controller
   sl.registerFactory(() => AuthController(authServiceInterface: sl()));
   sl.registerFactory(() => BankInfoController(bankInfoServiceInterface: sl()));
   sl.registerFactory(() => ChatController(chatServiceInterface: sl()));
   sl.registerFactory(() => CouponController(couponServiceInterface: sl()));
-  sl.registerFactory(() => DeliveryManController(deliveryServiceInterface: sl()));
-  sl.registerFactory(() => EmergencyContactController(emergencyServiceInterface: sl()));
+  sl.registerFactory(
+      () => DeliveryManController(deliveryServiceInterface: sl()));
+  sl.registerFactory(
+      () => EmergencyContactController(emergencyServiceInterface: sl()));
   sl.registerFactory(() => OrderController(orderServiceInterface: sl()));
   sl.registerFactory(() => ProductController(productServiceInterface: sl()));
   sl.registerFactory(() => ProfileController(profileServiceInterface: sl()));
   sl.registerFactory(() => RefundController(refundServiceInterface: sl()));
-  sl.registerFactory(() => ProductReviewController(reviewServiceInterface: sl()));
+  sl.registerFactory(
+      () => ProductReviewController(reviewServiceInterface: sl()));
   sl.registerFactory(() => BusinessController(businessServiceInterface: sl()));
   sl.registerFactory(() => ShippingController(shippingServiceInterface: sl()));
   sl.registerFactory(() => AddProductController(shopServiceInterface: sl()));
   sl.registerFactory(() => SplashController(serviceInterface: sl()));
-  sl.registerFactory(() => TransactionController(transactionServiceInterface: sl()));
-  sl.registerFactory(() => NotificationController(notificationServiceInterface: sl()));
+  sl.registerFactory(
+      () => TransactionController(transactionServiceInterface: sl()));
+  sl.registerFactory(
+      () => NotificationController(notificationServiceInterface: sl()));
   sl.registerFactory(() => WalletController(walletServiceInterface: sl()));
-  sl.registerFactory(() => OrderDetailsController(orderDetailsServiceInterface: sl()));
-  sl.registerFactory(() => ProductDetailsController(productDetailsServiceInterface: sl()));
+  sl.registerFactory(
+      () => OrderDetailsController(orderDetailsServiceInterface: sl()));
+  sl.registerFactory(
+      () => ProductDetailsController(productDetailsServiceInterface: sl()));
   sl.registerFactory(() => ThemeController(sharedPreferences: sl()));
   sl.registerFactory(() => LocalizationController(sharedPreferences: sl()));
   sl.registerFactory(() => LanguageController());
@@ -372,14 +448,16 @@ Future<void> init() async {
   sl.registerFactory(() => ClearanceSaleController(chatServiceInterface: sl()));
 
   sl.registerFactory(() => CustomerController(cartServiceInterface: sl()));
-  sl.registerFactory(() => CouponDiscountController(cartServiceInterface: sl()));
+  sl.registerFactory(
+      () => CouponDiscountController(cartServiceInterface: sl()));
   sl.registerFactory(() => BarcodeScanController(cartServiceInterface: sl()));
   sl.registerFactory(() => ShowBottomSheetController());
   sl.registerFactory(() => TutorialController());
-  sl.registerFactory(() => AddProductImageController(shopServiceInterface: sl()));
-  sl.registerFactory(() => VariationController(addProductServiceInterface: sl()));
-  sl.registerFactory(() => DigitalProductController(addProductServiceInterface: sl()));
+  sl.registerFactory(
+      () => AddProductImageController(shopServiceInterface: sl()));
+  sl.registerFactory(
+      () => VariationController(addProductServiceInterface: sl()));
+  sl.registerFactory(
+      () => DigitalProductController(addProductServiceInterface: sl()));
   sl.registerFactory(() => CategoryController(categoryServiceInterface: sl()));
-
 }
-

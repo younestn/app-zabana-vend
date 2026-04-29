@@ -5,7 +5,8 @@ abstract class AuthServiceInterface {
   Future<dynamic> login({String? emailAddress, String? password});
   Future<dynamic> setLanguageCode(String languageCode);
   Future<dynamic> forgotPassword(String identity);
-  Future<dynamic> resetPassword(String identity, String otp ,String password, String confirmPassword);
+  Future<dynamic> resetPassword(
+      String identity, String otp, String password, String confirmPassword);
   Future<dynamic> verifyOtp(String identity, String otp);
   Future<dynamic> updateToken();
   Future<void> saveUserToken(String token);
@@ -16,5 +17,11 @@ abstract class AuthServiceInterface {
   String getUserEmail();
   String getUserPassword();
   Future<dynamic> clearUserNumberAndPassword();
-  Future<dynamic> registration(XFile? profileImage, XFile? shopLogo, XFile? shopBanner, XFile? secondaryBanner, RegisterModel registerModel, XFile? tinCertificate);
+  Future<dynamic> registration(
+      XFile? profileImage,
+      XFile? shopLogo,
+      XFile? shopBanner,
+      XFile? secondaryBanner,
+      RegisterModel registerModel,
+      XFile? tinCertificate);
 }

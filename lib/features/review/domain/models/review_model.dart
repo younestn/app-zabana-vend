@@ -20,51 +20,52 @@ class ReviewModel {
 
   ReviewModel(
       {this.id,
-        this.productId,
-        this.customerId,
-        this.orderId,
-        this.comment,
-        this.attachment,
-        this.rating,
-        this.status,
-        this.createdAt,
-        this.updatedAt,
-        this.customer,
-        this.reply,
-        this.attachmentFullUrl,
-        this.isSaved});
+      this.productId,
+      this.customerId,
+      this.orderId,
+      this.comment,
+      this.attachment,
+      this.rating,
+      this.status,
+      this.createdAt,
+      this.updatedAt,
+      this.customer,
+      this.reply,
+      this.attachmentFullUrl,
+      this.isSaved});
 
   ReviewModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     productId = json['product_id'];
     customerId = json['customer_id'];
-    if(json['order_id'] != null){
+    if (json['order_id'] != null) {
       orderId = json['order_id'];
     }
     comment = json['comment'];
-    if(json['attachment'] != null){
-      try{
+    if (json['attachment'] != null) {
+      try {
         // attachment = json['attachment'].cast<String>();
-      }catch(e){
+      } catch (e) {
         // attachment = jsonDecode(json['attachment']).cast<String>();
       }
-
     }
 
     rating = json['rating'].toDouble();
     status = json['status'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    product = json['product'] != null ? Product.fromJson(json['product']) : null;
-    customer = json['customer'] != null ?  Customer.fromJson(json['customer']) : null;
-    reply = json['reply'] != null ?  Reply.fromJson(json['reply']) : null;
+    product =
+        json['product'] != null ? Product.fromJson(json['product']) : null;
+    customer =
+        json['customer'] != null ? Customer.fromJson(json['customer']) : null;
+    reply = json['reply'] != null ? Reply.fromJson(json['reply']) : null;
     if (json['attachment_full_url'] != null) {
       attachmentFullUrl = <ImageFullUrl>[];
       json['attachment_full_url'].forEach((v) {
         attachmentFullUrl!.add(ImageFullUrl.fromJson(v));
       });
     }
-    isSaved = json['is_saved']??false;
+    isSaved = json['is_saved'] ?? false;
   }
 
   Map<String, dynamic> toJson() {
@@ -175,11 +176,11 @@ class Reply {
 
   Reply(
       {this.id,
-        this.reviewId,
-        this.addedBy,
-        this.replyText,
-        this.createdAt,
-        this.updatedAt});
+      this.reviewId,
+      this.addedBy,
+      this.replyText,
+      this.createdAt,
+      this.updatedAt});
 
   Reply.fromJson(Map<String, dynamic> json) {
     id = json['id'];

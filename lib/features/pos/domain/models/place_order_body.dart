@@ -12,23 +12,18 @@ class PlaceOrderBody {
   String? _paymentMethod;
   double? _paidAmount;
 
-
-
-
-  PlaceOrderBody(
-      {required List<Cart> cart,
-        double? couponDiscountAmount,
-        String? couponCode,
-        double? couponAmount,
-        double? orderAmount,
-        int? userId,
-        double? extraDiscount,
-        String? extraDiscountType,
-        String? paymentMethod,
-        double? paidAmount,
-
-
-       }) {
+  PlaceOrderBody({
+    required List<Cart> cart,
+    double? couponDiscountAmount,
+    String? couponCode,
+    double? couponAmount,
+    double? orderAmount,
+    int? userId,
+    double? extraDiscount,
+    String? extraDiscountType,
+    String? paymentMethod,
+    double? paidAmount,
+  }) {
     _cart = cart;
     _couponDiscountAmount = couponDiscountAmount;
     _couponCode = couponCode;
@@ -39,7 +34,6 @@ class PlaceOrderBody {
     _extraDiscountType = extraDiscountType;
     _paymentMethod = paymentMethod;
     _paidAmount = paidAmount;
-
   }
 
   List<Cart>? get cart => _cart;
@@ -52,7 +46,6 @@ class PlaceOrderBody {
   String? get extraDiscountType => _extraDiscountType;
   String? get paymentMethod => _paymentMethod;
   double? get paidAmount => _paidAmount;
-
 
   PlaceOrderBody.fromJson(Map<String, dynamic> json) {
     if (json['cart'] != null) {
@@ -67,9 +60,9 @@ class PlaceOrderBody {
     _orderAmount = json['order_amount'];
     _userId = json['customer_id'];
     _extraDiscount = json['extra_discount'];
-    _extraDiscountType = json ['extra_discount_type'];
-    _paymentMethod = json ['payment_method'];
-    _paidAmount = json ['paid_amount'];
+    _extraDiscountType = json['extra_discount_type'];
+    _paymentMethod = json['payment_method'];
+    _paidAmount = json['paid_amount'];
   }
 
   Map<String, dynamic> toJson() {
@@ -101,9 +94,6 @@ class Cart {
   double? _digitalVariationPrice;
   List<Variation?>? _variation;
 
-
-
-
   Cart(
       String productId,
       String price,
@@ -112,8 +102,7 @@ class Cart {
       String? variant,
       String? variantKey,
       double? digitalVariationPrice,
-      List<Variation?> variation
-      ) {
+      List<Variation?> variation) {
     _productId = productId;
     _price = price;
     _discountAmount = discountAmount;
@@ -132,8 +121,6 @@ class Cart {
   double? get digitalVariationPrice => _digitalVariationPrice;
   List<Variation?>? get variation => _variation;
 
-
-
   Cart.fromJson(Map<String, dynamic> json) {
     _productId = json['id'];
     _price = json['price'];
@@ -148,7 +135,6 @@ class Cart {
         _variation!.add(Variation.fromJson(v));
       });
     }
-
   }
 
   Map<String, dynamic> toJson() {

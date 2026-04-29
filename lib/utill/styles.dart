@@ -9,7 +9,6 @@ const titilliumRegular = TextStyle(
   fontSize: Dimensions.fontSizeDefault,
 );
 
-
 const titilliumSemiBold = TextStyle(
   fontFamily: 'static',
   fontSize: Dimensions.fontSizeLarge,
@@ -31,20 +30,17 @@ const robotoHintRegular = TextStyle(
     fontFamily: 'static',
     fontWeight: FontWeight.w400,
     fontSize: Dimensions.fontSizeSmall,
-    color: Colors.grey
-);
+    color: Colors.grey);
 const robotoRegular = TextStyle(
-  fontFamily: 'static',
-  fontWeight: FontWeight.w400,
-  fontSize: Dimensions.fontSizeDefault,
-  color: Colors.black
-);
+    fontFamily: 'static',
+    fontWeight: FontWeight.w400,
+    fontSize: Dimensions.fontSizeDefault,
+    color: Colors.black);
 const robotoRegularMainHeadingAddProduct = TextStyle(
-  fontFamily: 'static',
-  fontWeight: FontWeight.w400,
-  fontSize: Dimensions.fontSizeDefault,
-  color: Colors.black
-);
+    fontFamily: 'static',
+    fontWeight: FontWeight.w400,
+    fontSize: Dimensions.fontSizeDefault,
+    color: Colors.black);
 
 const robotoRegularForAddProductHeading = TextStyle(
   fontFamily: 'static',
@@ -71,17 +67,23 @@ const robotoBold = TextStyle(
   fontWeight: FontWeight.w600,
 );
 
- const robotoMedium = TextStyle(
+const robotoMedium = TextStyle(
   fontFamily: 'static',
   fontSize: Dimensions.fontSizeDefault,
   fontWeight: FontWeight.w500,
 );
 
-
 class ThemeShadow {
-  static List <BoxShadow> getShadow(BuildContext context) {
-    List<BoxShadow> boxShadow =  [BoxShadow(color: Provider.of<ThemeController>(context, listen: false).darkTheme? Colors.black26:
-    Theme.of(context).primaryColor.withValues(alpha:.075), blurRadius: 5,spreadRadius: 1,offset: const Offset(1,1))];
+  static List<BoxShadow> getShadow(BuildContext context) {
+    List<BoxShadow> boxShadow = [
+      BoxShadow(
+          color: Provider.of<ThemeController>(context, listen: false).darkTheme
+              ? Colors.black26
+              : Theme.of(context).primaryColor.withValues(alpha: .075),
+          blurRadius: 5,
+          spreadRadius: 1,
+          offset: const Offset(1, 1))
+    ];
     return boxShadow;
   }
 }

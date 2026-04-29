@@ -23,47 +23,58 @@ class _DeliveryManListScreenState extends State<DeliveryManListScreen> {
 
   @override
   void initState() {
-    Provider.of<DeliveryManController>(context, listen: false).deliveryManListURI(1,'');
+    Provider.of<DeliveryManController>(context, listen: false)
+        .deliveryManListURI(1, '');
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarWidget(title: getTranslated('delivery_man_list', context),isBackButtonExist: true,),
+      appBar: CustomAppBarWidget(
+        title: getTranslated('delivery_man_list', context),
+        isBackButtonExist: true,
+      ),
       body: RefreshIndicator(
-        onRefresh: () async{
-          Provider.of<DeliveryManController>(context, listen: false).deliveryManListURI(1,'');
+        onRefresh: () async {
+          Provider.of<DeliveryManController>(context, listen: false)
+              .deliveryManListURI(1, '');
         },
         child: CustomScrollView(
-        slivers: [
-          SliverPersistentHeader(delegate: SliverDelegateWidget(
-            height: 80,
-            child : Padding(
-              padding: const EdgeInsets.fromLTRB(Dimensions.paddingSizeMedium, Dimensions.paddingSizeDefault, Dimensions.paddingSizeMedium, Dimensions.paddingSizeDefault),
-              child: CustomSearchFieldWidget(
-                controller: searchController,
-                hint: getTranslated('search', context),
-                prefix: Images.iconsSearch,
-                iconPressed: () => (){},
-                onSubmit: (text) => (){},
-                onChanged: (value)=> debounceHelper.run((){
-                    Provider.of<DeliveryManController>(context, listen: false).deliveryManListURI(1, value, isUpdate: true);
+          slivers: [
+            SliverPersistentHeader(
+                delegate: SliverDelegateWidget(
+              height: 80,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                    Dimensions.paddingSizeMedium,
+                    Dimensions.paddingSizeDefault,
+                    Dimensions.paddingSizeMedium,
+                    Dimensions.paddingSizeDefault),
+                child: CustomSearchFieldWidget(
+                  controller: searchController,
+                  hint: getTranslated('search', context),
+                  prefix: Images.iconsSearch,
+                  iconPressed: () => () {},
+                  onSubmit: (text) => () {},
+                  onChanged: (value) => debounceHelper.run(() {
+                    Provider.of<DeliveryManController>(context, listen: false)
+                        .deliveryManListURI(1, value, isUpdate: true);
                   }),
-                isFilter: false,
+                  isFilter: false,
+                ),
               ),
-            ),
-          )),
-          const SliverToBoxAdapter(
-            child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-              DeliveryManListViewWidget(),
-              SizedBox(height: Dimensions.paddingSizeSmall),
-            ]),
-          )
-        ],
-      ),),
+            )),
+            const SliverToBoxAdapter(
+              child:
+                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+                DeliveryManListViewWidget(),
+                SizedBox(height: Dimensions.paddingSizeSmall),
+              ]),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
-
-

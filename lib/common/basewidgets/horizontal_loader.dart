@@ -7,7 +7,8 @@ class HorizontalLoader extends StatefulWidget {
   HorizontalLoaderState createState() => HorizontalLoaderState();
 }
 
-class HorizontalLoaderState extends State<HorizontalLoader> with SingleTickerProviderStateMixin {
+class HorizontalLoaderState extends State<HorizontalLoader>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late List<Animation<double>> _animations;
 

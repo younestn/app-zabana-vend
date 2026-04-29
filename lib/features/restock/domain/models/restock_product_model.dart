@@ -30,8 +30,6 @@ class RestockProductModel {
     data['offset'] = offset;
     return data;
   }
-
-
 }
 
 class Data {
@@ -46,14 +44,13 @@ class Data {
 
   Data(
       {this.id,
-        this.productId,
-        this.variant,
-        this.createdAt,
-        this.updatedAt,
-        this.restockProductCustomersCount,
-        this.product,
-        this.variantKeys
-      });
+      this.productId,
+      this.variant,
+      this.createdAt,
+      this.updatedAt,
+      this.restockProductCustomersCount,
+      this.product,
+      this.variantKeys});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -63,14 +60,15 @@ class Data {
     updatedAt = json['updated_at'];
     restockProductCustomersCount = json['restock_product_customers_count'];
     product =
-    json['product'] != null ? Product.fromJson(json['product']) : null;
-    if(json['variant_keys'] != null) {
+        json['product'] != null ? Product.fromJson(json['product']) : null;
+    if (json['variant_keys'] != null) {
       // variantKeys = json['variant_keys'].cast<String>();
       variantKeys = (json['variant_keys'] as List<dynamic>?)
           ?.where((element) => element != null) // Remove null values
-          .map((element) => element as String) // Cast remaining elements to String
+          .map((element) =>
+              element as String) // Cast remaining elements to String
           .toList();
-    }else {
+    } else {
       variantKeys = [];
     }
   }
@@ -86,9 +84,6 @@ class Data {
     return data;
   }
 }
-
-
-
 
 //
 //

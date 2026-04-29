@@ -24,8 +24,6 @@ import 'package:sixvalley_vendor_app/features/splash/controllers/splash_controll
 import 'package:sixvalley_vendor_app/common/basewidgets/custom_snackbar_widget.dart';
 import 'package:sixvalley_vendor_app/features/dashboard/screens/dashboard_screen.dart';
 
-
-
 class AddProductController extends ChangeNotifier {
   final AddProductServiceInterface shopServiceInterface;
 
@@ -42,13 +40,12 @@ class AddProductController extends ChangeNotifier {
 
   MetaSeoInfo? _metaSeoInfo = MetaSeoInfo();
   final TextEditingController maxSnippetController = TextEditingController();
-  final TextEditingController maxImagePreviewController = TextEditingController();
-
+  final TextEditingController maxImagePreviewController =
+      TextEditingController();
 
   int get unitIndex => _unitIndex;
   bool _isLoading = false;
   bool get isLoading => _isLoading;
-
 
   EditProductModel? _editProduct;
   EditProductModel? get editProduct => _editProduct;
@@ -63,8 +60,9 @@ class AddProductController extends ChangeNotifier {
   List<TextEditingController> _titleControllerList = [];
   List<TextEditingController> _descriptionControllerList = [];
 
-  List<TextEditingController>  get titleControllerList=> _titleControllerList;
-  List<TextEditingController> get descriptionControllerList=> _descriptionControllerList;
+  List<TextEditingController> get titleControllerList => _titleControllerList;
+  List<TextEditingController> get descriptionControllerList =>
+      _descriptionControllerList;
   final TextEditingController _productCode = TextEditingController();
   TextEditingController get productCode => _productCode;
   List<FocusNode>? _titleNode;
@@ -74,13 +72,12 @@ class AddProductController extends ChangeNotifier {
   int _productTypeIndex = 0;
   int get productTypeIndex => _productTypeIndex;
 
-
   int _totalVariantQuantity = 0;
   int get totalVariantQuantity => _totalVariantQuantity;
 
-  List<Map<String, dynamic>>? productReturnImage  = [];
+  List<Map<String, dynamic>>? productReturnImage = [];
   int _variationTotalQuantity = 0;
-  int get variationTotalQuantity  => _variationTotalQuantity;
+  int get variationTotalQuantity => _variationTotalQuantity;
   final bool _isCategoryLoading = false;
   bool get isCategoryLoading => _isCategoryLoading;
   int? _selectedPageIndex = 0;
@@ -91,11 +88,10 @@ class AddProductController extends ChangeNotifier {
   List<String> pages = ['general_info', 'variation_setup', 'product_seo'];
   List<String> imagePreviewType = ['large', 'medium', 'small'];
 
-
   void setTitle(int index, String title) {
     _titleControllerList[index].text = title;
   }
-  
+
   void setDescription(int index, String description) {
     _descriptionControllerList[index].text = description;
   }
@@ -112,7 +108,8 @@ class AddProductController extends ChangeNotifier {
     }
 
     final String sourceTitle = _titleControllerList[sourceIndex].text.trim();
-    final String sourceDescription = _descriptionControllerList[sourceIndex].text.trim();
+    final String sourceDescription =
+        _descriptionControllerList[sourceIndex].text.trim();
 
     for (int i = 0; i < _titleControllerList.length; i++) {
       if (i != sourceIndex) {
@@ -128,95 +125,98 @@ class AddProductController extends ChangeNotifier {
 
     notifyListeners();
   }
-  
-  void getTitleAndDescriptionList(List<Language> languageList, EditProductModel? edtProduct){
+
+  void getTitleAndDescriptionList(
+      List<Language> languageList, EditProductModel? edtProduct) {
     _titleControllerList = [];
     _descriptionControllerList = [];
-    for(int i= 0; i<languageList.length; i++){
-      if(edtProduct != null){
-        if(i==0){
-          _titleControllerList.insert(i,TextEditingController(text: edtProduct.name)) ;
-          _descriptionControllerList.add(TextEditingController(text: edtProduct.details)) ;
-        } else{
+    for (int i = 0; i < languageList.length; i++) {
+      if (edtProduct != null) {
+        if (i == 0) {
+          _titleControllerList.insert(
+              i, TextEditingController(text: edtProduct.name));
+          _descriptionControllerList
+              .add(TextEditingController(text: edtProduct.details));
+        } else {
           for (var lan in edtProduct.translations!) {
-            if(lan.locale == languageList[i].code && lan.key == 'name'){
-              _titleControllerList.add(TextEditingController(text: lan.value)) ;
+            if (lan.locale == languageList[i].code && lan.key == 'name') {
+              _titleControllerList.add(TextEditingController(text: lan.value));
             }
-            if(lan.locale == languageList[i].code && lan.key == 'description'){
-              _descriptionControllerList.add(TextEditingController(text: lan.value));
+            if (lan.locale == languageList[i].code &&
+                lan.key == 'description') {
+              _descriptionControllerList
+                  .add(TextEditingController(text: lan.value));
 
               debugPrint('--------description---------${lan.value}');
-
             }
           }
         }
-      }
-      else{
+      } else {
         _titleControllerList.add(TextEditingController());
         _descriptionControllerList.add(TextEditingController());
       }
     }
-    if(edtProduct != null){
-      if(_titleControllerList.length < languageList.length) {
-        int l1 = languageList.length-_titleControllerList.length;
-        for(int i=0; i<l1; i++) {
-          _titleControllerList.add(TextEditingController(text: editProduct!.name));
+    if (edtProduct != null) {
+      if (_titleControllerList.length < languageList.length) {
+        int l1 = languageList.length - _titleControllerList.length;
+        for (int i = 0; i < l1; i++) {
+          _titleControllerList
+              .add(TextEditingController(text: editProduct!.name));
           debugPrint('--------name---------${editProduct!.name}');
         }
       }
-      if(_descriptionControllerList.length < languageList.length) {
-        int l0 = languageList.length-_descriptionControllerList.length;
-        for(int i=0; i<l0; i++) {
-          _descriptionControllerList.add(TextEditingController(text: editProduct!.details));
+      if (_descriptionControllerList.length < languageList.length) {
+        int l0 = languageList.length - _descriptionControllerList.length;
+        for (int i = 0; i < l0; i++) {
+          _descriptionControllerList
+              .add(TextEditingController(text: editProduct!.details));
           debugPrint('--------description---------${editProduct!.details}');
         }
       }
-    }else {
-      if(_titleControllerList.length < languageList.length) {
-        int l = languageList.length-_titleControllerList.length;
-        for(int i=0; i<l; i++) {
+    } else {
+      if (_titleControllerList.length < languageList.length) {
+        int l = languageList.length - _titleControllerList.length;
+        for (int i = 0; i < l; i++) {
           _titleControllerList.add(TextEditingController());
         }
       }
-      if(_descriptionControllerList.length < languageList.length) {
-        int l2 = languageList.length-_descriptionControllerList.length;
-        for(int i=0; i<l2; i++) {
+      if (_descriptionControllerList.length < languageList.length) {
+        int l2 = languageList.length - _descriptionControllerList.length;
+        for (int i = 0; i < l2; i++) {
           _descriptionControllerList.add(TextEditingController());
         }
       }
     }
   }
 
-
   void resetDiscountTypeIndex() {
     _discountTypeIndex = 0;
   }
 
-
-  String discountType= 'percent';
+  String discountType = 'percent';
 
   void setDiscountTypeIndex(int index, bool notify) {
     _discountTypeIndex = index;
-    if(_discountTypeIndex == 0){
+    if (_discountTypeIndex == 0) {
       discountType = 'percent';
-    }else{
+    } else {
       discountType = 'flat';
     }
-    if(notify) {
+    if (notify) {
       notifyListeners();
     }
   }
-  
+
   void setTaxTypeIndex(int index, bool notify) {
     _taxTypeIndex = index;
-    if(notify) {
+    if (notify) {
       notifyListeners();
     }
   }
 
   void setImagePreviewType(String type, bool notify) {
     _imagePreviewSelectedType = type;
-    if(notify) {
+    if (notify) {
       notifyListeners();
     }
   }
@@ -227,17 +227,22 @@ class AddProductController extends ChangeNotifier {
   }
 
   ///Move to Add Product Directory
-  Future<void> getEditProduct(BuildContext context,int? id) async {
+  Future<void> getEditProduct(BuildContext context, int? id) async {
     _editProduct = null;
     ApiResponse response = await shopServiceInterface.getEditProduct(id);
     if (response.response != null && response.response!.statusCode == 200) {
       _editProduct = EditProductModel.fromJson(response.response!.data);
-      if(_editProduct?.seoInfo != null) {
+      if (_editProduct?.seoInfo != null) {
         convertSeoInfoToMetaSeoInfo(_editProduct!.seoInfo!);
       }
 
-      getTitleAndDescriptionList(Provider.of<SplashController>(Get.context!,listen: false).configModel!.languageList!, _editProduct);
-      Provider.of<DigitalProductController>(Get.context!,listen: false).initDigitalProductVariation(_editProduct!);
+      getTitleAndDescriptionList(
+          Provider.of<SplashController>(Get.context!, listen: false)
+              .configModel!
+              .languageList!,
+          _editProduct);
+      Provider.of<DigitalProductController>(Get.context!, listen: false)
+          .initDigitalProductVariation(_editProduct!);
     } else {
       ApiChecker.checkApi(response);
     }
@@ -246,100 +251,134 @@ class AddProductController extends ChangeNotifier {
 
   void convertSeoInfoToMetaSeoInfo(SeoInfo seoInfo) {
     _metaSeoInfo = MetaSeoInfo(
-      metaIndex: seoInfo.index,
-      metaNoFollow: seoInfo.noFollow,
-      metaNoImageIndex: seoInfo.noImageIndex,
-      metaNoArchive: seoInfo.noArchive,
-      metaNoSnippet: seoInfo.noSnippet,
-      metaMaxSnippet: seoInfo.maxSnippet,
-      metaMaxSnippetValue: seoInfo.maxSnippetValue,
-      metaMaxVideoPreview: seoInfo.maxVideoPreview,
-      metaMaxVideoPreviewValue: seoInfo.maxVideoPreviewValue,
-      metaMaxImagePreview: seoInfo.maxImagePreview,
-      metaMaxImagePreviewValue: seoInfo.maxImagePreviewValue,
-      imageFullUrl: seoInfo.imageFullUrl
-    );
+        metaIndex: seoInfo.index,
+        metaNoFollow: seoInfo.noFollow,
+        metaNoImageIndex: seoInfo.noImageIndex,
+        metaNoArchive: seoInfo.noArchive,
+        metaNoSnippet: seoInfo.noSnippet,
+        metaMaxSnippet: seoInfo.maxSnippet,
+        metaMaxSnippetValue: seoInfo.maxSnippetValue,
+        metaMaxVideoPreview: seoInfo.maxVideoPreview,
+        metaMaxVideoPreviewValue: seoInfo.maxVideoPreviewValue,
+        metaMaxImagePreview: seoInfo.maxImagePreview,
+        metaMaxImagePreviewValue: seoInfo.maxImagePreviewValue,
+        imageFullUrl: seoInfo.imageFullUrl);
   }
-
-
 
   void setUnitIndex(int index, bool notify) {
     _unitIndex = index;
-    if(notify) {
+    if (notify) {
       notifyListeners();
     }
   }
 
-
   int totalUploaded = 0;
-  void initUpload(){
+  void initUpload() {
     totalUploaded = 0;
     notifyListeners();
   }
 
-
-
-
-
-  Future<void> addProduct(BuildContext context, Product product, AddProductModel addProduct, String? thumbnail, String? metaImage, bool isAdd, List<String?> tags) async {
+  Future<void> addProduct(
+      BuildContext context,
+      Product product,
+      AddProductModel addProduct,
+      String? thumbnail,
+      String? metaImage,
+      bool isAdd,
+      List<String?> tags) async {
     _isLoading = true;
     notifyListeners();
 
-    final addProductImageController = Provider.of<AddProductImageController>(context, listen: false);
-    bool isDigitalVariationEmpty =  Provider.of<DigitalProductController>(context, listen: false).selectedDigitalVariation.isNotEmpty;
+    final addProductImageController =
+        Provider.of<AddProductImageController>(context, listen: false);
+    bool isDigitalVariationEmpty =
+        Provider.of<DigitalProductController>(context, listen: false)
+            .selectedDigitalVariation
+            .isNotEmpty;
 
     DigitalVariationModel? digitalVariationModel;
     String? token;
 
-    List<AttributeModel>? _attributeList = Provider.of<VariationController>(context, listen: false).attributeList;
+    List<AttributeModel>? _attributeList =
+        Provider.of<VariationController>(context, listen: false).attributeList;
 
-    Map<String, dynamic> variationFields = Provider.of<VariationController>(context, listen: false).processVariantData(context);
+    Map<String, dynamic> variationFields =
+        Provider.of<VariationController>(context, listen: false)
+            .processVariantData(context);
 
-    Provider.of<VariationController>(context, listen: false).onClearColorVariations(addProduct);
+    Provider.of<VariationController>(context, listen: false)
+        .onClearColorVariations(addProduct);
 
-    List<Map<String, dynamic>>? productReturnImages = addProductImageController.productReturnImageList;
+    List<Map<String, dynamic>>? productReturnImages =
+        addProductImageController.productReturnImageList;
 
-    List<ColorImage> colorImageObjects = addProductImageController.colorImageObject;
+    List<ColorImage> colorImageObjects =
+        addProductImageController.colorImageObject;
 
-    String? digitalProductFileName = Provider.of<DigitalProductController>(context, listen: false).digitalProductFileName;
+    String? digitalProductFileName =
+        Provider.of<DigitalProductController>(context, listen: false)
+            .digitalProductFileName;
 
-    if(_productTypeIndex == 1) {
-      digitalVariationModel = Provider.of<DigitalProductController>(context, listen: false).getDigitalVariationModel();
+    if (_productTypeIndex == 1) {
+      digitalVariationModel =
+          Provider.of<DigitalProductController>(context, listen: false)
+              .getDigitalVariationModel();
     } else {
-      digitalVariationModel =  DigitalVariationModel();
+      digitalVariationModel = DigitalVariationModel();
     }
 
-    token = Provider.of<AuthController>(context,listen: false).getUserToken();
+    token = Provider.of<AuthController>(context, listen: false).getUserToken();
 
     setMetaSeoData(product);
 
+    ApiResponse response = await shopServiceInterface.addProduct(
+        product,
+        addProduct,
+        variationFields,
+        productReturnImages,
+        thumbnail,
+        metaImage,
+        isAdd,
+        _attributeList![0].active,
+        colorImageObjects,
+        tags,
+        digitalProductFileName,
+        digitalVariationModel,
+        isDigitalVariationEmpty,
+        token);
+    if (response.response != null && response.response?.statusCode == 200) {
+      await addProductImageController.onDeleteColorImages(product);
 
-
-    ApiResponse response = await shopServiceInterface.addProduct(product, addProduct ,variationFields, productReturnImages, thumbnail, metaImage, isAdd, _attributeList![0].active, colorImageObjects, tags, digitalProductFileName, digitalVariationModel, isDigitalVariationEmpty, token);
-    if(response.response != null && response.response?.statusCode == 200) {
-
-    await addProductImageController.onDeleteColorImages(product);
-
-     _productCode.clear();
-      Navigator.pushAndRemoveUntil(Get.context!, MaterialPageRoute(builder: (_) => const DashboardScreen()), (route) => false);
-      showCustomSnackBarWidget(isAdd ? getTranslated('product_added_successfully', Get.context!): getTranslated('product_updated_successfully', Get.context!),Get.context!, isError: false);
-       titleControllerList.clear();
+      _productCode.clear();
+      Navigator.pushAndRemoveUntil(
+          Get.context!,
+          MaterialPageRoute(builder: (_) => const DashboardScreen()),
+          (route) => false);
+      showCustomSnackBarWidget(
+          isAdd
+              ? getTranslated('product_added_successfully', Get.context!)
+              : getTranslated('product_updated_successfully', Get.context!),
+          Get.context!,
+          isError: false);
+      titleControllerList.clear();
       descriptionControllerList.clear();
-      Provider.of<AddProductImageController>(Get.context!, listen: false).removeProductImage();
+      Provider.of<AddProductImageController>(Get.context!, listen: false)
+          .removeProductImage();
       emptyDigitalProductData();
       _isLoading = false;
       _metaSeoInfo = MetaSeoInfo();
-     }else {
-      Provider.of<AddProductImageController>(Get.context!,listen: false).emptyWithColorImage();
+    } else {
+      Provider.of<AddProductImageController>(Get.context!, listen: false)
+          .emptyWithColorImage();
       _isLoading = false;
-      ApiChecker.checkApi( response);
-      showCustomSnackBarWidget(getTranslated('product_add_failed', Get.context!), Get.context!, sanckBarType: SnackBarType.error);
+      ApiChecker.checkApi(response);
+      showCustomSnackBarWidget(
+          getTranslated('product_add_failed', Get.context!), Get.context!,
+          sanckBarType: SnackBarType.error);
     }
     _isLoading = false;
     notifyListeners();
   }
-
-
 
   void setMetaSeoData(Product product) {
     metaSeoInfo?.metaMaxImagePreviewValue = _imagePreviewSelectedType;
@@ -351,10 +390,7 @@ class AddProductController extends ChangeNotifier {
     notifyListeners();
   }
 
-
-
-
-  void setValueForUnit (String? setValue){
+  void setValueForUnit(String? setValue) {
     if (kDebugMode) {
       debugPrint('------$setValue====$_unitValue');
     }
@@ -363,35 +399,46 @@ class AddProductController extends ChangeNotifier {
 
   void setProductTypeIndex(int index, bool notify) {
     _productTypeIndex = index;
-    if(notify) {
+    if (notify) {
       notifyListeners();
     }
   }
-  
-  void setTotalVariantTotalQuantity(int total){
+
+  void setTotalVariantTotalQuantity(int total) {
     _totalVariantQuantity = total;
   }
 
-  Future<void> updateProductQuantity(BuildContext context, int? productId, int currentStock, List<Variation> variations) async {
-    if(kDebugMode){
+  Future<void> updateProductQuantity(BuildContext context, int? productId,
+      int currentStock, List<Variation> variations) async {
+    if (kDebugMode) {
       debugPrint("variation======>${variations.length}/${variations.toList()}");
     }
     List<Variation> updatedVariations = [];
-    for(int i=0; i<variations.length; i++){
-      updatedVariations.add(Variation(type: variations[i].type,
+    for (int i = 0; i < variations.length; i++) {
+      updatedVariations.add(Variation(
+          type: variations[i].type,
           sku: variations[i].sku,
           price: variations[i].price,
-          qty: int.parse( Provider.of<VariationController>(context, listen: false).variantTypeList[i].qtyController.text)
-      ));
+          qty: int.parse(
+              Provider.of<VariationController>(context, listen: false)
+                  .variantTypeList[i]
+                  .qtyController
+                  .text)));
     }
     _isLoading = true;
     notifyListeners();
-    ApiResponse apiResponse = await shopServiceInterface.updateProductQuantity(productId, currentStock, updatedVariations);
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    ApiResponse apiResponse = await shopServiceInterface.updateProductQuantity(
+        productId, currentStock, updatedVariations);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       _isLoading = false;
       Navigator.pop(Get.context!);
-      showCustomSnackBarWidget(getTranslated('quantity_updated_successfully', Get.context!), Get.context!, isError: false);
-      Provider.of<ProductController>(Get.context!, listen: false).getStockOutProductList(1, 'en');
+      showCustomSnackBarWidget(
+          getTranslated('quantity_updated_successfully', Get.context!),
+          Get.context!,
+          isError: false);
+      Provider.of<ProductController>(Get.context!, listen: false)
+          .getStockOutProductList(1, 'en');
     } else {
       _isLoading = false;
       ApiChecker.checkApi(apiResponse);
@@ -399,27 +446,39 @@ class AddProductController extends ChangeNotifier {
     notifyListeners();
   }
 
-
-  Future<void> updateRestockProductQuantity(BuildContext context, int? productId, int currentStock, List<Variation> variations,{int? index}) async {
-    if(kDebugMode){
+  Future<void> updateRestockProductQuantity(BuildContext context,
+      int? productId, int currentStock, List<Variation> variations,
+      {int? index}) async {
+    if (kDebugMode) {
       debugPrint("variation======>${variations.length}/${variations.toList()}");
     }
     List<Variation> updatedVariations = [];
-    for(int i=0; i<variations.length; i++){
-      updatedVariations.add(Variation(type: variations[i].type,
+    for (int i = 0; i < variations.length; i++) {
+      updatedVariations.add(Variation(
+          type: variations[i].type,
           sku: variations[i].sku,
           price: variations[i].price,
-          qty: int.parse(Provider.of<VariationController>(context, listen: false).variantTypeList[i].qtyController.text)
-      ));
+          qty: int.parse(
+              Provider.of<VariationController>(context, listen: false)
+                  .variantTypeList[i]
+                  .qtyController
+                  .text)));
     }
     _isLoading = true;
     notifyListeners();
-    ApiResponse apiResponse = await shopServiceInterface.updateRestockProductQuantity(productId, currentStock, updatedVariations);
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    ApiResponse apiResponse =
+        await shopServiceInterface.updateRestockProductQuantity(
+            productId, currentStock, updatedVariations);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       _isLoading = false;
       Navigator.pop(Get.context!);
-      showCustomSnackBarWidget(getTranslated('quantity_updated_successfully', Get.context!), Get.context!, isError: false);
-      await Provider.of<RestockController>(Get.context!, listen: false).getRestockProductList(1);
+      showCustomSnackBarWidget(
+          getTranslated('quantity_updated_successfully', Get.context!),
+          Get.context!,
+          isError: false);
+      await Provider.of<RestockController>(Get.context!, listen: false)
+          .getRestockProductList(1);
       // Provider.of<RestockController>(Get.context!, listen: false).removeItem(index);
     } else {
       _isLoading = false;
@@ -428,35 +487,27 @@ class AddProductController extends ChangeNotifier {
     notifyListeners();
   }
 
-
-
   List<String> imagesWithoutColor = [];
   List<String> imagesWithColorForUpdate = [];
   ProductImagesModel? productImagesModel;
 
-
-  void  setSelectedPageIndex (int index, {bool isUpdate = true}){
+  void setSelectedPageIndex(int index, {bool isUpdate = true}) {
     _selectedPageIndex = index;
-    if(isUpdate) {
+    if (isUpdate) {
       notifyListeners();
     }
   }
-
 
   List<String> processList(List<String> inputList) {
     return inputList.map((str) => str.toLowerCase().trim()).toList();
   }
 
-
-
-  void updateState(){
+  void updateState() {
     notifyListeners();
   }
 
-
   void emptyDigitalProductData() {
-    Provider.of<DigitalProductController>(Get.context!, listen: false).emptyDigitalProductData();
+    Provider.of<DigitalProductController>(Get.context!, listen: false)
+        .emptyDigitalProductData();
   }
-
-
 }
