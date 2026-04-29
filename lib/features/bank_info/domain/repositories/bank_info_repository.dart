@@ -111,8 +111,9 @@ Future<http.StreamedResponse> sendCommissionReceipt(int invoiceId, String? note,
     Uri.parse('${AppConstants.baseUrl}${AppConstants.sendCommissionReceiptUri}$invoiceId/send-payment-receipt'),
   );
 
-  request.headers.addAll(<String, String>{
+    request.headers.addAll(<String, String>{
     'Authorization': 'Bearer $token',
+    'Accept': 'application/json',
   });
 
   if (note != null && note.trim().isNotEmpty) {

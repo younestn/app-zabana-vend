@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -73,12 +75,55 @@ Future getCurrentMonthCommissionInvoice() async {
 
 @override
 Future<ResponseModel> sendCommissionReceipt(int invoiceId, String? note, XFile receiptImage) async {
-  http.StreamedResponse response = await bankInfoRepoInterface.sendCommissionReceipt(invoiceId, note, receiptImage);
+  try {
+    final http.StreamedResponse response =
+        await bankInfoRepoInterface.sendCommissionReceipt(invoiceId, note, receiptImage);
 
-  if (response.statusCode == 200) {
-    return ResponseModel(true, 'تم إرسال وصل الدفع بنجاح');
-  } else {
-    return ResponseModel(false, '${response.statusCode} ${response.reasonPhrase}');
+    final String responseBody = await response.stream.bytesToString();
+    dynamic decodedBody;
+
+    if (responseBody.isNotEmpty) {
+      try {
+        decodedBody = jsonDecode(responseBody);
+      } catch (_) {
+        decodedBody = null;
+      }
+    }
+
+    if (response.statusCode == 200) {
+      final String successMessage =
+          decodedBody is Map<String, dynamic> && decodedBody['message'] != null
+              ? decodedBody['message'].toString()
+              : 'تم إرسال وصل الدفع إلى الإدارة بنجاح';
+
+      return ResponseModel(true, successMessage);
+    }
+
+    String errorMessage = 'عذرًا، حدث خطأ أثناء الإرسال';
+
+    if (decodedBody is Map<String, dynamic>) {
+      if (decodedBody['message'] != null &&
+          decodedBody['message'].toString().trim().isNotEmpty) {
+        errorMessage = decodedBody['message'].toString();
+      } else if (decodedBody['errors'] is List &&
+          (decodedBody['errors'] as List).isNotEmpty) {
+        final dynamic firstError = (decodedBody['errors'] as List).first;
+        if (firstError is Map && firstError['message'] != null) {
+          errorMessage = firstError['message'].toString();
+        }
+      }
+    }
+
+    if (kDebugMode) {
+      print('sendCommissionReceipt => ${response.statusCode} $errorMessage');
+    }
+
+    return ResponseModel(false, errorMessage);
+  } catch (e) {
+    if (kDebugMode) {
+      print('sendCommissionReceipt exception => $e');
+    }
+    return ResponseModel(false, 'تعذر الاتصال بالسيرفر. يرجى المحاولة مرة أخرى');
   }
 }
 

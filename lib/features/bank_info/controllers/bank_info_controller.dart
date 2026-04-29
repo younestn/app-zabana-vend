@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:sixvalley_vendor_app/features/order/domain/models/business_analytics_filter_data.dart';
 import 'package:sixvalley_vendor_app/features/profile/domain/models/profile_body.dart';
@@ -221,33 +223,65 @@ void clearCommissionReceiptImage({bool notify = true}) {
   }
 }
 
+String? _validateSelectedCommissionReceipt() {
+  if (_selectedCommissionReceiptImage == null) {
+    return 'يرجى اختيار صورة وصل الدفع';
+  }
+
+  final File file = File(_selectedCommissionReceiptImage!.path);
+
+  if (!file.existsSync()) {
+    return 'تعذر قراءة ملف الوصل المحدد';
+  }
+
+  final List<String> allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
+  final String fileName = _selectedCommissionReceiptImage!.name.toLowerCase();
+  final String fileExtension = fileName.contains('.') ? fileName.split('.').last : '';
+
+  if (!allowedExtensions.contains(fileExtension)) {
+    return 'صيغة الصورة غير مدعومة. الصيغ المسموحة: JPG, JPEG, PNG, WEBP';
+  }
+
+  final int fileSizeInBytes = file.lengthSync();
+  if (fileSizeInBytes > 5 * 1024 * 1024) {
+    return 'حجم الصورة كبير جدًا. الحد الأقصى 5 MB';
+  }
+
+  return null;
+}
+
 Future<ResponseModel> sendCommissionReceipt(
   BuildContext context, {
   required int invoiceId,
   String? note,
 }) async {
-  if (_selectedCommissionReceiptImage == null) {
-    return ResponseModel(false, 'يرجى اختيار صورة وصل الدفع');
+  final String? validationMessage = _validateSelectedCommissionReceipt();
+  if (validationMessage != null) {
+    return ResponseModel(false, validationMessage);
   }
 
   _isSendingReceipt = true;
   notifyListeners();
 
-  final ResponseModel responseModel = await bankInfoServiceInterface.sendCommissionReceipt(
-    invoiceId,
-    note,
-    _selectedCommissionReceiptImage!,
-  );
+  try {
+    final ResponseModel responseModel = await bankInfoServiceInterface.sendCommissionReceipt(
+      invoiceId,
+      note,
+      _selectedCommissionReceiptImage!,
+    );
 
-  if (responseModel.isSuccess) {
-    _selectedCommissionReceiptImage = null;
-    await getCurrentMonthCommissionInvoice(context, reload: true);
+    if (responseModel.isSuccess) {
+      _selectedCommissionReceiptImage = null;
+      await getCurrentMonthCommissionInvoice(context, reload: true);
+    }
+
+    return responseModel;
+  } catch (e) {
+    return ResponseModel(false, 'عذرًا، حدث خطأ أثناء الإرسال');
+  } finally {
+    _isSendingReceipt = false;
+    notifyListeners();
   }
-
-  _isSendingReceipt = false;
-  notifyListeners();
-
-  return responseModel;
 }
 
 }

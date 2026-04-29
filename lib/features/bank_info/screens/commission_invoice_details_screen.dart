@@ -124,7 +124,7 @@ class _CommissionInvoiceDetailsScreenState
                             );
                           },
                           icon: const Icon(Icons.chat_outlined),
-                          label: const Text('ارسال نموذج لاثبات الدفع '),
+                          label: const Text('تواصل مع الإدارة'),
                         ),
                       ),
                     ],
@@ -431,8 +431,9 @@ class _CommissionInvoiceDetailsScreenState
               Text('إرسال وصل الدفع', style: robotoBold.copyWith(fontSize: Dimensions.fontSizeLarge)),
               const SizedBox(height: Dimensions.paddingSizeSmall),
 
-              TextField(
+                            TextField(
                 controller: _noteController,
+                enabled: !bankInfoController.isSendingReceipt,
                 maxLines: 3,
                 decoration: InputDecoration(
                   hintText: 'أضف ملاحظة اختيارية مع الوصل',
@@ -441,7 +442,6 @@ class _CommissionInvoiceDetailsScreenState
                   ),
                 ),
               ),
-
               const SizedBox(height: Dimensions.paddingSizeDefault),
 
               InkWell(
@@ -488,8 +488,9 @@ class _CommissionInvoiceDetailsScreenState
 
               const SizedBox(height: Dimensions.paddingSizeDefault),
 
-              CustomButtonWidget(
-                btnTxt: bankInfoController.isSendingReceipt ? 'جاري الإرسال...' : 'إرسال الوصل للإدارة',
+                            CustomButtonWidget(
+                btnTxt: 'إرسال الوصل للإدارة',
+                isLoading: bankInfoController.isSendingReceipt,
                 onTap: bankInfoController.isSendingReceipt
                     ? null
                     : () async {
@@ -504,16 +505,18 @@ class _CommissionInvoiceDetailsScreenState
                           note: _noteController.text.trim(),
                         );
 
+                        if (!mounted) return;
+
                         if (response.isSuccess) {
                           _noteController.clear();
                           showCustomSnackBarWidget(
-                            response.message ?? 'تم الإرسال',
+                            response.message ?? 'تم إرسال الوصل للإدارة بنجاح',
                             context,
                             isError: false,
                           );
                         } else {
                           showCustomSnackBarWidget(
-                            response.message ?? 'فشل الإرسال',
+                            response.message ?? 'عذرًا، حدث خطأ أثناء الإرسال',
                             context,
                           );
                         }

@@ -32,16 +32,28 @@ class ShippingRepository implements ShippingRepositoryInterface{
     }
   }
 
-  @override
-  Future<ApiResponse> updateShipping(String? title,String? duration,double? cost, int? id) async {
-    try {
-      final response = await dioClient!.post('${AppConstants.updateShippingUri}/$id',
-          data: {'_method': 'put','title' : title, 'duration' : duration, 'cost' : cost});
-      return ApiResponse.withSuccess(response);
-    } catch (e) {
-      return ApiResponse.withError(ApiErrorHandler.getMessage(e));
-    }
+@override
+Future<ApiResponse> updateShipping(
+  String? title,
+  String? duration,
+  double? cost,
+  int? id,
+) async {
+  try {
+    final response = await dioClient!.put(
+      '${AppConstants.updateShippingUri}/$id',
+      data: {
+        'title': title,
+        'duration': duration,
+        'cost': cost,
+      },
+    );
+
+    return ApiResponse.withSuccess(response);
+  } catch (e) {
+    return ApiResponse.withError(ApiErrorHandler.getMessage(e));
   }
+}
 
 
   @override
@@ -94,19 +106,22 @@ class ShippingRepository implements ShippingRepositoryInterface{
   }
 
   @override
-  Future<ApiResponse> shippingOnOff(int? id,int status) async {
-    try {
-      final response = await dioClient!.post(AppConstants.shippingMethodOnOff,
-          data: {
-        '_method': 'put',
-            'id' : id,
-            'status' : status
-      });
-      return ApiResponse.withSuccess(response);
-    } catch (e) {
-      return ApiResponse.withError(ApiErrorHandler.getMessage(e));
-    }
+Future<ApiResponse> shippingOnOff(int? id, int status) async {
+  try {
+    final response = await dioClient!.put(
+      AppConstants.shippingMethodOnOff,
+      data: {
+        'id': id,
+        'status': status,
+      },
+    );
+
+    return ApiResponse.withSuccess(response);
+  } catch (e) {
+    return ApiResponse.withError(ApiErrorHandler.getMessage(e));
   }
+}
+
 @override
 Future<ApiResponse> getNoestSettings(String token) async {
   dioClient!.dio!.options.headers = {
@@ -187,31 +202,56 @@ Future<ApiResponse> testNoestConnection(String token, String? noestGuid, String?
     }
   }
 
-  @override
-  Future delete(int id) async{
-    try {
-      final response = await dioClient!.delete('${AppConstants.deleteShippingUri}/$id');
-      return ApiResponse.withSuccess(response);
-    } catch (e) {
-      return ApiResponse.withError(ApiErrorHandler.getMessage(e));
-    }
+@override
+Future<ApiResponse> delete(int id) async {
+  try {
+    final response = await dioClient!.delete(
+      '${AppConstants.deleteShippingUri}/$id',
+    );
+
+    return ApiResponse.withSuccess(response);
+  } catch (e) {
+    return ApiResponse.withError(ApiErrorHandler.getMessage(e));
   }
+}
+
+@override
+Future<ApiResponse> get(String id) async {
+  try {
+    final response = await dioClient!.get(
+      '${AppConstants.editShippingUri}/$id',
+    );
+
+    return ApiResponse.withSuccess(response);
+  } catch (e) {
+    return ApiResponse.withError(ApiErrorHandler.getMessage(e));
+  }
+}
+
+@override
+Future<ApiResponse> getList({int? offset = 1}) async {
+  try {
+    final response = await dioClient!.get(
+      AppConstants.getShippingUri,
+    );
+
+    return ApiResponse.withSuccess(response);
+  } catch (e) {
+    return ApiResponse.withError(ApiErrorHandler.getMessage(e));
+  }
+}
 
   @override
-  Future get(String id) {
-    // TODO: implement get
-    throw UnimplementedError();
-  }
+Future<ApiResponse> update(Map<String, dynamic> body, int id) async {
+  try {
+    final response = await dioClient!.put(
+      '${AppConstants.updateShippingUri}/$id',
+      data: body,
+    );
 
-  @override
-  Future getList({int? offset = 1}) {
-    // TODO: implement getList
-    throw UnimplementedError();
+    return ApiResponse.withSuccess(response);
+  } catch (e) {
+    return ApiResponse.withError(ApiErrorHandler.getMessage(e));
   }
-
-  @override
-  Future update(Map<String, dynamic> body, int id) {
-    // TODO: implement update
-    throw UnimplementedError();
-  }
+}
 }
